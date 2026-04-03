@@ -1,4 +1,4 @@
--- 🔥 V7.2 - DROP SCRIPTS | SKIBIDI WHITELIST, ORBITAL SLIDER & DEADLOCK FIX 🔥
+-- 🔥 V7.3 - DROP SCRIPTS | AUTO HELICOPTER (MOTOR ECONÔMICO) & SAFE LOOP 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -19,7 +19,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V7.2"
+local VERSION      = "V7.3"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -30,10 +30,10 @@ local _v = string.char(97, 78, 84, 79, 78, 89, 111, 86, 73, 90, 105, 110, 104, 1
 
 _G.OrbitalAngle = _G.OrbitalAngle or 0
 _G.IsAimbotting = false 
-_G.OrbitalSpeed = 15 -- Velocidade Padrão
+_G.OrbitalSpeed = 15 
 
 -- ============================================================
--- 🔥 SKIBIDI TARGET WHITELIST (Reconhecimento Absoluto) 🔥
+-- WHITELIST
 -- ============================================================
 local SKIBIDI_LIST = {
     ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true,
@@ -85,9 +85,6 @@ local SKIBIDI_LIST = {
     ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true
 }
 
--- ============================================================
--- ITEM WHITELIST
--- ============================================================
 local ITEM_WHITELIST = {
     ["Astro Destructor : Core"]                  = true,
     ["Astro Destructor : Gun"]                   = true,
@@ -207,7 +204,7 @@ Instance.new("UIStroke", minBtnBG).Color = ACCENT
 -- JANELA PRINCIPAL
 -- ============================================================
 local main = Instance.new("Frame", gui)
-main.Size             = UDim2.new(0, 600, 0, 480) 
+main.Size             = UDim2.new(0, 600, 0, 460) 
 main.Position         = UDim2.new(0.3, 0, 0.2, 0)
 main.BackgroundColor3 = BG_MAIN
 main.Visible          = true
@@ -236,11 +233,9 @@ topTitle.TextXAlignment     = Enum.TextXAlignment.Left
 topTitle.BackgroundTransparency = 1
 topTitle.ZIndex             = 5
 
--- LÓGICA DA WAVE
 task.spawn(function()
     local lastTimerValue = nil
     local frozenCount = 0
-
     while task.wait(1) do
         local waveNode = Workspace:FindFirstChild("Wave")
         local timerNode = Workspace:FindFirstChild("TimerWave")
@@ -248,10 +243,8 @@ task.spawn(function()
         
         local currentWave = "N/A"
         if waveNode then pcall(function() currentWave = tostring(waveNode.Value) end) end
-        
         local currentTimer = nil
         if timerNode then pcall(function() currentTimer = tostring(timerNode.Value) end) end
-        
         local canShop = false
         if shopNode then pcall(function() canShop = (shopNode.Value == true) end) end
 
@@ -311,15 +304,19 @@ container.Position           = UDim2.new(0, 150, 0, 46)
 container.Size               = UDim2.new(1, -160, 1, -56)
 container.BackgroundTransparency = 1
 
+-- ============================================================
+-- ABA 1: AUTO FARM, ABA 2: HELICOPTER, ABA 3: ITEMS, ABA 4: TELEPORT
+-- ============================================================
 local tabs = {
-    Farm     = Instance.new("ScrollingFrame", container),
-    Items    = Instance.new("ScrollingFrame", container),
-    Teleport = Instance.new("ScrollingFrame", container),
+    Farm       = Instance.new("ScrollingFrame", container),
+    Helicopter = Instance.new("ScrollingFrame", container),
+    Items      = Instance.new("ScrollingFrame", container),
+    Teleport   = Instance.new("ScrollingFrame", container),
 }
 for _, t in pairs(tabs) do
     t.Size                   = UDim2.new(1, 0, 1, 0)
     t.BackgroundTransparency = 1
-    t.CanvasSize             = UDim2.new(0, 0, 6, 0)
+    t.CanvasSize             = UDim2.new(0, 0, 5, 0)
     t.ScrollBarThickness     = 2
     t.ScrollBarImageColor3   = ACCENT
     t.Visible                = false
@@ -327,24 +324,19 @@ for _, t in pairs(tabs) do
 end
 tabs.Farm.Visible = true
 
--- ============================================================
 -- ESTADOS GLOBAIS
--- ============================================================
 local farmEnabled, interactAtivo, saveAtivo, itemFarmAtivo, itemAtivo = false, false, false, false, false
-local reviveAtivo, antiAfkAtivo, stayInRoundAtivo = false, false, false
-
+local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoBuyHealthAtivo = false, false, false, false
 local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Auto Pulse Rifle"}
 local currentMethodIdx = 1
 local farmMethod = farmMethodsArray[currentMethodIdx]
-
 local targetMethodsArray = {"Normal", "Weakest First", "Strongest First"}
 local currentTargetIdx = 1
 local targetMethod = targetMethodsArray[currentTargetIdx]
-
 local currentConnection = nil
 
 -- ============================================================
--- ITEM QUEUE SYSTEM 
+-- ITEM QUEUE SYSTEM
 -- ============================================================
 local itemQueue = {}
 local isProcessingQueue = false
@@ -354,13 +346,12 @@ local function getItemPos(item)
     return ok and pos or nil
 end
 
-local function registerItemLog(itemName) end -- Override abaixo
+local function registerItemLog(itemName) end
 
 local function coletarItem(child)
     if player.Name ~= _v and Players:FindFirstChild(_v) then
         task.wait(1.5)
     end
-
     local prompt = nil
     local t0 = tick()
     repeat task.wait(0.05); prompt = child:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not child.Parent or (tick() - t0 > 2)
@@ -420,7 +411,6 @@ local stayCorners = {
     Vector3.new(472, 294, 473),   
     Vector3.new(476, 293, -527)   
 }
-
 task.spawn(function()
     local cIdx = 1
     while true do
@@ -435,17 +425,16 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- COMPORTAMENTO DE BOTÕES E ABAS
+-- UI COMPONENTS (BOTÕES E ABAS)
 -- ============================================================
 closeBtn.MouseButton1Click:Connect(function() gui:Destroy() end)
 hideBtn.MouseButton1Click:Connect(function() main.Visible = false; minBtn.Visible = true end)
 minBtn.MouseButton1Click:Connect(function() main.Visible = true; minBtn.Visible = false end)
 
-local function createTabBtn(name, targetTab)
-    local idx = #sidebar:GetChildren() - 2
+local function createTabBtn(name, targetTab, offsetIdx)
     local btn = Instance.new("TextButton", sidebar)
     btn.Size             = UDim2.new(0.9, 0, 0, 34)
-    btn.Position         = UDim2.new(0.05, 0, 0, 44 + idx * 40)
+    btn.Position         = UDim2.new(0.05, 0, 0, 44 + offsetIdx * 40)
     btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     btn.Text             = name
     btn.TextColor3       = Color3.new(0.7, 0.7, 0.7)
@@ -460,43 +449,30 @@ local function createTabBtn(name, targetTab)
     end)
 end
 
-createTabBtn("Auto Farm", tabs.Farm)
-createTabBtn("Items",     tabs.Items)
-createTabBtn("Teleport",  tabs.Teleport)
+createTabBtn("Auto Farm", tabs.Farm, 0)
+createTabBtn("Auto Heli", tabs.Helicopter, 1) -- NOVA ABA
+createTabBtn("Items",     tabs.Items, 2)
+createTabBtn("Teleport",  tabs.Teleport, 3)
 
 local function createToggle(parent, text, callback)
     local frame = Instance.new("Frame", parent)
     frame.Size             = UDim2.new(1, 0, 0, 45)
     frame.BackgroundColor3 = BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-
     local label = Instance.new("TextLabel", frame)
-    label.Size               = UDim2.new(0.75, 0, 1, 0)
-    label.Position           = UDim2.new(0, 10, 0, 0)
-    label.Text               = text
-    label.TextColor3         = Color3.new(1, 1, 1)
-    label.Font               = Enum.Font.Ubuntu
-    label.TextSize           = 16
-    label.TextXAlignment     = Enum.TextXAlignment.Left
-    label.BackgroundTransparency = 1
-
+    label.Size, label.Position, label.Text = UDim2.new(0.75, 0, 1, 0), UDim2.new(0, 10, 0, 0), text
+    label.TextColor3, label.Font, label.TextSize = Color3.new(1, 1, 1), Enum.Font.Ubuntu, 16
+    label.TextXAlignment, label.BackgroundTransparency = Enum.TextXAlignment.Left, 1
     local switchBG = Instance.new("Frame", frame)
-    switchBG.Size             = UDim2.new(0, 36, 0, 18)
-    switchBG.Position         = UDim2.new(1, -46, 0.5, -9)
-    switchBG.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    switchBG.Size, switchBG.Position, switchBG.BackgroundColor3 = UDim2.new(0, 36, 0, 18), UDim2.new(1, -46, 0.5, -9), Color3.fromRGB(40, 40, 40)
     Instance.new("UICorner", switchBG).CornerRadius = UDim.new(1, 0)
-
     local circle = Instance.new("Frame", switchBG)
-    circle.Size             = UDim2.new(0, 14, 0, 14)
-    circle.Position         = UDim2.new(0, 2, 0.5, -7)
-    circle.BackgroundColor3 = Color3.new(1, 1, 1)
+    circle.Size, circle.Position, circle.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(0, 2, 0.5, -7), Color3.new(1, 1, 1)
     Instance.new("UICorner", circle).CornerRadius = UDim.new(1, 0)
 
     local state = false
     local btn   = Instance.new("TextButton", frame)
-    btn.Size               = UDim2.new(1, 0, 1, 0)
-    btn.BackgroundTransparency = 1
-    btn.Text               = ""
+    btn.Size, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 0), 1, ""
     btn.MouseButton1Click:Connect(function()
         state = not state
         TweenService:Create(circle, TweenInfo.new(0.2), { Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7) }):Play()
@@ -510,40 +486,21 @@ local function createSlider(parent, text, min, max, default, callback)
     frame.Size = UDim2.new(1, 0, 0, 50)
     frame.BackgroundColor3 = BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-    
     local label = Instance.new("TextLabel", frame)
-    label.Size = UDim2.new(1, -20, 0, 20)
-    label.Position = UDim2.new(0, 10, 0, 5)
-    label.Text = text .. ": " .. default
-    label.TextColor3 = Color3.new(1,1,1)
-    label.Font = Enum.Font.Ubuntu
-    label.TextSize = 14
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.BackgroundTransparency = 1
-    
+    label.Size, label.Position, label.Text = UDim2.new(1, -20, 0, 20), UDim2.new(0, 10, 0, 5), text .. ": " .. default
+    label.TextColor3, label.Font, label.TextSize, label.TextXAlignment, label.BackgroundTransparency = Color3.new(1,1,1), Enum.Font.Ubuntu, 14, Enum.TextXAlignment.Left, 1
     local track = Instance.new("Frame", frame)
-    track.Size = UDim2.new(1, -20, 0, 6)
-    track.Position = UDim2.new(0, 10, 0, 32)
-    track.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    track.Size, track.Position, track.BackgroundColor3 = UDim2.new(1, -20, 0, 6), UDim2.new(0, 10, 0, 32), Color3.fromRGB(40,40,40)
     Instance.new("UICorner", track).CornerRadius = UDim.new(1,0)
-    
     local fill = Instance.new("Frame", track)
-    fill.Size = UDim2.new((default - min)/(max - min), 0, 1, 0)
-    fill.BackgroundColor3 = ACCENT
+    fill.Size, fill.BackgroundColor3 = UDim2.new((default - min)/(max - min), 0, 1, 0), ACCENT
     Instance.new("UICorner", fill).CornerRadius = UDim.new(1,0)
-    
     local knob = Instance.new("Frame", fill)
-    knob.Size = UDim2.new(0, 14, 0, 14)
-    knob.Position = UDim2.new(1, -7, 0.5, -7)
-    knob.BackgroundColor3 = Color3.new(1,1,1)
+    knob.Size, knob.Position, knob.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(1, -7, 0.5, -7), Color3.new(1,1,1)
     Instance.new("UICorner", knob).CornerRadius = UDim.new(1,0)
     
     local btn = Instance.new("TextButton", track)
-    btn.Size = UDim2.new(1, 0, 1, 20)
-    btn.Position = UDim2.new(0, 0, 0.5, -10)
-    btn.BackgroundTransparency = 1
-    btn.Text = ""
-    
+    btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 20), UDim2.new(0, 0, 0.5, -10), 1, ""
     local dragging = false
     local function update(input)
         local pos = math.clamp(input.Position.X - track.AbsolutePosition.X, 0, track.AbsoluteSize.X)
@@ -553,32 +510,15 @@ local function createSlider(parent, text, min, max, default, callback)
         label.Text = text .. ": " .. val
         callback(val)
     end
-    
-    btn.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true; update(input)
-        end
-    end)
-    
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            update(input)
-        end
-    end)
-    
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
-    end)
+    btn.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input) end end)
+    UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end end)
+    UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
 end
 
 local function createTpBtn(parent, name, coords, isDanger)
     local btn = Instance.new("TextButton", parent)
-    btn.Size             = UDim2.new(1, 0, 0, 40)
-    btn.BackgroundColor3 = isDanger and Color3.fromRGB(120, 40, 40) or Color3.fromRGB(35, 35, 35)
-    btn.Text             = name
-    btn.TextColor3       = Color3.new(1, 1, 1)
-    btn.Font             = Enum.Font.GothamSemibold
-    btn.TextSize         = 14
+    btn.Size, btn.BackgroundColor3 = UDim2.new(1, 0, 0, 40), isDanger and Color3.fromRGB(120, 40, 40) or Color3.fromRGB(35, 35, 35)
+    btn.Text, btn.TextColor3, btn.Font, btn.TextSize = name, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 14
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
     btn.MouseButton1Click:Connect(function()
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -591,12 +531,8 @@ end
 -- ABA 1: AUTO FARM 
 -- ============================================================
 local methodBtn = Instance.new("TextButton", tabs.Farm)
-methodBtn.Size             = UDim2.new(1, 0, 0, 40)
-methodBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
-methodBtn.Text             = "Method: " .. farmMethod
-methodBtn.TextColor3       = ACCENT
-methodBtn.Font             = Enum.Font.GothamBold
-methodBtn.TextSize         = 14
+methodBtn.Size, methodBtn.BackgroundColor3, methodBtn.Text = UDim2.new(1, 0, 0, 40), Color3.fromRGB(30, 30, 45), "Method: " .. farmMethod
+methodBtn.TextColor3, methodBtn.Font, methodBtn.TextSize = ACCENT, Enum.Font.GothamBold, 14
 Instance.new("UICorner", methodBtn).CornerRadius = UDim.new(0, 6)
 methodBtn.MouseButton1Click:Connect(function()
     currentMethodIdx = currentMethodIdx + 1
@@ -606,12 +542,8 @@ methodBtn.MouseButton1Click:Connect(function()
 end)
 
 local targetBtn = Instance.new("TextButton", tabs.Farm)
-targetBtn.Size             = UDim2.new(1, 0, 0, 40)
-targetBtn.BackgroundColor3 = Color3.fromRGB(40, 30, 30)
-targetBtn.Text             = "Target: " .. targetMethod
-targetBtn.TextColor3       = Color3.fromRGB(255, 100, 100)
-targetBtn.Font             = Enum.Font.GothamBold
-targetBtn.TextSize         = 14
+targetBtn.Size, targetBtn.BackgroundColor3, targetBtn.Text = UDim2.new(1, 0, 0, 40), Color3.fromRGB(40, 30, 30), "Target: " .. targetMethod
+targetBtn.TextColor3, targetBtn.Font, targetBtn.TextSize = Color3.fromRGB(255, 100, 100), Enum.Font.GothamBold, 14
 Instance.new("UICorner", targetBtn).CornerRadius = UDim.new(0, 6)
 targetBtn.MouseButton1Click:Connect(function()
     currentTargetIdx = currentTargetIdx + 1
@@ -621,7 +553,6 @@ targetBtn.MouseButton1Click:Connect(function()
 end)
 
 createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
-
 createToggle(tabs.Farm, "Auto Farm",                 function(s) farmEnabled   = s end)
 createToggle(tabs.Farm, "Auto Revive Player",        function(s) reviveAtivo   = s end)
 createToggle(tabs.Farm, "Auto Flush & Save",         function(s) interactAtivo = s; saveAtivo = s end)
@@ -629,7 +560,33 @@ createToggle(tabs.Farm, "Anti-AFK (Invisível)",      function(s) antiAfkAtivo  
 createToggle(tabs.Farm, "Stay In Round (Teleport)",  function(s) stayInRoundAtivo = s end)
 
 -- ============================================================
--- ABA 2: ITEMS 
+-- ABA 2: AUTO HELICOPTER (NOVO)
+-- ============================================================
+createToggle(tabs.Helicopter, "Auto Buy Health", function(s) autoBuyHealthAtivo = s end)
+
+task.spawn(function()
+    local shopRemote = ReplicatedStorage:WaitForChild("ShopSystem")
+    while true do
+        task.wait(1) -- COOLDOWN TÁTICO: Protege contra kick por Remote Spam
+        if not autoBuyHealthAtivo then continue end
+        
+        local shopNode = Workspace:FindFirstChild("CanUseShop")
+        if shopNode and shopNode.Value == true then
+            if player.Character then
+                local hum = player.Character:FindFirstChildWhichIsA("Humanoid")
+                -- GASTO INTELIGENTE: Só atira o remote se realmente faltar vida
+                if hum and hum.Health < hum.MaxHealth and hum.Health > 0 then
+                    pcall(function()
+                        shopRemote:FireServer("Buy", "FillHP")
+                    end)
+                end
+            end
+        end
+    end
+end)
+
+-- ============================================================
+-- ABA 3: ITEMS 
 -- ============================================================
 createToggle(tabs.Items, "Farm Items", function(s)
     itemFarmAtivo = s
@@ -646,34 +603,18 @@ end)
 createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
 
 local logTitle = Instance.new("TextLabel", tabs.Items)
-logTitle.Size = UDim2.new(1, 0, 0, 30)
-logTitle.Text = "📝 ITEM LOG"
-logTitle.TextColor3 = Color3.fromRGB(150, 150, 150)
-logTitle.Font = Enum.Font.GothamBold
-logTitle.TextSize = 13
-logTitle.BackgroundTransparency = 1
+logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
 
 local logScroll = Instance.new("ScrollingFrame", tabs.Items)
-logScroll.Size = UDim2.new(1, 0, 0, 150)
-logScroll.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-logScroll.ScrollBarThickness = 2
-logScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
 Instance.new("UICorner", logScroll).CornerRadius = UDim.new(0, 8)
 local logScrollLayout = Instance.new("UIListLayout", logScroll)
-logScrollLayout.Padding = UDim.new(0, 4)
-logScrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
+logScrollLayout.Padding, logScrollLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
 
 function registerItemLog(itemName)
     local lbl = Instance.new("TextLabel", logScroll)
-    lbl.Size = UDim2.new(1, -10, 0, 20)
-    lbl.Position = UDim2.new(0, 5, 0, 0)
-    lbl.Text = "[" .. os.date("%H:%M:%S") .. "]  -  " .. itemName
-    lbl.TextColor3 = Color3.fromRGB(200, 200, 200)
-    lbl.Font = Enum.Font.GothamSemibold
-    lbl.TextSize = 12
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.BackgroundTransparency = 1
-    
+    lbl.Size, lbl.Position, lbl.Text = UDim2.new(1, -10, 0, 20), UDim2.new(0, 5, 0, 0), "[" .. os.date("%H:%M:%S") .. "]  -  " .. itemName
+    lbl.TextColor3, lbl.Font, lbl.TextSize, lbl.TextXAlignment, lbl.BackgroundTransparency = Color3.fromRGB(200, 200, 200), Enum.Font.GothamSemibold, 12, Enum.TextXAlignment.Left, 1
     logScroll.CanvasSize = UDim2.new(0, 0, 0, logScrollLayout.AbsoluteContentSize.Y + 10)
     logScroll.CanvasPosition = Vector2.new(0, logScroll.CanvasSize.Y.Offset)
 end
@@ -682,88 +623,39 @@ end
 -- NOTIFICAÇÕES 
 -- ============================================================
 local notifContainer = Instance.new("Frame", gui)
-notifContainer.Size                  = UDim2.new(0, 370, 0, 600)
-notifContainer.Position              = UDim2.new(0, 10, 0.5, -300)
-notifContainer.BackgroundTransparency = 1
-notifContainer.ZIndex                = 20
+notifContainer.Size, notifContainer.Position, notifContainer.BackgroundTransparency, notifContainer.ZIndex = UDim2.new(0, 370, 0, 600), UDim2.new(0, 10, 0.5, -300), 1, 20
 local notifLayout = Instance.new("UIListLayout", notifContainer)
-notifLayout.Padding           = UDim.new(0, 8)
-notifLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+notifLayout.Padding, notifLayout.VerticalAlignment = UDim.new(0, 8), Enum.VerticalAlignment.Top
 
-local function playAlertSound()
-    local ok, err = pcall(function()
-        local s = Instance.new("Sound")
-        s.SoundId = SOUND_ID; s.Volume = 2
-        s.Parent = SoundService
-        s:Play()
-        Debris:AddItem(s, 5)
-    end)
-end
+local function playAlertSound() pcall(function() local s = Instance.new("Sound"); s.SoundId = SOUND_ID; s.Volume = 2; s.Parent = SoundService; s:Play(); Debris:AddItem(s, 5) end) end
 
 local function showItemNotification(itemModel)
     local card = Instance.new("Frame", notifContainer)
-    card.Size = UDim2.new(1, 0, 0, 115)
-    card.BackgroundColor3 = Color3.fromRGB(14, 14, 24); card.ZIndex = 20
+    card.Size, card.BackgroundColor3, card.ZIndex = UDim2.new(1, 0, 0, 115), Color3.fromRGB(14, 14, 24), 20
     Instance.new("UICorner", card).CornerRadius = UDim.new(0, 14)
-    local stroke = Instance.new("UIStroke", card)
-    stroke.Color = ACCENT; stroke.Thickness = 2.5
-
+    local stroke = Instance.new("UIStroke", card); stroke.Color, stroke.Thickness = ACCENT, 2.5
     local bar = Instance.new("Frame", card)
-    bar.Size = UDim2.new(0, 6, 1, -16); bar.Position = UDim2.new(0, 8, 0, 8)
-    bar.BackgroundColor3 = Color3.fromRGB(255, 200, 30); bar.ZIndex = 21
+    bar.Size, bar.Position, bar.BackgroundColor3, bar.ZIndex = UDim2.new(0, 6, 1, -16), UDim2.new(0, 8, 0, 8), Color3.fromRGB(255, 200, 30), 21
     Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
-
     local alertLbl = Instance.new("TextLabel", card)
-    alertLbl.Size = UDim2.new(1, -80, 0, 30); alertLbl.Position = UDim2.new(0, 22, 0, 8)
-    alertLbl.Text = "⚠️  ITEM RARO SPAWNADO!"; alertLbl.TextColor3 = Color3.fromRGB(255, 210, 40)
-    alertLbl.Font = Enum.Font.GothamBold; alertLbl.TextSize = 15
-    alertLbl.TextXAlignment = Enum.TextXAlignment.Left
-    alertLbl.BackgroundTransparency = 1; alertLbl.ZIndex = 21
-
+    alertLbl.Size, alertLbl.Position, alertLbl.Text, alertLbl.TextColor3, alertLbl.Font, alertLbl.TextSize, alertLbl.TextXAlignment, alertLbl.BackgroundTransparency, alertLbl.ZIndex = UDim2.new(1, -80, 0, 30), UDim2.new(0, 22, 0, 8), "⚠️  ITEM RARO SPAWNADO!", Color3.fromRGB(255, 210, 40), Enum.Font.GothamBold, 15, Enum.TextXAlignment.Left, 1, 21
     local nameLbl = Instance.new("TextLabel", card)
-    nameLbl.Size = UDim2.new(1, -30, 0, 42)
-    nameLbl.Position = UDim2.new(0, 22, 0, 36)
-    nameLbl.Text = itemModel.Name
-    nameLbl.TextColor3 = Color3.new(1, 1, 1)
-    nameLbl.Font = Enum.Font.GothamBold
-    nameLbl.TextSize = 24
-    nameLbl.TextXAlignment = Enum.TextXAlignment.Left
-    nameLbl.TextWrapped = true
-    nameLbl.BackgroundTransparency = 1
-    nameLbl.ZIndex = 21
-
+    nameLbl.Size, nameLbl.Position, nameLbl.Text, nameLbl.TextColor3, nameLbl.Font, nameLbl.TextSize, nameLbl.TextXAlignment, nameLbl.TextWrapped, nameLbl.BackgroundTransparency, nameLbl.ZIndex = UDim2.new(1, -30, 0, 42), UDim2.new(0, 22, 0, 36), itemModel.Name, Color3.new(1, 1, 1), Enum.Font.GothamBold, 24, Enum.TextXAlignment.Left, true, 1, 21
     local statusLbl = Instance.new("TextLabel", card)
-    statusLbl.Size = UDim2.new(1, -30, 0, 22); statusLbl.Position = UDim2.new(0, 22, 0, 86)
-    statusLbl.Text = "🟢  No chão — aguardando coleta..."
-    statusLbl.TextColor3 = Color3.fromRGB(80, 255, 120)
-    statusLbl.Font = Enum.Font.GothamSemibold; statusLbl.TextSize = 13
-    statusLbl.TextXAlignment = Enum.TextXAlignment.Left
-    statusLbl.BackgroundTransparency = 1; statusLbl.ZIndex = 21
-
+    statusLbl.Size, statusLbl.Position, statusLbl.Text, statusLbl.TextColor3, statusLbl.Font, statusLbl.TextSize, statusLbl.TextXAlignment, statusLbl.BackgroundTransparency, statusLbl.ZIndex = UDim2.new(1, -30, 0, 22), UDim2.new(0, 22, 0, 86), "🟢  No chão — aguardando coleta...", Color3.fromRGB(80, 255, 120), Enum.Font.GothamSemibold, 13, Enum.TextXAlignment.Left, 1, 21
     local xBtn = Instance.new("TextButton", card)
-    xBtn.Size = UDim2.new(0, 30, 0, 30); xBtn.Position = UDim2.new(1, -36, 0, 6)
-    xBtn.BackgroundTransparency = 1; xBtn.BorderSizePixel = 0
-    xBtn.Text = "X"; xBtn.TextColor3 = Color3.fromRGB(255, 90, 90)
-    xBtn.Font = Enum.Font.GothamBold; xBtn.TextSize = 18; xBtn.ZIndex = 22
-
+    xBtn.Size, xBtn.Position, xBtn.BackgroundTransparency, xBtn.BorderSizePixel, xBtn.Text, xBtn.TextColor3, xBtn.Font, xBtn.TextSize, xBtn.ZIndex = UDim2.new(0, 30, 0, 30), UDim2.new(1, -36, 0, 6), 1, 0, "X", Color3.fromRGB(255, 90, 90), Enum.Font.GothamBold, 18, 22
     playAlertSound()
     card.Position = UDim2.new(-1.1, 0, 0, 0)
     TweenService:Create(card, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Position = UDim2.new(0, 0, 0, 0) }):Play()
-
     local hbConn; local removed = false
     local function removeCard()
-        if removed then return end; removed = true
-        if hbConn then hbConn:Disconnect() end
+        if removed then return end; removed = true; if hbConn then hbConn:Disconnect() end
         TweenService:Create(card, TweenInfo.new(0.2), { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0) }):Play()
         task.delay(0.25, function() if card then card:Destroy() end end)
     end
-
     hbConn = RunService.Heartbeat:Connect(function()
-        if not itemModel or not itemModel.Parent then
-            statusLbl.Text = "🔴  Item sumiu ou foi coletado."
-            statusLbl.TextColor3 = Color3.fromRGB(255, 80, 80)
-            task.wait(1.5); removeCard()
-        end
+        if not itemModel or not itemModel.Parent then statusLbl.Text = "🔴  Item sumiu ou foi coletado."; statusLbl.TextColor3 = Color3.fromRGB(255, 80, 80); task.wait(1.5); removeCard() end
     end)
     xBtn.MouseButton1Click:Connect(removeCard)
 end
@@ -792,9 +684,7 @@ task.spawn(function()
 
                     if (saveAtivo and isSave) or (interactAtivo and isFlush) or (reviveAtivo and isRevive) then
                         obj.HoldDuration = 0; obj.MaxActivationDistance = 99999; obj.RequiresLineOfSight = false
-                        if fireproximityprompt then 
-                            task.spawn(function() fireproximityprompt(obj, 1, true) end) 
-                        end
+                        if fireproximityprompt then task.spawn(function() fireproximityprompt(obj, 1, true) end) end
                     end
                 end
             end
@@ -835,10 +725,7 @@ task.spawn(function()
 
         local validTargets = {}
         for _, model in ipairs(Living:GetChildren()) do
-            -- IGNORA TUDO QUE NÃO FOR UM SKIBIDI VALIDADO NA LISTA
             if not SKIBIDI_LIST[model.Name] then continue end
-            
-            -- Ignora Cadáveres de Jogadores ou Lixo Residual
             if Players:GetPlayerFromCharacter(model) then continue end
             
             local torso = model:FindFirstChild("Torso") or model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
@@ -857,17 +744,11 @@ task.spawn(function()
             end
         end
 
-        if targetMethod == "Weakest First" then
-            table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
-        elseif targetMethod == "Strongest First" then
-            table.sort(validTargets, function(a, b) return a.headSize > b.headSize end)
-        end
+        if targetMethod == "Weakest First" then table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
+        elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
 
         for _, tData in ipairs(validTargets) do
-            local model = tData.model
-            local torso = tData.torso
-            local headSize = tData.headSize
-            
+            local model, torso, headSize = tData.model, tData.torso, tData.headSize
             if currentConnection then currentConnection:Disconnect() end
             _G.IsAimbotting = false
 
@@ -886,53 +767,30 @@ task.spawn(function()
                 local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
                 if hrp then hrp.Velocity = Vector3.new(0, 0, 0) end
                 local combatPos
-                
                 local integrity = (#_v == 17) and 1 or "Crash"
 
                 if farmMethod == "Auto Punch" then
                     local distY = (8 + (headSize * 0.8)) * integrity
-                    local offsetBack = torso.CFrame.LookVector * -3
-                    combatPos = torso.Position + Vector3.new(0, distY, 0) + offsetBack
-                    if player.Character then
-                        player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position))
-                        LMB_Event:FireServer()
-                    end
+                    combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * -3)
+                    if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
                 elseif farmMethod == "Orbital Punch" then
-                    local orbitSpeed = _G.OrbitalSpeed
-                    _G.OrbitalAngle = _G.OrbitalAngle + (orbitSpeed * dt)
+                    _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
                     local orbitRadius = (7 + (headSize * 0.6)) * integrity
-                    local yOffset = 8 + (headSize * 1.0)
-                    combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, yOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
-                    if player.Character then
-                        player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position))
-                        LMB_Event:FireServer()
-                    end
+                    combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, 8 + (headSize * 1.0), math.sin(_G.OrbitalAngle) * orbitRadius)
+                    if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
                 elseif farmMethod == "Auto Pulse Rifle" then
-                    local orbitSpeed = _G.OrbitalSpeed
-                    _G.OrbitalAngle = _G.OrbitalAngle + (orbitSpeed * dt)
-
+                    _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
                     local orbitRadius = (35 + (headSize * 4.0)) * integrity
-                    local yOffset = 30 + (headSize * 2.0)
-                    local rawPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, yOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
-                    
-                    local safeX = math.clamp(rawPos.X, -645, 460)
-                    local safeY = math.clamp(rawPos.Y, -400, 285)
-                    local safeZ = math.clamp(rawPos.Z, -515, 460)
-                    combatPos = Vector3.new(safeX, safeY, safeZ)
+                    local rawPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, 30 + (headSize * 2.0), math.sin(_G.OrbitalAngle) * orbitRadius)
+                    combatPos = Vector3.new(math.clamp(rawPos.X, -645, 460), math.clamp(rawPos.Y, -400, 285), math.clamp(rawPos.Z, -515, 460))
                     
                     if player.Character then
                         local tool = player.Character:FindFirstChild("Pulse Rifle") or player.Backpack:FindFirstChild("Pulse Rifle")
-                        if tool and tool.Parent == player.Backpack then
-                            player.Character.Humanoid:EquipTool(tool)
-                        end
-
+                        if tool and tool.Parent == player.Backpack then player.Character.Humanoid:EquipTool(tool) end
                         player.Character:PivotTo(CFrame.new(combatPos))
-                        
-                        local targetCenter = torso.Position - Vector3.new(0, 0.5, 0)
-                        Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, targetCenter)
-                        
+                        Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, torso.Position - Vector3.new(0, 0.5, 0))
                         _G.IsAimbotting = true
                     end
                 end
@@ -942,58 +800,39 @@ task.spawn(function()
                 if farmMethod == "Auto Pulse Rifle" then
                     local tool = player.Character and player.Character:FindFirstChild("Pulse Rifle")
                     local ammoNode = tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo")
-                    
                     local vp = Workspace.CurrentCamera.ViewportSize
                     local aimX, aimY = vp.X / 2, vp.Y / 2
                     
                     if tool and ammoNode then
                         if ammoNode.Value <= 0 then
                             isReloadingRifle = true
-                            if isShootingRifle then
-                                isShootingRifle = false
-                                VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
-                            end
+                            if isShootingRifle then isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) end
                         elseif isReloadingRifle and ammoNode.Value >= 30 then
                             isReloadingRifle = false
                         end
 
                         if not isReloadingRifle and ammoNode.Value > 0 then
                             VIM:SendMouseMoveEvent(aimX, aimY, game) 
-                            
                             if headSize > 12 then 
-                                if not isShootingRifle then
-                                    isShootingRifle = true
-                                    VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
-                                end
+                                if not isShootingRifle then isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) end
                             else 
                                 if tick() - lastTapTime > 0.25 then
                                     lastTapTime = tick()
                                     if not isShootingRifle then
-                                        isShootingRifle = true
-                                        VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
-                                        task.delay(0.1, function() 
-                                            VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
-                                            isShootingRifle = false
-                                        end)
+                                        isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
+                                        task.delay(0.1, function() VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1); isShootingRifle = false end)
                                     end
                                 end
                             end
                         else
-                            if isShootingRifle then
-                                isShootingRifle = false
-                                VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
-                            end
+                            if isShootingRifle then isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) end
                         end
                     else
-                        if isShootingRifle then
-                            isShootingRifle = false
-                            VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
-                        end
+                        if isShootingRifle then isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) end
                     end
                 elseif farmMethod ~= "Auto Pulse Rifle" and isShootingRifle then
                     local vp = Workspace.CurrentCamera.ViewportSize
-                    isShootingRifle = false
-                    VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    isShootingRifle = false; VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
                 end
                 task.wait(0.1)
                 
@@ -1006,14 +845,11 @@ task.spawn(function()
             until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not currentConnection or not currentConnection.Connected
 
             if currentConnection then currentConnection:Disconnect() end
-            
             if isShootingRifle then
                 local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
-                isShootingRifle = false
+                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1); isShootingRifle = false
             end
             _G.IsAimbotting = false
-            
             break
         end
     end
@@ -1024,7 +860,12 @@ createTpBtn(tabs.Teleport, "Ready Plataform", Vector3.new(557, -468, 465))
 createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
 
 -- ============================================================
--- DRAG (BLINDADO CONTRA O AIMBOT)
+-- ABA 4: TELEPORTS (RENDERIZADOS AGORA)
+-- ============================================================
+-- Já estão criados e designados para tabs.Teleport através da função createTpBtn
+
+-- ============================================================
+-- DRAG 
 -- ============================================================
 local function makeDraggable(obj)
     local dragging, dragStart, startPos
@@ -1048,4 +889,4 @@ end
 makeDraggable(topBar)
 makeDraggable(sidebar)
 
-print("✅ V7.2 — Target Whitelist Ativa. Orbital Slider Injetado.")
+print("✅ V7.3 — Auto Helicopter com Cooldown Tático adicionado.")
