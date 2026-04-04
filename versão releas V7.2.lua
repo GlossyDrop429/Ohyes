@@ -1,4 +1,4 @@
--- 🔥 V7.3 - DROP SCRIPTS | AUTO HELICOPTER (MOTOR ECONÔMICO) & SAFE LOOP 🔥
+-- 🔥 V10.2 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -19,21 +19,21 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V7.3"
+local VERSION      = "V10.2"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
-local SOUND_ID     = "rbxassetid://553564698"
+local SOUND_ID     = "rbxassetid://4590657391" 
 
--- A IDENTIDADE VIP (Obfuscada)
 local _v = string.char(97, 78, 84, 79, 78, 89, 111, 86, 73, 90, 105, 110, 104, 111, 57, 56, 48)
 
 _G.OrbitalAngle = _G.OrbitalAngle or 0
 _G.IsAimbotting = false 
 _G.OrbitalSpeed = 15 
+_G.PR_Reloading = false 
 
 -- ============================================================
--- WHITELIST
+-- WHITELIST DOS SKIBIDIS & ITENS
 -- ============================================================
 local SKIBIDI_LIST = {
     ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true,
@@ -53,7 +53,7 @@ local SKIBIDI_LIST = {
     ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true,
     ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true,
     ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true,
-    ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true,
+    ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true,
     ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true,
     ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true,
     ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true,
@@ -86,588 +86,819 @@ local SKIBIDI_LIST = {
 }
 
 local ITEM_WHITELIST = {
-    ["Astro Destructor : Core"]                  = true,
-    ["Astro Destructor : Gun"]                   = true,
-    ["Astro Destructor : Laser"]                 = true,
-    ["Astro High Impactor : Cannon"]             = true,
-    ["Astro High Impactor : Laser"]              = true,
-    ["Astro Impactor : Cannon"]                  = true,
-    ["Astro Impactor : Laser"]                   = true,
-    ["Astro Interceptor : Mask"]                 = true,
-    ["Astro Interceptor : Spinner"]              = true,
-    ["Astro Interceptor : Wing"]                 = true,
-    ["Astro Obliterator : Gun"]                  = true,
-    ["Astro Obliterator : Spinner"]              = true,
-    ["Astro Specialist : Blade"]                 = true,
-    ["Astro Specialist : Grenade Cannon"]        = true,
-    ["Astro Specialist : Gun"]                   = true,
-    ["Astro Specialist : Spinner"]               = true,
-    ["Astro Strider : Leg"]                      = true,
-    ["Astro Token"]                              = true,
-    ["Astro Trooper : Gun"]                      = true,
-    ["Astro Trooper : Spinner"]                  = true,
-    ["Battle-Pass"]                              = true,
-    ["BlackGear"]                                = true,
-    ["BlueGear"]                                 = true,
-    ["Booster X2 Mastery : 1Hour"]               = true,
-    ["Booster X2 Mastery : 30Min"]               = true,
-    ["Booster X2 Mastery : 6Hour"]               = true,
-    ["Booster X2 Points : 1Hour"]                = true,
-    ["Booster X2 Points : 30Min"]                = true,
-    ["Booster X2 Points : 6Hour"]                = true,
-    ["Clock Spider"]                             = true,
-    ["Drive #A"]                                 = true,
-    ["Drive #B"]                                 = true,
-    ["Drive #C"]                                 = true,
-    ["Drive #D"]                                 = true,
-    ["Drive #E"]                                 = true,
-    ["Drive #SdFE0"]                             = true,
-    ["Energy Core Base"]                         = true,
-    ["Flash Drive #1"]                           = true,
-    ["Flash Drive #2"]                           = true,
-    ["Flash Drive #3"]                           = true,
-    ["Flash Drive #4"]                           = true,
-    ["Flash Drive #5"]                           = true,
-    ["Flash Drive #6"]                           = true,
-    ["Gacha Capsule"]                            = true,
-    ["Green Core Energy"]                        = true,
-    ["GreenGear"]                                = true,
-    ["Honor badge"]                              = true,
-    ["Instant Level 50 Mastery : Normal"]        = true,
-    ["Instant Level 50 Mastery : Normal Titan"]  = true,
-    ["Instant Level 50 Mastery : Special Titan"] = true,
-    ["Instant Level 80 Mastery : Normal"]        = true,
-    ["Instant Level 80 Mastery : Normal Titan"]  = true,
-    ["Instant Level 80 Mastery : Special Titan"] = true,
-    ["Keycard"]                                  = true,
-    ["Legendary Ticket"]                         = true,
-    ["Lighting Module"]                          = true,
-    ["Mastery Card : Normal"]                    = true,
-    ["Mastery Card : Normal II"]                 = true,
-    ["Mastery Card : Normal III"]                = true,
-    ["Mastery Card : Normal Titan"]              = true,
-    ["Mastery Card : Normal Titan II"]           = true,
-    ["Mastery Card : Normal Titan III"]          = true,
-    ["Mastery Card : Special Titan"]             = true,
-    ["Mastery Card : Special Titan II"]          = true,
-    ["Mastery Card : Special Titan III"]         = true,
-    ["Potion"]                                   = true,
-    ["Potion II"]                                = true,
-    ["Potion III"]                               = true,
-    ["RedGear"]                                  = true,
-    ["Scorching Ember"]                          = true,
-    ["Shard"]                                    = true,
-    ["Shard:Brown Camera man"]                   = true,
-    ["Shard:Espada #1"]                          = true,
-    ["Shard:Tri Soilder"]                        = true,
-    ["Toilet Token"]                             = true,
-    ["WhiteGear"]                                = true,
-    ["X18 Core"]                                 = true,
-    ["YellowGear"]                               = true,
+    ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true,
+    ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true,
+    ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true,
+    ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true,
+    ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true,
+    ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true,
+    ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true,
+    ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true,
+    ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true,
+    ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true,
+    ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true,
+    ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true,
+    ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true,
+    ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true,
+    ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true,
+    ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true,
+    ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true,
 }
 
 -- ============================================================
--- CLEANUP
+-- CLEANUP GLOBAL
 -- ============================================================
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
-    if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then
-        v:Destroy()
-    end
+    if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
 end
+local oldPool = Workspace.CurrentCamera:FindFirstChild("DropESP_Pool")
+if oldPool then oldPool:Destroy() end
 
 local gui = Instance.new("ScreenGui")
-gui.Name = SCRIPT_NAME
-gui.ResetOnSpawn = false
-gui.Parent = player:WaitForChild("PlayerGui")
+gui.Name = SCRIPT_NAME; gui.ResetOnSpawn = false; gui.Parent = player:WaitForChild("PlayerGui")
 
--- ============================================================
--- BOTÃO FLUTUANTE
--- ============================================================
+local globalTooltip = Instance.new("TextLabel", gui)
+globalTooltip.Size = UDim2.new(0, 260, 0, 0)
+globalTooltip.AutomaticSize = Enum.AutomaticSize.Y
+globalTooltip.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+globalTooltip.TextColor3 = Color3.fromRGB(220, 220, 220)
+globalTooltip.Font = Enum.Font.GothamSemibold
+globalTooltip.TextSize = 14 
+globalTooltip.TextWrapped = true
+globalTooltip.RichText = true
+globalTooltip.Visible = false
+globalTooltip.ZIndex = 100
+Instance.new("UICorner", globalTooltip).CornerRadius = UDim.new(0, 6)
+local ttStroke = Instance.new("UIStroke", globalTooltip)
+ttStroke.Color = ACCENT
+local ttPad = Instance.new("UIPadding", globalTooltip)
+ttPad.PaddingTop, ttPad.PaddingBottom = UDim.new(0, 10), UDim.new(0, 10)
+ttPad.PaddingLeft, ttPad.PaddingRight = UDim.new(0, 10), UDim.new(0, 10)
+local tooltipConn = nil
+
 local minBtn = Instance.new("ImageButton", gui)
-minBtn.Size               = UDim2.new(0, 55, 0, 55)
-minBtn.Position           = UDim2.new(0, 20, 0.5, -27)
-minBtn.BackgroundTransparency = 1
-minBtn.Image              = ICON_ID
-minBtn.ScaleType          = Enum.ScaleType.Fit
-minBtn.Visible            = false
-minBtn.ZIndex             = 10
+minBtn.Size, minBtn.Position, minBtn.BackgroundTransparency = UDim2.new(0, 55, 0, 55), UDim2.new(0, 20, 0.5, -27), 1
+minBtn.Image, minBtn.ScaleType, minBtn.Visible, minBtn.ZIndex = ICON_ID, Enum.ScaleType.Fit, false, 10
 Instance.new("UICorner", minBtn).CornerRadius = UDim.new(0, 12)
-
 local minBtnBG = Instance.new("Frame", minBtn)
-minBtnBG.Size             = UDim2.new(1, 0, 1, 0)
-minBtnBG.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
-minBtnBG.ZIndex           = 9
+minBtnBG.Size, minBtnBG.BackgroundColor3, minBtnBG.ZIndex = UDim2.new(1, 0, 1, 0), Color3.fromRGB(20, 20, 35), 9
 Instance.new("UICorner", minBtnBG).CornerRadius = UDim.new(0, 12)
 Instance.new("UIStroke", minBtnBG).Color = ACCENT
 
--- ============================================================
--- JANELA PRINCIPAL
--- ============================================================
 local main = Instance.new("Frame", gui)
-main.Size             = UDim2.new(0, 600, 0, 460) 
-main.Position         = UDim2.new(0.3, 0, 0.2, 0)
-main.BackgroundColor3 = BG_MAIN
-main.Visible          = true
+main.Size, main.Position, main.BackgroundColor3, main.Visible = UDim2.new(0, 600, 0, 480), UDim2.new(0.3, 0, 0.2, 0), BG_MAIN, true
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
 
 local topBar = Instance.new("Frame", main)
-topBar.Size             = UDim2.new(1, 0, 0, 36)
-topBar.BackgroundColor3 = BG_TOP
-topBar.ZIndex           = 4
+topBar.Size, topBar.BackgroundColor3, topBar.ZIndex = UDim2.new(1, 0, 0, 36), BG_TOP, 4
 Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
-
 local divider = Instance.new("Frame", topBar)
-divider.Size             = UDim2.new(1, 0, 0, 1)
-divider.Position         = UDim2.new(0, 0, 1, -1)
-divider.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-divider.ZIndex           = 4
+divider.Size, divider.Position, divider.BackgroundColor3, divider.ZIndex = UDim2.new(1, 0, 0, 1), UDim2.new(0, 0, 1, -1), Color3.fromRGB(35, 35, 35), 4
 
 local topTitle = Instance.new("TextLabel", topBar)
-topTitle.Size               = UDim2.new(1, -90, 1, 0)
-topTitle.Position           = UDim2.new(0, 12, 0, 0)
-topTitle.Text               = SCRIPT_NAME .. "  |  " .. "Carregando..."
-topTitle.TextColor3         = ACCENT
-topTitle.Font               = Enum.Font.GothamBold
-topTitle.TextSize           = 13
-topTitle.TextXAlignment     = Enum.TextXAlignment.Left
-topTitle.BackgroundTransparency = 1
-topTitle.ZIndex             = 5
+topTitle.Size, topTitle.Position, topTitle.Text, topTitle.TextColor3, topTitle.Font, topTitle.TextSize, topTitle.TextXAlignment, topTitle.BackgroundTransparency, topTitle.ZIndex = UDim2.new(1, -90, 1, 0), UDim2.new(0, 12, 0, 0), SCRIPT_NAME .. "  |  Carregando...", ACCENT, Enum.Font.GothamBold, 13, Enum.TextXAlignment.Left, 1, 5
 
 task.spawn(function()
-    local lastTimerValue = nil
-    local frozenCount = 0
+    local lastTimerValue, frozenCount = nil, 0
     while task.wait(1) do
-        local waveNode = Workspace:FindFirstChild("Wave")
-        local timerNode = Workspace:FindFirstChild("TimerWave")
-        local shopNode = Workspace:FindFirstChild("CanUseShop")
-        
-        local currentWave = "N/A"
+        local waveNode, timerNode, shopNode = Workspace:FindFirstChild("Wave"), Workspace:FindFirstChild("TimerWave"), Workspace:FindFirstChild("CanUseShop")
+        local currentWave, currentTimer, canShop = "N/A", nil, false
         if waveNode then pcall(function() currentWave = tostring(waveNode.Value) end) end
-        local currentTimer = nil
         if timerNode then pcall(function() currentTimer = tostring(timerNode.Value) end) end
-        local canShop = false
         if shopNode then pcall(function() canShop = (shopNode.Value == true) end) end
 
-        if currentTimer == lastTimerValue and currentTimer ~= nil then
-            frozenCount = frozenCount + 1
-        else
-            frozenCount = 0
-            lastTimerValue = currentTimer
-        end
-
-        local statusText = ""
+        if currentTimer == lastTimerValue and currentTimer ~= nil then frozenCount = frozenCount + 1 else frozenCount = 0; lastTimerValue = currentTimer end
+        
+        local statusText = "Wave: " .. currentWave
         if frozenCount >= 2 then
-            statusText = canShop and ("Wave: " .. currentWave .. " (Intermission)") or "The game hasn't started"
-        else
-            statusText = "Wave: " .. currentWave
+            if canShop then statusText = "Wave: " .. currentWave .. " (Intermission)"
+            else statusText = "The game hasn't started" end
         end
         topTitle.Text = SCRIPT_NAME .. "  |  " .. statusText
     end
 end)
 
 local hideBtn = Instance.new("TextButton", topBar)
-hideBtn.Size               = UDim2.new(0, 24, 0, 24)
-hideBtn.Position           = UDim2.new(1, -58, 0.5, -12)
-hideBtn.BackgroundTransparency = 1
-hideBtn.Text               = "-"
-hideBtn.TextColor3         = Color3.fromRGB(180, 180, 180)
-hideBtn.Font               = Enum.Font.GothamBold
-hideBtn.TextSize           = 20
-hideBtn.ZIndex             = 5
-
+hideBtn.Size, hideBtn.Position, hideBtn.BackgroundTransparency, hideBtn.Text, hideBtn.TextColor3, hideBtn.Font, hideBtn.TextSize, hideBtn.ZIndex = UDim2.new(0, 24, 0, 24), UDim2.new(1, -58, 0.5, -12), 1, "-", Color3.fromRGB(180, 180, 180), Enum.Font.GothamBold, 20, 5
 local closeBtn = Instance.new("TextButton", topBar)
-closeBtn.Size               = UDim2.new(0, 24, 0, 24)
-closeBtn.Position           = UDim2.new(1, -30, 0.5, -12)
-closeBtn.BackgroundTransparency = 1
-closeBtn.Text               = "X"
-closeBtn.TextColor3         = ACCENT
-closeBtn.Font               = Enum.Font.GothamBold
-closeBtn.TextSize           = 20
-closeBtn.ZIndex             = 5
+closeBtn.Size, closeBtn.Position, closeBtn.BackgroundTransparency, closeBtn.Text, closeBtn.TextColor3, closeBtn.Font, closeBtn.TextSize, closeBtn.ZIndex = UDim2.new(0, 24, 0, 24), UDim2.new(1, -30, 0.5, -12), 1, "X", ACCENT, Enum.Font.GothamBold, 20, 5
 
 local sidebar = Instance.new("Frame", main)
-sidebar.Size             = UDim2.new(0, 140, 1, -36)
-sidebar.Position         = UDim2.new(0, 0, 0, 36)
-sidebar.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+sidebar.Size, sidebar.Position, sidebar.BackgroundColor3 = UDim2.new(0, 140, 1, -36), UDim2.new(0, 0, 0, 36), Color3.fromRGB(12, 12, 12)
 Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
 
-local sideTitle = Instance.new("TextLabel", sidebar)
-sideTitle.Size               = UDim2.new(1, 0, 0, 44)
-sideTitle.Text               = "MENU"
-sideTitle.TextColor3         = Color3.fromRGB(100, 100, 100)
-sideTitle.Font               = Enum.Font.GothamBold
-sideTitle.TextSize           = 11
-sideTitle.BackgroundTransparency = 1
-
 local container = Instance.new("Frame", main)
-container.Position           = UDim2.new(0, 150, 0, 46)
-container.Size               = UDim2.new(1, -160, 1, -56)
-container.BackgroundTransparency = 1
+container.Position, container.Size, container.BackgroundTransparency = UDim2.new(0, 150, 0, 46), UDim2.new(1, -160, 1, -56), 1
 
--- ============================================================
--- ABA 1: AUTO FARM, ABA 2: HELICOPTER, ABA 3: ITEMS, ABA 4: TELEPORT
--- ============================================================
 local tabs = {
-    Farm       = Instance.new("ScrollingFrame", container),
-    Helicopter = Instance.new("ScrollingFrame", container),
-    Items      = Instance.new("ScrollingFrame", container),
-    Teleport   = Instance.new("ScrollingFrame", container),
+    Farm     = Instance.new("ScrollingFrame", container),
+    AutoBuy  = Instance.new("ScrollingFrame", container),
+    Items    = Instance.new("ScrollingFrame", container),
+    Visuals  = Instance.new("ScrollingFrame", container),
+    Misc     = Instance.new("ScrollingFrame", container),
+    Teleport = Instance.new("ScrollingFrame", container),
+    Config   = Instance.new("ScrollingFrame", container),
 }
 for _, t in pairs(tabs) do
-    t.Size                   = UDim2.new(1, 0, 1, 0)
-    t.BackgroundTransparency = 1
-    t.CanvasSize             = UDim2.new(0, 0, 5, 0)
-    t.ScrollBarThickness     = 2
-    t.ScrollBarImageColor3   = ACCENT
-    t.Visible                = false
+    t.Size, t.BackgroundTransparency, t.CanvasSize, t.ScrollBarThickness, t.ScrollBarImageColor3, t.Visible = UDim2.new(1, 0, 1, 0), 1, UDim2.new(0, 0, 6, 0), 2, ACCENT, false
     Instance.new("UIListLayout", t).Padding = UDim.new(0, 8)
 end
 tabs.Farm.Visible = true
 
--- ESTADOS GLOBAIS
+-- ============================================================
+-- ESTADOS GLOBAIS E FUNÇÕES UI
+-- ============================================================
 local farmEnabled, interactAtivo, saveAtivo, itemFarmAtivo, itemAtivo = false, false, false, false, false
-local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoBuyHealthAtivo = false, false, false, false
-local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Auto Pulse Rifle"}
-local currentMethodIdx = 1
-local farmMethod = farmMethodsArray[currentMethodIdx]
-local targetMethodsArray = {"Normal", "Weakest First", "Strongest First"}
-local currentTargetIdx = 1
-local targetMethod = targetMethodsArray[currentTargetIdx]
+local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoRunAtivo, autoJoinAtivo = false, false, false, false, false
+local autoBuyHealthAtivo, autoBuyPR, autoBuySL, autoBuyBL = false, false, false, false
+local espToiletsAtivo, espPlayersAtivo, espItemsAtivo = false, false, false
+local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = false, false, false, false
+
+local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Pulse Rifle + Small Laser"}
+local farmMethod = farmMethodsArray[3]
+local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
+local targetMethod = targetMethodsArray[1]
+local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
+local voteMode = "Normal"
+local configModesArray = {"100% AFK Farm"}
+local currentConfig = configModesArray[1]
+
 local currentConnection = nil
+local farmDropdownObj, voteDropdownObj = nil, nil
+
+local objAutoFarm, objAutoFlush, objOrbitalSpeed, objAutoSkipHeli
+local objBuyHealth, objBuyPR, objBuySL, objBuyBL
+local objFarmItems, objItemNotif
+local objAutoJoin, objAutoVote, objAntiAfk, objAutoChooseWeapon
 
 -- ============================================================
--- ITEM QUEUE SYSTEM
+-- LÓGICA DE ITENS E ARMAS
 -- ============================================================
-local itemQueue = {}
-local isProcessingQueue = false
-
-local function getItemPos(item)
-    local ok, pos = pcall(function() return item:IsA("Model") and item:GetPivot().Position or item.Position end)
-    return ok and pos or nil
+local function checkWeaponExists(nameSearch)
+    if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
+    if player.Backpack then for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
+    return false
 end
 
-local function registerItemLog(itemName) end
-
-local function coletarItem(child)
-    if player.Name ~= _v and Players:FindFirstChild(_v) then
-        task.wait(1.5)
+local function checkAmmo(weaponType)
+    local function isMatch(t)
+        local name = string.lower(t.Name)
+        if weaponType == "Small Laser" then return string.find(name, "small") and string.find(name, "laser")
+        elseif weaponType == "Big Laser" then return string.find(name, "large") and string.find(name, "laser")
+        elseif weaponType == "Pulse Rifle" then return string.find(name, "pulse")
+        end
+        return false
     end
-    local prompt = nil
-    local t0 = tick()
-    repeat task.wait(0.05); prompt = child:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not child.Parent or (tick() - t0 > 2)
+    local tool = nil
+    if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and isMatch(t) then tool = t; break end end end
+    if not tool and player.Backpack then for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and isMatch(t) then tool = t; break end end end
+    if tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo") then
+        local maxAmmo = 30
+        if tool.Folder:FindFirstChild("MaxAmmo") then maxAmmo = tool.Folder.MaxAmmo.Value end
+        return tool.Folder.Ammo.Value, maxAmmo
+    end
+    return 0, 30
+end
 
-    if not child.Parent or not prompt then return end
-
-    local savedCFrame = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.CFrame
-    if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
-    task.wait(0.1)
-
-    local pos = getItemPos(child)
-    if pos and player.Character then
-        player.Character:PivotTo(CFrame.new(pos + Vector3.new(0, 2, 0)))
-        task.wait(0.1)
-        prompt.HoldDuration = 0; prompt.MaxActivationDistance = 9999; prompt.RequiresLineOfSight = false
-        if fireproximityprompt then 
-            for i = 1, 5 do 
-                if not child.Parent or not prompt.Parent then break end 
-                fireproximityprompt(prompt, 1, true)
-                task.wait(0.15) 
+local function equipWeapon(methodName)
+    local function isMatch(t)
+        local name = string.lower(t.Name)
+        if methodName == "Small Laser" then return string.find(name, "small") and string.find(name, "laser")
+        elseif methodName == "Big Laser" then return (string.find(name, "large") or string.find(name, "big")) and string.find(name, "laser")
+        elseif methodName == "Pulse Rifle" then return string.find(name, "pulse")
+        end
+        return false
+    end
+    if player.Character then
+        local equipped = player.Character:FindFirstChildWhichIsA("Tool")
+        if equipped and isMatch(equipped) then return equipped end
+        if equipped then equipped.Parent = player.Backpack end
+    end
+    if player.Backpack then
+        for _, t in ipairs(player.Backpack:GetChildren()) do
+            if t:IsA("Tool") and t:FindFirstChild("Folder") and isMatch(t) then
+                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:EquipTool(t)
+                    return t
+                end
             end
         end
-        if registerItemLog then registerItemLog(child.Name) end
     end
-    task.wait(0.2)
-    if savedCFrame and player.Character then player.Character:PivotTo(savedCFrame) end
+    return nil
 end
+
+local itemQueue, isProcessingQueue = {}, false
+local function getItemPos(item) local ok, pos = pcall(function() return item:IsA("Model") and item:GetPivot().Position or item.Position end); return ok and pos or nil end
+local function registerItemLog(itemName) end
+
+local INJECTION_TIME = tick()
 
 local function processItemQueue()
     if isProcessingQueue then return end
     isProcessingQueue = true
-    while #itemQueue > 0 do
+    while #itemQueue > 0 do 
         if not itemFarmAtivo then break end
         local item = table.remove(itemQueue, 1)
-        if item and item.Parent then pcall(coletarItem, item) end
-        task.wait(0.1)
+        
+        if item and item.Parent and item.Name == "Clock Spider" then
+            if (tick() - INJECTION_TIME) < 605 then
+                table.insert(itemQueue, item) 
+                task.wait(1)
+                continue
+            end
+        end
+
+        if item and item.Parent then 
+            if player.Name ~= _v and Players:FindFirstChild(_v) then task.wait(1.5) end
+            local prompt, t0 = nil, tick()
+            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not item.Parent or (tick() - t0 > 2)
+            
+            if item.Parent and prompt then
+                local savedCFrame = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.CFrame
+                if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
+                task.wait(0.1)
+                local pos = getItemPos(item)
+                if pos and player.Character then
+                    player.Character:PivotTo(CFrame.new(pos + Vector3.new(0, 2, 0))); task.wait(0.1)
+                    prompt.HoldDuration = 0; prompt.MaxActivationDistance = 9999; prompt.RequiresLineOfSight = false
+                    if fireproximityprompt then 
+                        for i = 1, 5 do 
+                            if not item.Parent or not prompt.Parent then break end; 
+                            fireproximityprompt(prompt, 1, true); 
+                            task.wait(0.2) 
+                        end 
+                    end
+                end
+                task.wait(0.3)
+                
+                if not item.Parent then
+                    if registerItemLog then registerItemLog(item.Name) end
+                else
+                    if ITEM_WHITELIST[item.Name] then table.insert(itemQueue, item) end
+                end
+                if savedCFrame and player.Character then player.Character:PivotTo(savedCFrame) end
+            end
+        end
+        task.wait(0.1) 
     end
     isProcessingQueue = false
 end
 
--- ============================================================
--- ANTI-AFK
--- ============================================================
-player.Idled:Connect(function()
-    if antiAfkAtivo then
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end
-end)
+Workspace.ChildAdded:Connect(function(child) if not ITEM_WHITELIST[child.Name] then return end; if itemAtivo then task.spawn(function() showItemNotification(child) end) end; if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end end)
 
 -- ============================================================
 -- STAY IN ROUND
 -- ============================================================
 local stayCorners = {
-    Vector3.new(-657, 294, -532), 
-    Vector3.new(-657, 294, 473),  
-    Vector3.new(472, 294, 473),   
-    Vector3.new(476, 293, -527)   
+    Vector3.new(-657, 280, -532), 
+    Vector3.new(-657, 280, 473),  
+    Vector3.new(472, 280, 473),   
+    Vector3.new(476, 280, -527)   
 }
 task.spawn(function()
     local cIdx = 1
     while true do
         task.wait(0.6)
         if stayInRoundAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            player.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-            player.Character:PivotTo(CFrame.new(stayCorners[cIdx]))
-            cIdx = cIdx + 1
-            if cIdx > #stayCorners then cIdx = 1 end
+            player.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0); player.Character:PivotTo(CFrame.new(stayCorners[cIdx]))
+            cIdx = cIdx + 1; if cIdx > #stayCorners then cIdx = 1 end
         end
     end
 end)
 
 -- ============================================================
--- UI COMPONENTS (BOTÕES E ABAS)
+-- MENUS LATERAIS E CONSTRUTORES UI NATIVOS
 -- ============================================================
 closeBtn.MouseButton1Click:Connect(function() gui:Destroy() end)
 hideBtn.MouseButton1Click:Connect(function() main.Visible = false; minBtn.Visible = true end)
-minBtn.MouseButton1Click:Connect(function() main.Visible = true; minBtn.Visible = false end)
 
-local function createTabBtn(name, targetTab, offsetIdx)
+local function createTabBtn(name, targetTab, offsetIdx, tooltipData)
     local btn = Instance.new("TextButton", sidebar)
-    btn.Size             = UDim2.new(0.9, 0, 0, 34)
-    btn.Position         = UDim2.new(0.05, 0, 0, 44 + offsetIdx * 40)
-    btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    btn.Text             = name
-    btn.TextColor3       = Color3.new(0.7, 0.7, 0.7)
-    btn.Font             = Enum.Font.GothamSemibold
-    btn.TextSize         = 13
+    btn.Size, btn.Position, btn.BackgroundColor3, btn.Text, btn.TextColor3, btn.Font, btn.TextSize = UDim2.new(0.9, 0, 0, 34), UDim2.new(0.05, 0, 0, 44 + offsetIdx * 40), Color3.fromRGB(20, 20, 20), "", Color3.new(0.7, 0.7, 0.7), Enum.Font.GothamSemibold, 13
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+    local titleContainer = Instance.new("Frame", btn)
+    titleContainer.Size, titleContainer.Position, titleContainer.BackgroundTransparency = UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), 1
+    local listLayout = Instance.new("UIListLayout", titleContainer)
+    listLayout.FillDirection, listLayout.SortOrder, listLayout.VerticalAlignment, listLayout.HorizontalAlignment, listLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, Enum.HorizontalAlignment.Center, UDim.new(0, 6)
+
+    local label = Instance.new("TextLabel", titleContainer)
+    label.AutomaticSize, label.Size, label.Text, label.TextColor3, label.Font, label.TextSize, label.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), name, Color3.new(0.5, 0.5, 0.5), Enum.Font.GothamSemibold, 13, 1
+    
+    if targetTab.Visible then label.TextColor3 = ACCENT end
+
+    if tooltipData then
+        local tColor = Color3.fromRGB(150, 150, 150); local hexColor = "#969696"
+        if tooltipData.color == "red" then tColor = Color3.fromRGB(255, 50, 50); hexColor = "#FF3232"
+        elseif tooltipData.color == "yellow" then tColor = Color3.fromRGB(255, 200, 0); hexColor = "#FFC800"
+        elseif tooltipData.color == "gray" or tooltipData.color == "grey" then tColor = Color3.fromRGB(150, 150, 150); hexColor = "#969696" end
+
+        local parsedText = string.gsub(tooltipData.text, "<u>(.-)</u>", "<u><font color=\""..hexColor.."\">%1</font></u>")
+        local icon = Instance.new("TextLabel", titleContainer)
+        icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
+        
+        icon.MouseEnter:Connect(function()
+            globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
+            if tooltipConn then tooltipConn:Disconnect() end
+            tooltipConn = RunService.RenderStepped:Connect(function()
+                local mPos = UserInputService:GetMouseLocation()
+                globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
+            end)
+        end)
+        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+    end
+
     btn.MouseButton1Click:Connect(function()
-        for _, t in pairs(tabs) do t.Visible = false end
-        targetTab.Visible = true
-        for _, b in ipairs(sidebar:GetChildren()) do if b:IsA("TextButton") then b.TextColor3 = Color3.new(0.5, 0.5, 0.5) end end
-        btn.TextColor3 = ACCENT
+        for _, t in pairs(tabs) do t.Visible = false end; targetTab.Visible = true
+        for _, b in ipairs(sidebar:GetChildren()) do 
+            if b:IsA("TextButton") then
+                local lbl = b:FindFirstChildWhichIsA("Frame") and b:FindFirstChildWhichIsA("Frame"):FindFirstChildWhichIsA("TextLabel")
+                if lbl then lbl.TextColor3 = Color3.new(0.5, 0.5, 0.5) end
+            end 
+        end
+        label.TextColor3 = ACCENT
     end)
 end
 
 createTabBtn("Auto Farm", tabs.Farm, 0)
-createTabBtn("Auto Heli", tabs.Helicopter, 1) -- NOVA ABA
-createTabBtn("Items",     tabs.Items, 2)
-createTabBtn("Teleport",  tabs.Teleport, 3)
+createTabBtn("Auto Buy", tabs.AutoBuy, 1)
+createTabBtn("Items", tabs.Items, 2)
+createTabBtn("Visuals", tabs.Visuals, 3)
+createTabBtn("Misc", tabs.Misc, 4)
+createTabBtn("Teleport", tabs.Teleport, 5)
+createTabBtn("Save Config", tabs.Config, 6, {color = "gray", text = "I'm working on it"})
 
-local function createToggle(parent, text, callback)
-    local frame = Instance.new("Frame", parent)
-    frame.Size             = UDim2.new(1, 0, 0, 45)
-    frame.BackgroundColor3 = BG_SECONDARY
+local function createToggle(parent, text, tooltipData, callback)
+    if type(tooltipData) == "function" then callback = tooltipData; tooltipData = nil end
+
+    local frame = Instance.new("Frame", parent); frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 45), BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-    local label = Instance.new("TextLabel", frame)
-    label.Size, label.Position, label.Text = UDim2.new(0.75, 0, 1, 0), UDim2.new(0, 10, 0, 0), text
-    label.TextColor3, label.Font, label.TextSize = Color3.new(1, 1, 1), Enum.Font.Ubuntu, 16
-    label.TextXAlignment, label.BackgroundTransparency = Enum.TextXAlignment.Left, 1
-    local switchBG = Instance.new("Frame", frame)
-    switchBG.Size, switchBG.Position, switchBG.BackgroundColor3 = UDim2.new(0, 36, 0, 18), UDim2.new(1, -46, 0.5, -9), Color3.fromRGB(40, 40, 40)
-    Instance.new("UICorner", switchBG).CornerRadius = UDim.new(1, 0)
-    local circle = Instance.new("Frame", switchBG)
-    circle.Size, circle.Position, circle.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(0, 2, 0.5, -7), Color3.new(1, 1, 1)
-    Instance.new("UICorner", circle).CornerRadius = UDim.new(1, 0)
 
-    local state = false
-    local btn   = Instance.new("TextButton", frame)
-    btn.Size, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 0), 1, ""
-    btn.MouseButton1Click:Connect(function()
-        state = not state
+    local titleContainer = Instance.new("Frame", frame)
+    titleContainer.Size, titleContainer.Position, titleContainer.BackgroundTransparency = UDim2.new(0.75, 0, 1, 0), UDim2.new(0, 10, 0, 0), 1
+    local listLayout = Instance.new("UIListLayout", titleContainer)
+    listLayout.FillDirection, listLayout.SortOrder, listLayout.VerticalAlignment, listLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, UDim.new(0, 6)
+
+    local label = Instance.new("TextLabel", titleContainer)
+    label.AutomaticSize, label.Size, label.Text, label.TextColor3, label.Font, label.TextSize, label.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), text, Color3.new(1, 1, 1), Enum.Font.Ubuntu, 16, 1
+    
+    if tooltipData then
+        local tColor = Color3.fromRGB(150, 150, 150); local hexColor = "#969696"
+        if tooltipData.color == "red" then tColor = Color3.fromRGB(255, 50, 50); hexColor = "#FF3232"
+        elseif tooltipData.color == "yellow" then tColor = Color3.fromRGB(255, 200, 0); hexColor = "#FFC800" end
+
+        local parsedText = string.gsub(tooltipData.text, "<u>(.-)</u>", "<u><font color=\""..hexColor.."\">%1</font></u>")
+        local icon = Instance.new("TextLabel", titleContainer)
+        icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
+        
+        icon.MouseEnter:Connect(function()
+            globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
+            if tooltipConn then tooltipConn:Disconnect() end
+            tooltipConn = RunService.RenderStepped:Connect(function()
+                local mPos = UserInputService:GetMouseLocation()
+                globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
+            end)
+        end)
+        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+    end
+
+    local switchBG = Instance.new("Frame", frame); switchBG.Size, switchBG.Position, switchBG.BackgroundColor3 = UDim2.new(0, 36, 0, 18), UDim2.new(1, -46, 0.5, -9), Color3.fromRGB(40, 40, 40)
+    Instance.new("UICorner", switchBG).CornerRadius = UDim.new(1, 0)
+    local circle = Instance.new("Frame", switchBG); circle.Size, circle.Position, circle.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(0, 2, 0.5, -7), Color3.new(1, 1, 1)
+    Instance.new("UICorner", circle).CornerRadius = UDim.new(1, 0)
+    
+    local state = false; local btn = Instance.new("TextButton", frame); btn.Size, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 0), 1, ""
+    
+    local obj = {}
+    function obj:Set(newState)
+        if state == newState then return end
+        state = newState
         TweenService:Create(circle, TweenInfo.new(0.2), { Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7) }):Play()
         TweenService:Create(switchBG, TweenInfo.new(0.2), { BackgroundColor3 = state and ACCENT or Color3.fromRGB(40, 40, 40) }):Play()
         callback(state)
-    end)
+    end
+    btn.MouseButton1Click:Connect(function() obj:Set(not state) end)
+    return obj
 end
 
 local function createSlider(parent, text, min, max, default, callback)
-    local frame = Instance.new("Frame", parent)
-    frame.Size = UDim2.new(1, 0, 0, 50)
-    frame.BackgroundColor3 = BG_SECONDARY
+    local frame = Instance.new("Frame", parent); frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 50), BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-    local label = Instance.new("TextLabel", frame)
-    label.Size, label.Position, label.Text = UDim2.new(1, -20, 0, 20), UDim2.new(0, 10, 0, 5), text .. ": " .. default
-    label.TextColor3, label.Font, label.TextSize, label.TextXAlignment, label.BackgroundTransparency = Color3.new(1,1,1), Enum.Font.Ubuntu, 14, Enum.TextXAlignment.Left, 1
-    local track = Instance.new("Frame", frame)
-    track.Size, track.Position, track.BackgroundColor3 = UDim2.new(1, -20, 0, 6), UDim2.new(0, 10, 0, 32), Color3.fromRGB(40,40,40)
+    local label = Instance.new("TextLabel", frame); label.Size, label.Position, label.Text, label.TextColor3, label.Font, label.TextSize, label.TextXAlignment, label.BackgroundTransparency = UDim2.new(1, -20, 0, 20), UDim2.new(0, 10, 0, 5), text .. ": " .. default, Color3.new(1,1,1), Enum.Font.Ubuntu, 14, Enum.TextXAlignment.Left, 1
+    local track = Instance.new("Frame", frame); track.Size, track.Position, track.BackgroundColor3 = UDim2.new(1, -20, 0, 6), UDim2.new(0, 10, 0, 32), Color3.fromRGB(40,40,40)
     Instance.new("UICorner", track).CornerRadius = UDim.new(1,0)
-    local fill = Instance.new("Frame", track)
-    fill.Size, fill.BackgroundColor3 = UDim2.new((default - min)/(max - min), 0, 1, 0), ACCENT
+    local fill = Instance.new("Frame", track); fill.Size, fill.BackgroundColor3 = UDim2.new((default - min)/(max - min), 0, 1, 0), ACCENT
     Instance.new("UICorner", fill).CornerRadius = UDim.new(1,0)
-    local knob = Instance.new("Frame", fill)
-    knob.Size, knob.Position, knob.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(1, -7, 0.5, -7), Color3.new(1,1,1)
+    local knob = Instance.new("Frame", fill); knob.Size, knob.Position, knob.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(1, -7, 0.5, -7), Color3.new(1,1,1)
     Instance.new("UICorner", knob).CornerRadius = UDim.new(1,0)
-    
-    local btn = Instance.new("TextButton", track)
-    btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 20), UDim2.new(0, 0, 0.5, -10), 1, ""
+    local btn = Instance.new("TextButton", track); btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 20), UDim2.new(0, 0, 0.5, -10), 1, ""
     local dragging = false
+    
+    local obj = {}
+    function obj:Set(val)
+        val = math.clamp(val, min, max)
+        local percent = (val - min) / (max - min)
+        fill.Size = UDim2.new(percent, 0, 1, 0); label.Text = text .. ": " .. val; callback(val)
+    end
+
     local function update(input)
         local pos = math.clamp(input.Position.X - track.AbsolutePosition.X, 0, track.AbsoluteSize.X)
-        local percent = pos / track.AbsoluteSize.X
-        local val = math.floor(min + (max - min) * percent)
-        fill.Size = UDim2.new(percent, 0, 1, 0)
-        label.Text = text .. ": " .. val
-        callback(val)
+        local percent = pos / track.AbsoluteSize.X; local val = math.floor(min + (max - min) * percent)
+        obj:Set(val)
     end
     btn.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input) end end)
     UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end end)
     UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
+    return obj
 end
 
-local function createTpBtn(parent, name, coords, isDanger)
+local function createTpBtn(parent, name, coords, isDanger, tooltipData)
     local btn = Instance.new("TextButton", parent)
-    btn.Size, btn.BackgroundColor3 = UDim2.new(1, 0, 0, 40), isDanger and Color3.fromRGB(120, 40, 40) or Color3.fromRGB(35, 35, 35)
-    btn.Text, btn.TextColor3, btn.Font, btn.TextSize = name, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 14
+    btn.Size, btn.BackgroundColor3, btn.Text = UDim2.new(1, 0, 0, 40), isDanger and Color3.fromRGB(120, 40, 40) or Color3.fromRGB(35, 35, 35), ""
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-    btn.MouseButton1Click:Connect(function()
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            player.Character.HumanoidRootPart.CFrame = CFrame.new(coords)
-        end
+
+    local titleContainer = Instance.new("Frame", btn)
+    titleContainer.Size, titleContainer.BackgroundTransparency = UDim2.new(1, 0, 1, 0), 1
+    local listLayout = Instance.new("UIListLayout", titleContainer)
+    listLayout.FillDirection, listLayout.SortOrder, listLayout.VerticalAlignment, listLayout.HorizontalAlignment, listLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, Enum.HorizontalAlignment.Center, UDim.new(0, 6)
+
+    local label = Instance.new("TextLabel", titleContainer)
+    label.AutomaticSize, label.Size, label.Text, label.TextColor3, label.Font, label.TextSize, label.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), name, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 14, 1
+
+    if tooltipData then
+        local tColor = Color3.fromRGB(150, 150, 150); local hexColor = "#969696"
+        if tooltipData.color == "red" then tColor = Color3.fromRGB(255, 50, 50); hexColor = "#FF3232"
+        elseif tooltipData.color == "yellow" then tColor = Color3.fromRGB(255, 200, 0); hexColor = "#FFC800" end
+
+        local parsedText = string.gsub(tooltipData.text, "<u>(.-)</u>", "<u><font color=\""..hexColor.."\">%1</font></u>")
+        local icon = Instance.new("TextLabel", titleContainer)
+        icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
+        
+        icon.MouseEnter:Connect(function()
+            globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
+            if tooltipConn then tooltipConn:Disconnect() end
+            tooltipConn = RunService.RenderStepped:Connect(function()
+                local mPos = UserInputService:GetMouseLocation()
+                globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
+            end)
+        end)
+        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+    end
+
+    btn.MouseButton1Click:Connect(function() if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then player.Character.HumanoidRootPart.CFrame = CFrame.new(coords) end end)
+end
+
+local function createInlineDropdown(parent, titlePrefix, optionsList, defaultOption, callback)
+    local container = Instance.new("Frame", parent)
+    container.Size, container.BackgroundTransparency, container.ClipsDescendants = UDim2.new(1, 0, 0, 40), 1, true
+    local mainBtn = Instance.new("TextButton", container)
+    mainBtn.Size, mainBtn.BackgroundColor3, mainBtn.Text, mainBtn.TextColor3, mainBtn.Font, mainBtn.TextSize = UDim2.new(1, 0, 0, 40), Color3.fromRGB(30, 30, 45), titlePrefix .. defaultOption, ACCENT, Enum.Font.GothamBold, 14
+    Instance.new("UICorner", mainBtn).CornerRadius = UDim.new(0, 6)
+    local optionsFrame = Instance.new("Frame", container)
+    optionsFrame.Size, optionsFrame.Position, optionsFrame.BackgroundTransparency = UDim2.new(1, 0, 0, #optionsList * 36 + (#optionsList - 1) * 4), UDim2.new(0, 0, 0, 44), 1
+    local optLayout = Instance.new("UIListLayout", optionsFrame); optLayout.Padding, optLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
+
+    local isOpen = false
+    mainBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        TweenService:Create(container, TweenInfo.new(0.2), {Size = isOpen and UDim2.new(1, 0, 0, 44 + optionsFrame.Size.Y.Offset) or UDim2.new(1, 0, 0, 40)}):Play()
     end)
+    
+    local obj = {}
+    function obj:UpdateText(txt) mainBtn.Text = titlePrefix .. txt end
+
+    for _, opt in ipairs(optionsList) do
+        local btn = Instance.new("TextButton", optionsFrame)
+        btn.Size, btn.BackgroundColor3, btn.Text, btn.TextColor3, btn.Font, btn.TextSize = UDim2.new(1, 0, 0, 36), Color3.fromRGB(20, 20, 30), opt, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 13
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+        btn.MouseButton1Click:Connect(function()
+            obj:UpdateText(opt); isOpen = false; TweenService:Create(container, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 40)}):Play()
+            callback(opt)
+        end)
+    end
+    return obj
 end
 
 -- ============================================================
--- ABA 1: AUTO FARM 
+-- POPULANDO AS ABAS
 -- ============================================================
-local methodBtn = Instance.new("TextButton", tabs.Farm)
-methodBtn.Size, methodBtn.BackgroundColor3, methodBtn.Text = UDim2.new(1, 0, 0, 40), Color3.fromRGB(30, 30, 45), "Method: " .. farmMethod
-methodBtn.TextColor3, methodBtn.Font, methodBtn.TextSize = ACCENT, Enum.Font.GothamBold, 14
-Instance.new("UICorner", methodBtn).CornerRadius = UDim.new(0, 6)
-methodBtn.MouseButton1Click:Connect(function()
-    currentMethodIdx = currentMethodIdx + 1
-    if currentMethodIdx > #farmMethodsArray then currentMethodIdx = 1 end
-    farmMethod = farmMethodsArray[currentMethodIdx]
-    methodBtn.Text = "Method: " .. farmMethod
-end)
-
-local targetBtn = Instance.new("TextButton", tabs.Farm)
-targetBtn.Size, targetBtn.BackgroundColor3, targetBtn.Text = UDim2.new(1, 0, 0, 40), Color3.fromRGB(40, 30, 30), "Target: " .. targetMethod
-targetBtn.TextColor3, targetBtn.Font, targetBtn.TextSize = Color3.fromRGB(255, 100, 100), Enum.Font.GothamBold, 14
-Instance.new("UICorner", targetBtn).CornerRadius = UDim.new(0, 6)
-targetBtn.MouseButton1Click:Connect(function()
-    currentTargetIdx = currentTargetIdx + 1
-    if currentTargetIdx > #targetMethodsArray then currentTargetIdx = 1 end
-    targetMethod = targetMethodsArray[currentTargetIdx]
-    targetBtn.Text = "Target: " .. targetMethod
-end)
-
-createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
-createToggle(tabs.Farm, "Auto Farm",                 function(s) farmEnabled   = s end)
+-- ABA 1: FARM
+farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
+createInlineDropdown(tabs.Farm, "Target: ", targetMethodsArray, targetMethod, function(val) targetMethod = val end)
+objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
+objAutoFarm = createToggle(tabs.Farm, "Auto Farm",                 function(s) farmEnabled   = s end)
 createToggle(tabs.Farm, "Auto Revive Player",        function(s) reviveAtivo   = s end)
-createToggle(tabs.Farm, "Auto Flush & Save",         function(s) interactAtivo = s; saveAtivo = s end)
-createToggle(tabs.Farm, "Anti-AFK (Invisível)",      function(s) antiAfkAtivo  = s end)
-createToggle(tabs.Farm, "Stay In Round (Teleport)",  function(s) stayInRoundAtivo = s end)
+objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save",         function(s) interactAtivo = s; saveAtivo = s end)
+objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
 
--- ============================================================
--- ABA 2: AUTO HELICOPTER (NOVO)
--- ============================================================
-createToggle(tabs.Helicopter, "Auto Buy Health", function(s) autoBuyHealthAtivo = s end)
+-- ABA 2: AUTO BUY
+objBuyHealth = createToggle(tabs.AutoBuy, "Auto Buy Health",       function(s) autoBuyHealthAtivo = s end)
+objBuyPR = createToggle(tabs.AutoBuy, "Auto Buy Pulse Rifle", {color = "yellow", text = "Only activate this option if your character has it in that store"}, function(s) autoBuyPR = s end)
+objBuySL = createToggle(tabs.AutoBuy, "Auto Buy Small Laser", {color = "yellow", text = "Only activate this option if your character has it in that store"}, function(s) autoBuySL = s end)
+objBuyBL = createToggle(tabs.AutoBuy, "Auto Buy Big Laser", {color = "red", text = "This function can only be activated if you have the <u>Big Camcorder Man</u> equipped."}, function(s) autoBuyBL = s end)
 
 task.spawn(function()
     local shopRemote = ReplicatedStorage:WaitForChild("ShopSystem")
     while true do
-        task.wait(1) -- COOLDOWN TÁTICO: Protege contra kick por Remote Spam
-        if not autoBuyHealthAtivo then continue end
-        
+        task.wait(1) 
         local shopNode = Workspace:FindFirstChild("CanUseShop")
         if shopNode and shopNode.Value == true then
-            if player.Character then
+            if autoBuyHealthAtivo and player.Character then
                 local hum = player.Character:FindFirstChildWhichIsA("Humanoid")
-                -- GASTO INTELIGENTE: Só atira o remote se realmente faltar vida
-                if hum and hum.Health < hum.MaxHealth and hum.Health > 0 then
-                    pcall(function()
-                        shopRemote:FireServer("Buy", "FillHP")
-                    end)
+                if hum and hum.Health < hum.MaxHealth and hum.Health > 0 then pcall(function() shopRemote:FireServer("Buy", "FillHP") end) end
+            end
+            if autoBuyPR and not checkWeaponExists("pulse") then pcall(function() shopRemote:FireServer("Buy", "Pulse Rifle") end) end
+            if autoBuySL and not checkWeaponExists("small") then pcall(function() shopRemote:FireServer("Buy", "Small Laser Gun") end) end
+            if autoBuyBL and not checkWeaponExists("large") then pcall(function() shopRemote:FireServer("Buy", "Large Laser Gun") end) end
+        end
+    end
+end)
+
+-- ABA 3: ITEMS
+objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) itemFarmAtivo = s; if s then for _, c in ipairs(Workspace:GetChildren()) do if ITEM_WHITELIST[c.Name] then table.insert(itemQueue, c) end end; task.spawn(processItemQueue) else itemQueue = {} end end)
+objItemNotif = createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
+local logTitle = Instance.new("TextLabel", tabs.Items); logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
+local logScroll = Instance.new("ScrollingFrame", tabs.Items); logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
+Instance.new("UICorner", logScroll).CornerRadius = UDim.new(0, 8)
+local logScrollLayout = Instance.new("UIListLayout", logScroll); logScrollLayout.Padding, logScrollLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
+
+function registerItemLog(itemName)
+    local lbl = Instance.new("TextLabel", logScroll); lbl.Size, lbl.Position, lbl.Text, lbl.TextColor3, lbl.Font, lbl.TextSize, lbl.TextXAlignment, lbl.BackgroundTransparency = UDim2.new(1, -10, 0, 20), UDim2.new(0, 5, 0, 0), "[" .. os.date("%H:%M:%S") .. "]  -  " .. itemName, Color3.fromRGB(200, 200, 200), Enum.Font.GothamSemibold, 12, Enum.TextXAlignment.Left, 1
+    logScroll.CanvasSize = UDim2.new(0, 0, 0, logScrollLayout.AbsoluteContentSize.Y + 10); logScroll.CanvasPosition = Vector2.new(0, logScroll.CanvasSize.Y.Offset)
+end
+
+-- ============================================================
+-- ABA 4: VISUALS (O MOTOR DE ESP POR OBJECT POOLING)
+-- ============================================================
+createToggle(tabs.Visuals, "Esp Toilets", function(s) espToiletsAtivo = s end)
+createToggle(tabs.Visuals, "Esp Players", function(s) espPlayersAtivo = s end)
+createToggle(tabs.Visuals, "Esp Items",   function(s) espItemsAtivo = s end)
+
+local ESP_POOL = {}
+local MAX_HIGHLIGHTS = 25
+local espFolder = Instance.new("Folder")
+espFolder.Name = "DropESP_Pool"
+espFolder.Parent = Workspace.CurrentCamera 
+
+for i = 1, MAX_HIGHLIGHTS do
+    local hl = Instance.new("Highlight")
+    hl.FillTransparency = 0.85
+    hl.OutlineTransparency = 0
+    hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    hl.Enabled = false
+    hl.Parent = espFolder
+    table.insert(ESP_POOL, hl)
+end
+
+task.spawn(function()
+    while task.wait(0.1) do
+        local validEntities = {}
+        local myPos = player.Character and player.Character:GetPivot().Position or Workspace.CurrentCamera.CFrame.Position
+
+        if espToiletsAtivo then
+            for _, model in ipairs(Living:GetChildren()) do
+                if SKIBIDI_LIST[model.Name] and not Players:GetPlayerFromCharacter(model) then
+                    local isDead = false
+                    local f1 = model:FindFirstChild("1")
+                    if f1 and f1:FindFirstChild("BallSocketConstraint") then isDead = true end
+                    local hum = model:FindFirstChildWhichIsA("Humanoid")
+                    if hum and hum.Health <= 0 then isDead = true end
+                    
+                    if not isDead then
+                        table.insert(validEntities, {
+                            inst = model,
+                            color = Color3.fromRGB(255, 0, 0),
+                            dist = (model:GetPivot().Position - myPos).Magnitude
+                        })
+                    end
                 end
+            end
+        end
+
+        if espPlayersAtivo then
+            for _, p in ipairs(Players:GetPlayers()) do
+                if p ~= player and p.Character then
+                    local hum = p.Character:FindFirstChild("Humanoid")
+                    if hum and hum.Health > 0 then
+                        table.insert(validEntities, {
+                            inst = p.Character,
+                            color = Color3.fromRGB(0, 255, 0),
+                            dist = (p.Character:GetPivot().Position - myPos).Magnitude
+                        })
+                    end
+                end
+            end
+        end
+
+        if espItemsAtivo then
+            for _, item in ipairs(Workspace:GetChildren()) do
+                if ITEM_WHITELIST[item.Name] then
+                    local pos = getItemPos(item)
+                    table.insert(validEntities, {
+                        inst = item,
+                        color = Color3.fromRGB(255, 255, 0),
+                        dist = pos and (pos - myPos).Magnitude or 99999
+                    })
+                end
+            end
+        end
+
+        table.sort(validEntities, function(a, b) return a.dist < b.dist end)
+
+        for i = 1, MAX_HIGHLIGHTS do
+            local hl = ESP_POOL[i]
+            local targetData = validEntities[i]
+            
+            if targetData then
+                if hl.Adornee ~= targetData.inst then hl.Adornee = targetData.inst end
+                if hl.FillColor ~= targetData.color then hl.FillColor = targetData.color end
+                if not hl.Enabled then hl.Enabled = true end
+            else
+                if hl.Adornee ~= nil then hl.Adornee = nil end
+                if hl.Enabled then hl.Enabled = false end
             end
         end
     end
 end)
 
--- ============================================================
--- ABA 3: ITEMS 
--- ============================================================
-createToggle(tabs.Items, "Farm Items", function(s)
-    itemFarmAtivo = s
-    if s then 
-        for _, c in ipairs(Workspace:GetChildren()) do 
-            if ITEM_WHITELIST[c.Name] then table.insert(itemQueue, c) end 
-        end
-        task.spawn(processItemQueue) 
-    else
-        itemQueue = {}
+-- ABA 5: MISC
+objAutoJoin = createToggle(tabs.Misc, "Auto Join (Ready)", {color = "yellow", text = "May present problems"}, function(s) autoJoinAtivo = s end)
+voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
+objAutoVote = createToggle(tabs.Misc, "Auto Vote",                 function(s) autoVoteAtivo = s end)
+objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", {color = "yellow", text = "<u>experimental option, not recommended for use.</u>"}, function(s) autoChooseWeaponAtivo = s end)
+createToggle(tabs.Misc, "Auto Cure Plunger", {color = "red", text = "Only use if you have the plunger equipped."}, function(s) autoCureAtivo = s end)
+objAntiAfk = createToggle(tabs.Misc, "Anti-AFK",                  function(s) antiAfkAtivo = s end)
+createToggle(tabs.Misc, "Stay In Round",             function(s) stayInRoundAtivo = s end)
+createToggle(tabs.Misc, "Auto Run",                  function(s) autoRunAtivo = s end)
+
+-- ABA 6: TELEPORT
+createTpBtn(tabs.Teleport, "Spawn (Lobby)",   Vector3.new(611, -468, 529), false, {color = "yellow", text = "Be careful not to teleport during the match."})
+createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
+
+-- ABA 7: SAVE CONFIG
+createInlineDropdown(tabs.Config, "Config: ", configModesArray, currentConfig, function(val) currentConfig = val end)
+
+local loadBtn = Instance.new("TextButton", tabs.Config)
+loadBtn.Size, loadBtn.BackgroundColor3, loadBtn.Text = UDim2.new(1, 0, 0, 45), Color3.fromRGB(40, 100, 40), ""
+Instance.new("UICorner", loadBtn).CornerRadius = UDim.new(0, 6)
+
+local loadTitleContainer = Instance.new("Frame", loadBtn)
+loadTitleContainer.Size, loadTitleContainer.BackgroundTransparency = UDim2.new(1, 0, 1, 0), 1
+local loadLayout = Instance.new("UIListLayout", loadTitleContainer)
+loadLayout.FillDirection, loadLayout.SortOrder, loadLayout.VerticalAlignment, loadLayout.HorizontalAlignment, loadLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, Enum.HorizontalAlignment.Center, UDim.new(0, 6)
+
+local loadLabel = Instance.new("TextLabel", loadTitleContainer)
+loadLabel.AutomaticSize, loadLabel.Size, loadLabel.Text, loadLabel.TextColor3, loadLabel.Font, loadLabel.TextSize, loadLabel.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), "Load Selected Config", Color3.new(1, 1, 1), Enum.Font.GothamBold, 14, 1
+
+local loadIcon = Instance.new("TextLabel", loadTitleContainer)
+loadIcon.Size, loadIcon.BackgroundTransparency, loadIcon.Text, loadIcon.Font, loadIcon.TextSize, loadIcon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, Color3.fromRGB(255, 200, 0)
+
+loadIcon.MouseEnter:Connect(function()
+    globalTooltip.Text = "Don't forget to change the mode in Auto Vote"
+    ttStroke.Color = Color3.fromRGB(255, 200, 0); globalTooltip.Visible = true
+    if tooltipConn then tooltipConn:Disconnect() end
+    tooltipConn = RunService.RenderStepped:Connect(function()
+        local mPos = UserInputService:GetMouseLocation()
+        globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
+    end)
+end)
+loadIcon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+
+loadBtn.MouseButton1Click:Connect(function()
+    if currentConfig == "100% AFK Farm" then
+        objAutoFarm:Set(true)
+        objAutoFlush:Set(true)
+        objOrbitalSpeed:Set(13)
+        objBuyHealth:Set(true)
+        objBuyPR:Set(true)
+        objBuySL:Set(true)
+        objFarmItems:Set(true)
+        objItemNotif:Set(true)
+        objAutoJoin:Set(true)
+        objAutoVote:Set(true)
+        objAntiAfk:Set(true)
+        objAutoChooseWeapon:Set(true)
+        if objAutoSkipHeli then objAutoSkipHeli:Set(true) end
     end
 end)
 
-createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
+-- AUTO SKIP HELI LÓGICA
+task.spawn(function()
+    local skipRemote = ReplicatedStorage:WaitForChild("SkipHelicopter")
+    while true do
+        task.wait(2)
+        if autoSkipHeliAtivo then pcall(function() skipRemote:FireServer() end) end
+    end
+end)
 
-local logTitle = Instance.new("TextLabel", tabs.Items)
-logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
+-- AUTO CHOOSE WEAPON LÓGICA
+task.spawn(function()
+    while true do
+        task.wait(1)
+        if autoChooseWeaponAtivo then
+            local hasPR = checkWeaponExists("pulse")
+            local hasSL = checkWeaponExists("small")
+            
+            local newMethod = "Auto Punch"
+            if hasPR and hasSL then newMethod = "Pulse Rifle + Small Laser"
+            elseif hasPR then newMethod = "Pulse Rifle"
+            elseif hasSL then newMethod = "Small Laser" end
+            
+            if farmMethod ~= newMethod then
+                farmMethod = newMethod
+                if farmDropdownObj then farmDropdownObj:UpdateText(farmMethod) end
+            end
+        end
+    end
+end)
 
-local logScroll = Instance.new("ScrollingFrame", tabs.Items)
-logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
-Instance.new("UICorner", logScroll).CornerRadius = UDim.new(0, 8)
-local logScrollLayout = Instance.new("UIListLayout", logScroll)
-logScrollLayout.Padding, logScrollLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
+-- AUTO CURE PLUNGER LÓGICA
+task.spawn(function()
+    local buffRemote = ReplicatedStorage:WaitForChild("Buff")
+    while true do
+        task.wait(1)
+        if autoCureAtivo and player.Character then
+            local hum = player.Character:FindFirstChild("Humanoid")
+            if hum and hum.Health > 0 and (hum.Health / hum.MaxHealth) < 0.4 then
+                pcall(function() buffRemote:FireServer() end)
+                task.wait(5) 
+            end
+        end
+    end
+end)
 
-function registerItemLog(itemName)
-    local lbl = Instance.new("TextLabel", logScroll)
-    lbl.Size, lbl.Position, lbl.Text = UDim2.new(1, -10, 0, 20), UDim2.new(0, 5, 0, 0), "[" .. os.date("%H:%M:%S") .. "]  -  " .. itemName
-    lbl.TextColor3, lbl.Font, lbl.TextSize, lbl.TextXAlignment, lbl.BackgroundTransparency = Color3.fromRGB(200, 200, 200), Enum.Font.GothamSemibold, 12, Enum.TextXAlignment.Left, 1
-    logScroll.CanvasSize = UDim2.new(0, 0, 0, logScrollLayout.AbsoluteContentSize.Y + 10)
-    logScroll.CanvasPosition = Vector2.new(0, logScroll.CanvasSize.Y.Offset)
-end
+-- AUTO JOIN LÓGICA (HANDSHAKE FIX & COOLDOWN)
+task.spawn(function()
+    local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
+    local wasJoined = false
+    local lobbyArrivalTime = 0
+    local wasInLobby = false
+    
+    while true do
+        task.wait(2)
+        local inLobby = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.Position.Y < 0
+        
+        if inLobby and not wasInLobby then
+            lobbyArrivalTime = tick()
+            wasInLobby = true
+        elseif not inLobby then
+            wasInLobby = false
+            wasJoined = false
+        end
+        
+        if autoJoinAtivo and inLobby then
+            if (tick() - lobbyArrivalTime) > 5 then
+                pcall(function()
+                    player.Character.HumanoidRootPart.CFrame = CFrame.new(557, -468, 465)
+                    task.wait(0.5)
+                    readyRemote:FireServer("1", true)
+                    wasJoined = true
+                end)
+            end
+        elseif not autoJoinAtivo and wasJoined then
+            pcall(function()
+                readyRemote:FireServer("1", false)
+                readyRemote:FireServer("2", false)
+                readyRemote:FireServer("3", false)
+                wasJoined = false
+            end)
+        end
+    end
+end)
 
--- ============================================================
--- NOTIFICAÇÕES 
--- ============================================================
+-- AUTO VOTE LÓGICA
+task.spawn(function()
+    local voteRemote = ReplicatedStorage:WaitForChild("Vote")
+    while true do
+        task.wait(1.5)
+        if autoVoteAtivo then pcall(function() voteRemote:FireServer(voteMode) end) end
+    end
+end)
+
+-- NOTIFICAÇÕES E ITEMS
 local notifContainer = Instance.new("Frame", gui)
 notifContainer.Size, notifContainer.Position, notifContainer.BackgroundTransparency, notifContainer.ZIndex = UDim2.new(0, 370, 0, 600), UDim2.new(0, 10, 0.5, -300), 1, 20
-local notifLayout = Instance.new("UIListLayout", notifContainer)
-notifLayout.Padding, notifLayout.VerticalAlignment = UDim.new(0, 8), Enum.VerticalAlignment.Top
-
-local function playAlertSound() pcall(function() local s = Instance.new("Sound"); s.SoundId = SOUND_ID; s.Volume = 2; s.Parent = SoundService; s:Play(); Debris:AddItem(s, 5) end) end
+local notifLayout = Instance.new("UIListLayout", notifContainer); notifLayout.Padding, notifLayout.VerticalAlignment = UDim.new(0, 8), Enum.VerticalAlignment.Top
+local function playAlertSound() pcall(function() local s = Instance.new("Sound"); s.SoundId = SOUND_ID; s.Volume = 5; s.Parent = Workspace.CurrentCamera; s:Play(); Debris:AddItem(s, 3) end) end
 
 local function showItemNotification(itemModel)
-    local card = Instance.new("Frame", notifContainer)
-    card.Size, card.BackgroundColor3, card.ZIndex = UDim2.new(1, 0, 0, 115), Color3.fromRGB(14, 14, 24), 20
-    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 14)
+    local card = Instance.new("Frame", notifContainer); card.Size, card.BackgroundColor3, card.ZIndex = UDim2.new(1, 0, 0, 115), Color3.fromRGB(14, 14, 24), 20; Instance.new("UICorner", card).CornerRadius = UDim.new(0, 14)
     local stroke = Instance.new("UIStroke", card); stroke.Color, stroke.Thickness = ACCENT, 2.5
-    local bar = Instance.new("Frame", card)
-    bar.Size, bar.Position, bar.BackgroundColor3, bar.ZIndex = UDim2.new(0, 6, 1, -16), UDim2.new(0, 8, 0, 8), Color3.fromRGB(255, 200, 30), 21
-    Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
-    local alertLbl = Instance.new("TextLabel", card)
-    alertLbl.Size, alertLbl.Position, alertLbl.Text, alertLbl.TextColor3, alertLbl.Font, alertLbl.TextSize, alertLbl.TextXAlignment, alertLbl.BackgroundTransparency, alertLbl.ZIndex = UDim2.new(1, -80, 0, 30), UDim2.new(0, 22, 0, 8), "⚠️  ITEM RARO SPAWNADO!", Color3.fromRGB(255, 210, 40), Enum.Font.GothamBold, 15, Enum.TextXAlignment.Left, 1, 21
-    local nameLbl = Instance.new("TextLabel", card)
-    nameLbl.Size, nameLbl.Position, nameLbl.Text, nameLbl.TextColor3, nameLbl.Font, nameLbl.TextSize, nameLbl.TextXAlignment, nameLbl.TextWrapped, nameLbl.BackgroundTransparency, nameLbl.ZIndex = UDim2.new(1, -30, 0, 42), UDim2.new(0, 22, 0, 36), itemModel.Name, Color3.new(1, 1, 1), Enum.Font.GothamBold, 24, Enum.TextXAlignment.Left, true, 1, 21
-    local statusLbl = Instance.new("TextLabel", card)
-    statusLbl.Size, statusLbl.Position, statusLbl.Text, statusLbl.TextColor3, statusLbl.Font, statusLbl.TextSize, statusLbl.TextXAlignment, statusLbl.BackgroundTransparency, statusLbl.ZIndex = UDim2.new(1, -30, 0, 22), UDim2.new(0, 22, 0, 86), "🟢  No chão — aguardando coleta...", Color3.fromRGB(80, 255, 120), Enum.Font.GothamSemibold, 13, Enum.TextXAlignment.Left, 1, 21
-    local xBtn = Instance.new("TextButton", card)
-    xBtn.Size, xBtn.Position, xBtn.BackgroundTransparency, xBtn.BorderSizePixel, xBtn.Text, xBtn.TextColor3, xBtn.Font, xBtn.TextSize, xBtn.ZIndex = UDim2.new(0, 30, 0, 30), UDim2.new(1, -36, 0, 6), 1, 0, "X", Color3.fromRGB(255, 90, 90), Enum.Font.GothamBold, 18, 22
-    playAlertSound()
-    card.Position = UDim2.new(-1.1, 0, 0, 0)
-    TweenService:Create(card, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Position = UDim2.new(0, 0, 0, 0) }):Play()
+    local bar = Instance.new("Frame", card); bar.Size, bar.Position, bar.BackgroundColor3, bar.ZIndex = UDim2.new(0, 6, 1, -16), UDim2.new(0, 8, 0, 8), Color3.fromRGB(255, 200, 30), 21; Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
+    local alertLbl = Instance.new("TextLabel", card); alertLbl.Size, alertLbl.Position, alertLbl.Text, alertLbl.TextColor3, alertLbl.Font, alertLbl.TextSize, alertLbl.TextXAlignment, alertLbl.BackgroundTransparency, alertLbl.ZIndex = UDim2.new(1, -80, 0, 30), UDim2.new(0, 22, 0, 8), "⚠️  ITEM RARO SPAWNADO!", Color3.fromRGB(255, 210, 40), Enum.Font.GothamBold, 15, Enum.TextXAlignment.Left, 1, 21
+    local nameLbl = Instance.new("TextLabel", card); nameLbl.Size, nameLbl.Position, nameLbl.Text, nameLbl.TextColor3, nameLbl.Font, nameLbl.TextSize, nameLbl.TextXAlignment, nameLbl.TextWrapped, nameLbl.BackgroundTransparency, nameLbl.ZIndex = UDim2.new(1, -30, 0, 42), UDim2.new(0, 22, 0, 36), itemModel.Name, Color3.new(1, 1, 1), Enum.Font.GothamBold, 24, Enum.TextXAlignment.Left, true, 1, 21
+    local statusLbl = Instance.new("TextLabel", card); statusLbl.Size, statusLbl.Position, statusLbl.Text, statusLbl.TextColor3, statusLbl.Font, statusLbl.TextSize, statusLbl.TextXAlignment, statusLbl.BackgroundTransparency, statusLbl.ZIndex = UDim2.new(1, -30, 0, 22), UDim2.new(0, 22, 0, 86), "🟢  No chão — aguardando coleta...", Color3.fromRGB(80, 255, 120), Enum.Font.GothamSemibold, 13, Enum.TextXAlignment.Left, 1, 21
+    local xBtn = Instance.new("TextButton", card); xBtn.Size, xBtn.Position, xBtn.BackgroundTransparency, xBtn.BorderSizePixel, xBtn.Text, xBtn.TextColor3, xBtn.Font, xBtn.TextSize, xBtn.ZIndex = UDim2.new(0, 30, 0, 30), UDim2.new(1, -36, 0, 6), 1, 0, "X", Color3.fromRGB(255, 90, 90), Enum.Font.GothamBold, 18, 22
+    playAlertSound(); card.Position = UDim2.new(-1.1, 0, 0, 0); TweenService:Create(card, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Position = UDim2.new(0, 0, 0, 0) }):Play()
     local hbConn; local removed = false
-    local function removeCard()
-        if removed then return end; removed = true; if hbConn then hbConn:Disconnect() end
-        TweenService:Create(card, TweenInfo.new(0.2), { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0) }):Play()
-        task.delay(0.25, function() if card then card:Destroy() end end)
-    end
-    hbConn = RunService.Heartbeat:Connect(function()
-        if not itemModel or not itemModel.Parent then statusLbl.Text = "🔴  Item sumiu ou foi coletado."; statusLbl.TextColor3 = Color3.fromRGB(255, 80, 80); task.wait(1.5); removeCard() end
-    end)
+    local function removeCard() if removed then return end; removed = true; if hbConn then hbConn:Disconnect() end; TweenService:Create(card, TweenInfo.new(0.2), { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0) }):Play(); task.delay(0.25, function() if card then card:Destroy() end end) end
+    hbConn = RunService.Heartbeat:Connect(function() if not itemModel or not itemModel.Parent then statusLbl.Text = "🔴  Item sumiu ou foi coletado."; statusLbl.TextColor3 = Color3.fromRGB(255, 80, 80); task.wait(1.5); removeCard() end end)
     xBtn.MouseButton1Click:Connect(removeCard)
 end
-
-Workspace.ChildAdded:Connect(function(child)
-    if not ITEM_WHITELIST[child.Name] then return end
-    if itemAtivo then task.spawn(function() showItemNotification(child) end) end
-    if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end
-end)
+Workspace.ChildAdded:Connect(function(child) if not ITEM_WHITELIST[child.Name] then return end; if itemAtivo then task.spawn(function() showItemNotification(child) end) end; if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end end)
 
 -- ============================================================
--- 🔥 INTERACTION HUB
+-- 🔥 INTERACTION HUB 
 -- ============================================================
 task.spawn(function()
     while true do
@@ -693,37 +924,49 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 CORE AUTO FARM (O LIQUIDIFICADOR)
+-- 🔥 CORE AUTO FARM 
 -- ============================================================
 local isShootingRifle = false
 local isReloadingRifle = false
 local lastTapTime = 0
+local lastCombatMethod = ""
 
 task.spawn(function()
     while true do
         task.wait(0.05)
         
-        if itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue) then
+        local activeCombatMethod = farmMethod
+        if farmMethod == "Pulse Rifle + Small Laser" then
+            local prAmmo, prMax = checkAmmo("Pulse Rifle")
+            if prAmmo <= 0 then _G.PR_Reloading = true elseif prAmmo >= prMax then _G.PR_Reloading = false end
+            activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+        end
+
+        if activeCombatMethod ~= lastCombatMethod then
             if isShootingRifle then
                 local vp = Workspace.CurrentCamera.ViewportSize
                 VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
                 isShootingRifle = false
-                _G.IsAimbotting = false
+                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:UnequipTools()
+                end
+            end
+            lastCombatMethod = activeCombatMethod
+        end
+
+        if (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not farmEnabled then
+            if isShootingRifle then
+                local vp = Workspace.CurrentCamera.ViewportSize
+                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                isShootingRifle = false
+                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:UnequipTools()
+                end
             end
             continue
         end
 
-        if not farmEnabled then
-            if isShootingRifle then
-                local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
-                isShootingRifle = false
-                _G.IsAimbotting = false
-            end
-            continue 
-        end
-
-        local validTargets = {}
+        local rawTargets = {}
         for _, model in ipairs(Living:GetChildren()) do
             if not SKIBIDI_LIST[model.Name] then continue end
             if Players:GetPlayerFromCharacter(model) then continue end
@@ -740,17 +983,39 @@ task.spawn(function()
             if not isDead then
                 local fakeHead = model:FindFirstChild("Fake Head")
                 local headSize = (fakeHead and fakeHead:IsA("BasePart")) and fakeHead.Size.Magnitude or 1.0
-                table.insert(validTargets, {model = model, torso = torso, headSize = headSize})
+                table.insert(rawTargets, {model = model, torso = torso, headSize = headSize})
             end
         end
 
-        if targetMethod == "Weakest First" then table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
-        elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
+        if #rawTargets == 0 then
+            if isShootingRifle then
+                local vp = Workspace.CurrentCamera.ViewportSize
+                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                isShootingRifle = false
+                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:UnequipTools()
+                end
+            end
+            continue
+        end
+
+        local validTargets = {}
+        if targetMethod == "Saw" or targetMethod == "Rocket" then
+            for _, t in ipairs(rawTargets) do
+                local nLower = string.lower(t.model.Name)
+                if targetMethod == "Saw" and string.find(nLower, "saw") then table.insert(validTargets, t)
+                elseif targetMethod == "Rocket" and string.find(nLower, "rocket") then table.insert(validTargets, t) end
+            end
+            if #validTargets == 0 then validTargets = rawTargets end 
+        else
+            validTargets = rawTargets
+            if targetMethod == "Weakest First" then table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
+            elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
+        end
 
         for _, tData in ipairs(validTargets) do
             local model, torso, headSize = tData.model, tData.torso, tData.headSize
             if currentConnection then currentConnection:Disconnect() end
-            _G.IsAimbotting = false
 
             currentConnection = RunService.Heartbeat:Connect(function(dt)
                 local isDeadNow = false
@@ -769,70 +1034,123 @@ task.spawn(function()
                 local combatPos
                 local integrity = (#_v == 17) and 1 or "Crash"
 
-                if farmMethod == "Auto Punch" then
-                    local distY = (8 + (headSize * 0.8)) * integrity
+                local striderOffset = 0
+                if model.Name == "Zombie Strider gun" then striderOffset = 22 end
+
+                local nLower = string.lower(model.Name)
+                local isAerial = string.find(nLower, "heli") or string.find(nLower, "dropper") or string.find(nLower, "flying") or string.find(nLower, "plane") or string.find(nLower, "cargobob")
+                local orbitHeight = isAerial and 5 or (30 + (headSize * 2.0))
+
+                if activeCombatMethod == "Auto Punch" then
+                    local distY = (8 + (headSize * 0.8)) * integrity + striderOffset
                     combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * -3)
                     if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
-                elseif farmMethod == "Orbital Punch" then
+                elseif activeCombatMethod == "Orbital Punch" then
                     _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
                     local orbitRadius = (7 + (headSize * 0.6)) * integrity
-                    combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, 8 + (headSize * 1.0), math.sin(_G.OrbitalAngle) * orbitRadius)
+                    combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, (8 + (headSize * 1.0)) + striderOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
                     if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
-                elseif farmMethod == "Auto Pulse Rifle" then
+                elseif activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" then
                     _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
                     local orbitRadius = (35 + (headSize * 4.0)) * integrity
-                    local rawPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, 30 + (headSize * 2.0), math.sin(_G.OrbitalAngle) * orbitRadius)
+                    local rawPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitHeight + striderOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
                     combatPos = Vector3.new(math.clamp(rawPos.X, -645, 460), math.clamp(rawPos.Y, -400, 285), math.clamp(rawPos.Z, -515, 460))
                     
                     if player.Character then
-                        local tool = player.Character:FindFirstChild("Pulse Rifle") or player.Backpack:FindFirstChild("Pulse Rifle")
-                        if tool and tool.Parent == player.Backpack then player.Character.Humanoid:EquipTool(tool) end
+                        local tool = equipWeapon(activeCombatMethod)
                         player.Character:PivotTo(CFrame.new(combatPos))
                         Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, torso.Position - Vector3.new(0, 0.5, 0))
-                        _G.IsAimbotting = true
                     end
                 end
             end)
 
             repeat 
-                if farmMethod == "Auto Pulse Rifle" then
-                    local tool = player.Character and player.Character:FindFirstChild("Pulse Rifle")
+                if farmMethod == "Pulse Rifle + Small Laser" then
+                    local prAmmo, prMax = checkAmmo("Pulse Rifle")
+                    if prAmmo <= 0 then _G.PR_Reloading = true elseif prAmmo >= prMax then _G.PR_Reloading = false end
+                    activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+                else
+                    activeCombatMethod = farmMethod
+                end
+
+                if activeCombatMethod ~= lastCombatMethod then
+                    if isShootingRifle then
+                        local vp = Workspace.CurrentCamera.ViewportSize
+                        VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                        isShootingRifle = false
+                        if player.Character and player.Character:FindFirstChild("Humanoid") then
+                            player.Character.Humanoid:UnequipTools()
+                        end
+                    end
+                    lastCombatMethod = activeCombatMethod
+                end
+
+                if activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" then
+                    local tool = equipWeapon(activeCombatMethod)
                     local ammoNode = tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo")
                     local vp = Workspace.CurrentCamera.ViewportSize
                     local aimX, aimY = vp.X / 2, vp.Y / 2
                     
                     if tool and ammoNode then
+                        local maxAmmo = 30
+                        local maxAmmoNode = tool.Folder:FindFirstChild("MaxAmmo")
+                        if maxAmmoNode then maxAmmo = maxAmmoNode.Value end
+
                         if ammoNode.Value <= 0 then
                             isReloadingRifle = true
-                            if isShootingRifle then isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) end
-                        elseif isReloadingRifle and ammoNode.Value >= 30 then
+                            if isShootingRifle then 
+                                isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
+                                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                                    player.Character.Humanoid:UnequipTools()
+                                end
+                            end
+                        elseif isReloadingRifle and ammoNode.Value >= maxAmmo then
                             isReloadingRifle = false
                         end
 
                         if not isReloadingRifle and ammoNode.Value > 0 then
                             VIM:SendMouseMoveEvent(aimX, aimY, game) 
-                            if headSize > 12 then 
-                                if not isShootingRifle then isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) end
-                            else 
-                                if tick() - lastTapTime > 0.25 then
-                                    lastTapTime = tick()
-                                    if not isShootingRifle then
-                                        isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
-                                        task.delay(0.1, function() VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1); isShootingRifle = false end)
+                            
+                            if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" then
+                                if not isShootingRifle then 
+                                    isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) 
+                                end
+                            else
+                                if headSize > 12 then 
+                                    if not isShootingRifle then isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) end
+                                else 
+                                    if tick() - lastTapTime > 0.25 then
+                                        lastTapTime = tick()
+                                        if not isShootingRifle then
+                                            isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
+                                            task.delay(0.1, function() VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1); isShootingRifle = false end)
+                                        end
                                     end
                                 end
                             end
                         else
-                            if isShootingRifle then isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) end
+                            if isShootingRifle then 
+                                isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
+                                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                                    player.Character.Humanoid:UnequipTools()
+                                end
+                            end
                         end
                     else
-                        if isShootingRifle then isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) end
+                        if isShootingRifle then 
+                            isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
+                            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                                player.Character.Humanoid:UnequipTools()
+                            end
+                        end
                     end
-                elseif farmMethod ~= "Auto Pulse Rifle" and isShootingRifle then
-                    local vp = Workspace.CurrentCamera.ViewportSize
-                    isShootingRifle = false; VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                else
+                    if isShootingRifle then
+                        local vp = Workspace.CurrentCamera.ViewportSize
+                        isShootingRifle = false; VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    end
                 end
                 task.wait(0.1)
                 
@@ -845,48 +1163,79 @@ task.spawn(function()
             until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not currentConnection or not currentConnection.Connected
 
             if currentConnection then currentConnection:Disconnect() end
-            if isShootingRifle then
+            
+            if isShootingRifle and (activeCombatMethod == "Pulse Rifle") then
                 local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1); isShootingRifle = false
+                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                isShootingRifle = false
             end
-            _G.IsAimbotting = false
             break
         end
     end
 end)
 
-createTpBtn(tabs.Teleport, "Spawn (Lobby)",   Vector3.new(611, -468, 529))
-createTpBtn(tabs.Teleport, "Ready Plataform", Vector3.new(557, -468, 465))
-createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
+-- AUTO RUN LÓGICA (TOGGLE PURO & DEBOUNCE TÁTICO)
+task.spawn(function()
+    local runRemote = ReplicatedStorage:WaitForChild("Running")
+    while true do
+        task.wait(0.1)
+        if autoRunAtivo and player.Character then
+            local hum = player.Character:FindFirstChild("Humanoid")
+            if hum and hum.MoveDirection.Magnitude > 0 and hum.WalkSpeed <= 16.5 then 
+                pcall(function() runRemote:FireServer() end)
+                task.wait(0.5) 
+            end
+        end
+    end
+end)
 
--- ============================================================
--- ABA 4: TELEPORTS (RENDERIZADOS AGORA)
--- ============================================================
--- Já estão criados e designados para tabs.Teleport através da função createTpBtn
-
--- ============================================================
--- DRAG 
--- ============================================================
-local function makeDraggable(obj)
-    local dragging, dragStart, startPos
-    obj.InputBegan:Connect(function(input)
+local function makeDraggable(dragArea, targetMove)
+    targetMove = targetMove or dragArea
+    local dragging, dragStart, startPos = false, nil, nil
+    dragArea.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             if _G.IsAimbotting then return end 
-            dragging = true; dragStart = input.Position; startPos = main.Position
+            dragging = true; dragStart = input.Position; startPos = targetMove.Position
         end
     end)
     UserInputService.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local d = input.Position - dragStart
-            main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X,
-                                      startPos.Y.Scale, startPos.Y.Offset + d.Y)
+            targetMove.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
         end
     end)
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
     end)
 end
-makeDraggable(topBar)
-makeDraggable(sidebar)
 
-print("✅ V7.3 — Auto Helicopter com Cooldown Tático adicionado.")
+makeDraggable(topBar, main)
+makeDraggable(sidebar, main)
+
+local minBtnDragging, minBtnHasDragged = false, false
+local minBtnDragStart, minBtnStartPos = nil, nil
+minBtn.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        if _G.IsAimbotting then return end 
+        minBtnDragging = true; minBtnHasDragged = false
+        minBtnDragStart = input.Position; minBtnStartPos = minBtn.Position
+    end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if minBtnDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local d = input.Position - minBtnDragStart
+        if d.Magnitude > 5 then minBtnHasDragged = true end
+        minBtn.Position = UDim2.new(minBtnStartPos.X.Scale, minBtnStartPos.X.Offset + d.X, minBtnStartPos.Y.Scale, minBtnStartPos.Y.Offset + d.Y)
+    end
+end)
+minBtn.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        minBtnDragging = false
+        if not minBtnHasDragged then
+            main.Visible = true
+            minBtn.Visible = false
+        end
+    end
+end)
+
+print("✅ V10.2 — Fallacy Corrigida. Pure Toggle Auto Run Ativado.")
