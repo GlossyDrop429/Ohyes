@@ -794,22 +794,6 @@ end
 -- POPULANDO AS ABAS
 -- ============================================================
 -- ABA 1: FARM
-farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
-createInlineDropdown(tabs.Farm, "Target: ", targetMethodsArray, targetMethod, function(val) targetMethod = val end)
-objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
-objAutoFarm = createToggle(tabs.Farm, "Auto Farm",                 function(s) farmEnabled   = s end)
-createToggle(tabs.Farm, "Auto Revive Player",        function(s) reviveAtivo   = s end)
-objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save",         function(s) interactAtivo = s; saveAtivo = s end)
-objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
-objSuicideWave = createTextBox(tabs.Farm, "Suicide Wave (0 = Off)", "Ex: 50", function(val)
-    local match = string.match(tostring(val), "%d+")
-    if match then
-        suicideWaveTarget = tonumber(match)
-    else
-        suicideWaveTarget = 0
-    end
-end)
-
 -- ABA 2: SKILLS
 local skillOptions = {"E", "R", "T", "Y", "F", "G", "H"}
 local holdSkillOptions = {"Hold E", "Hold R", "Hold T", "Hold Y", "Hold F", "Hold G", "Hold H"}
@@ -892,8 +876,8 @@ task.spawn(function()
 end)
 
 -- ABA 4: ITEMS
-objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) itemFarmAtivo = s; if s then for _, c in ipairs(Workspace:GetChildren()) do if ITEM_WHITELIST[c.Name] then table.insert(itemQueue, c) end end; task.spawn(processItemQueue) else itemQueue = {} end end)
-objItemNotif = createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
+objFarmItems = createToggle(tabs.Items, "Farm s", function(s) itemFarmAtivo = s; if s then for _, c in ipairs(Workspace:GetChildren()) do if ITEM_WHITELIST[c.Name] then table.insert(itemQueue, c) end end; task.spawn(processItemQueue) else itemQueue = {} end end)
+objItemNotif = createToggle(tabs.Items, "Itm Nier", function(s) itemAtivo = s end)
 local logTitle = Instance.new("TextLabel", tabs.Items); logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
 local logScroll = Instance.new("ScrollingFrame", tabs.Items); logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
 Instance.new("UICorner", logScroll).CornerRadius = UDim.new(0, 8)
@@ -907,9 +891,9 @@ end
 -- ============================================================
 -- ABA 5: VISUALS (O MOTOR DE ESP POR OBJECT POOLING)
 -- ============================================================
-createToggle(tabs.Visuals, "Esp Toilets", function(s) espToiletsAtivo = s end)
-createToggle(tabs.Visuals, "Esp Players", function(s) espPlayersAtivo = s end)
-createToggle(tabs.Visuals, "Esp Items",   function(s) espItemsAtivo = s end)
+createToggle(tabs.Visuals, "Esp Tiets", function(s) espToiletsAtivo = s end)
+createToggle(tabs.Visuals, "Esp Payrs", function(s) espPlayersAtivo = s end)
+createToggle(tabs.Visuals, "sp Ites",   function(s) espItemsAtivo = s end)
 
 local ESP_POOL = {}
 local MAX_HIGHLIGHTS = 25
@@ -1000,13 +984,7 @@ end)
 
 -- ABA 6: MISC
 objAutoJoin = createToggle(tabs.Misc, "Auto Join (Ready)", {color = "yellow", text = "May present problems"}, function(s) autoJoinAtivo = s end)
-voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
-objAutoVote = createToggle(tabs.Misc, "Auto Vote",                 function(s) autoVoteAtivo = s end)
-objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", {color = "yellow", text = "<u>experimental option, not recommended for use.</u>"}, function(s) autoChooseWeaponAtivo = s end)
-createToggle(tabs.Misc, "Auto Cure Plunger", {color = "red", text = "Only use if you have the plunger equipped."}, function(s) autoCureAtivo = s end)
-objAntiAfk = createToggle(tabs.Misc, "Anti-AFK",                  function(s) antiAfkAtivo = s end)
-createToggle(tabs.Misc, "Stay In Round",             function(s) stayInRoundAtivo = s end)
-createSlider(tabs.Misc, "Stay In Round Speed", 1, 50, 15, function(val) _G.StaySpeed = val end)
+voteDropdownObj = c val end)
 createToggle(tabs.Misc, "Auto Run",                  function(s) autoRunAtivo = s end)
 
 -- ABA 7: TELEPORT
@@ -1045,13 +1023,7 @@ loadIcon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltip
 loadBtn.MouseButton1Click:Connect(function()
     if currentConfig == "100% AFK Farm" then
         objAutoFarm:Set(true)
-        objAutoFlush:Set(true)
-        objOrbitalSpeed:Set(13)
-        objBuyHealth:Set(true)
-        objBuyPR:Set(true)
-        objBuySL:Set(true)
-        objFarmItems:Set(true)
-        objItemNotif:Set(true)
+        ob)
         objAutoJoin:Set(true)
         objAutoVote:Set(true)
         objAntiAfk:Set(true)
