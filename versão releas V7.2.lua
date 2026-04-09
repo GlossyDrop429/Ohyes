@@ -1,4 +1,4 @@
--- 🔥 V10.10 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
+-- 🔥 V12.7 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -12,14 +12,13 @@ local VIM               = game:GetService("VirtualInputManager")
 local SoundService      = game:GetService("SoundService")
 
 local player    = Players.LocalPlayer
-local Living    = Workspace:WaitForChild("Living")
 local LMB_Event = ReplicatedStorage:WaitForChild("LMB")
 
 local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V10.10"
+local VERSION      = "V12.7"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -215,6 +214,8 @@ tabs.Farm.Visible = true
 local farmEnabled, interactAtivo, saveAtivo, itemFarmAtivo, itemAtivo = false, false, false, false, false
 local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoRunAtivo, autoJoinAtivo = false, false, false, false, false
 local autoBuyHealthAtivo, autoBuyPR, autoBuySL, autoBuyBL, autoBuyLensAtivo, autoBuyHeadphoneAtivo = false, false, false, false, false, false
+local autoBuyTitanAtivo, autoUseTitanAtivo = false, false
+local antiAfkZoneAtivo = false
 local espToiletsAtivo, espPlayersAtivo, espItemsAtivo = false, false, false
 local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = false, false, false, false
 local suicideWaveTarget = 0
@@ -228,6 +229,7 @@ local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Las
 local farmMethod = farmMethodsArray[3]
 local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
 local targetMethod = targetMethodsArray[1]
+
 local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
 local voteMode = "Normal"
 local configModesArray = {"100% AFK Farm"}
@@ -237,9 +239,9 @@ local currentConnection = nil
 local farmDropdownObj, voteDropdownObj = nil, nil
 
 local objAutoFarm, objAutoFlush, objOrbitalSpeed, objAutoSkipHeli
-local objBuyHealth, objBuyPR, objBuySL, objBuyBL, objBuyLens, objBuyHeadphone
+local objBuyHealth, objBuyPR, objBuySL, objBuyBL, objBuyLens, objBuyHeadphone, objBuyTitan
 local objFarmItems, objItemNotif
-local objAutoJoin, objAutoVote, objAntiAfk, objAutoChooseWeapon
+local objAutoJoin, objAutoVote, objAntiAfk, objAutoChooseWeapon, objAntiAfkZone
 local objSuicideWave
 
 -- ============================================================
@@ -377,7 +379,7 @@ end
 Workspace.ChildAdded:Connect(function(child) if not ITEM_WHITELIST[child.Name] then return end; if itemAtivo then task.spawn(function() showItemNotification(child) end) end; if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end end)
 
 -- ============================================================
--- ENGINE DE VOO LINEAR (STAY IN ROUND CORRIGIDO COM CÂMERA SEGURA V10.9)
+-- ENGINE DE VOO LINEAR (STAY IN ROUND CORRIGIDO)
 -- ============================================================
 local stayCorners = {
     Vector3.new(-657, 280, -532), 
@@ -391,7 +393,7 @@ local wasStayInRound = false
 task.spawn(function()
     local cIdx = 1
     RunService.Heartbeat:Connect(function(dt)
-        if stayInRoundAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not _G.IsFarmingTarget and not isProcessingQueue then
+        if stayInRoundAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not farmEnabled then
             if not wasStayInRound then
                 Workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
                 wasStayInRound = true
@@ -427,7 +429,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- LÓGICA DE AUTO SKILLS (USO RÁPIDO E HOLD PERSONALIZADO)
+-- LÓGICA DE AUTO SKILLS
 -- ============================================================
 task.spawn(function()
     while true do
@@ -794,6 +796,22 @@ end
 -- POPULANDO AS ABAS
 -- ============================================================
 -- ABA 1: FARM
+farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
+createInlineDropdown(tabs.Farm, "Target: ", targetMethodsArray, targetMethod, function(val) targetMethod = val end)
+objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
+objAutoFarm = createToggle(tabs.Farm, "Auto Farm",                 function(s) farmEnabled   = s end)
+createToggle(tabs.Farm, "Auto Revive Player",        function(s) reviveAtivo   = s end)
+objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save",         function(s) interactAtivo = s; saveAtivo = s end)
+objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
+objSuicideWave = createTextBox(tabs.Farm, "Suicide Wave (0 = Off)", "Ex: 50", function(val)
+    local match = string.match(tostring(val), "%d+")
+    if match then
+        suicideWaveTarget = tonumber(match)
+    else
+        suicideWaveTarget = 0
+    end
+end)
+
 -- ABA 2: SKILLS
 local skillOptions = {"E", "R", "T", "Y", "F", "G", "H"}
 local holdSkillOptions = {"Hold E", "Hold R", "Hold T", "Hold Y", "Hold F", "Hold G", "Hold H"}
@@ -837,6 +855,7 @@ objBuySL = createToggle(tabs.AutoBuy, "Auto Buy Small Laser", {color = "yellow",
 objBuyBL = createToggle(tabs.AutoBuy, "Auto Buy Big Laser", {color = "red", text = "This function can only be activated if you have the <u>Big Camcorder Man</u> equipped."}, function(s) autoBuyBL = s end)
 objBuyLens = createToggle(tabs.AutoBuy, "Auto Buy Lens", function(s) autoBuyLensAtivo = s end)
 objBuyHeadphone = createToggle(tabs.AutoBuy, "Auto Buy HeadPhone", function(s) autoBuyHeadphoneAtivo = s end)
+local objBuyTitan = createToggle(tabs.AutoBuy, "Auto Buy Titan 1.0", function(s) autoBuyTitanAtivo = s end)
 
 task.spawn(function()
     local shopRemote = ReplicatedStorage:WaitForChild("ShopSystem")
@@ -871,13 +890,23 @@ task.spawn(function()
                 end
                 if not hasHeadphone then pcall(function() shopRemote:FireServer("Buy", "HeadPhone") end) end
             end
+            
+            if autoBuyTitanAtivo then
+                local hasTitan = checkWeaponExists("titan")
+                if not hasTitan then pcall(function() shopRemote:FireServer("Buy", "Titan-Request") end) end
+            end
         end
     end
 end)
 
 -- ABA 4: ITEMS
-objFarmItems = createToggle(tabs.Items, "Farm s", function(s) itemFarmAtivo = s; if s then for _, c in ipairs(Workspace:GetChildren()) do if ITEM_WHITELIST[c.Name] then table.insert(itemQueue, c) end end; task.spawn(processItemQueue) else itemQueue = {} end end)
-objItemNotif = createToggle(tabs.Items, "Itm Nier", function(s) itemAtivo = s end)
+objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) itemFarmAtivo = s; if s then 
+    local currentLiving = Workspace:FindFirstChild("Living")
+    if currentLiving then
+        for _, c in ipairs(Workspace:GetChildren()) do if ITEM_WHITELIST[c.Name] then table.insert(itemQueue, c) end end
+    end
+    task.spawn(processItemQueue) else itemQueue = {} end end)
+objItemNotif = createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
 local logTitle = Instance.new("TextLabel", tabs.Items); logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
 local logScroll = Instance.new("ScrollingFrame", tabs.Items); logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
 Instance.new("UICorner", logScroll).CornerRadius = UDim.new(0, 8)
@@ -891,9 +920,9 @@ end
 -- ============================================================
 -- ABA 5: VISUALS (O MOTOR DE ESP POR OBJECT POOLING)
 -- ============================================================
-createToggle(tabs.Visuals, "Esp Tiets", function(s) espToiletsAtivo = s end)
-createToggle(tabs.Visuals, "Esp Payrs", function(s) espPlayersAtivo = s end)
-createToggle(tabs.Visuals, "sp Ites",   function(s) espItemsAtivo = s end)
+createToggle(tabs.Visuals, "Esp Toilets", function(s) espToiletsAtivo = s end)
+createToggle(tabs.Visuals, "Esp Players", function(s) espPlayersAtivo = s end)
+createToggle(tabs.Visuals, "Esp Items",   function(s) espItemsAtivo = s end)
 
 local ESP_POOL = {}
 local MAX_HIGHLIGHTS = 25
@@ -916,8 +945,10 @@ task.spawn(function()
         local validEntities = {}
         local myPos = player.Character and player.Character:GetPivot().Position or Workspace.CurrentCamera.CFrame.Position
 
-        if espToiletsAtivo then
-            for _, model in ipairs(Living:GetChildren()) do
+        local currentLiving = Workspace:FindFirstChild("Living")
+
+        if espToiletsAtivo and currentLiving then
+            for _, model in ipairs(currentLiving:GetChildren()) do
                 if SKIBIDI_LIST[model.Name] and not Players:GetPlayerFromCharacter(model) then
                     local isDead = false
                     local f1 = model:FindFirstChild("1")
@@ -984,7 +1015,15 @@ end)
 
 -- ABA 6: MISC
 objAutoJoin = createToggle(tabs.Misc, "Auto Join (Ready)", {color = "yellow", text = "May present problems"}, function(s) autoJoinAtivo = s end)
-voteDropdownObj = c val end)
+voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
+objAutoVote = createToggle(tabs.Misc, "Auto Vote",                 function(s) autoVoteAtivo = s end)
+objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", {color = "yellow", text = "<u>experimental option, not recommended for use.</u>"}, function(s) autoChooseWeaponAtivo = s end)
+createToggle(tabs.Misc, "Auto Cure Plunger", {color = "red", text = "Only use if you have the plunger equipped."}, function(s) autoCureAtivo = s end)
+createToggle(tabs.Misc, "Auto use Titan Request", function(s) autoUseTitanAtivo = s end)
+objAntiAfk = createToggle(tabs.Misc, "Anti-AFK",                  function(s) antiAfkAtivo = s end)
+local objAntiAfkZone = createToggle(tabs.Misc, "Anti AFK Zone", {color = "red", text = "This is not the anti-AFK function"}, function(s) antiAfkZoneAtivo = s end)
+createToggle(tabs.Misc, "Stay In Round",             function(s) stayInRoundAtivo = s end)
+createSlider(tabs.Misc, "Stay In Round Speed", 1, 50, 15, function(val) _G.StaySpeed = val end)
 createToggle(tabs.Misc, "Auto Run",                  function(s) autoRunAtivo = s end)
 
 -- ABA 7: TELEPORT
@@ -1023,12 +1062,19 @@ loadIcon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltip
 loadBtn.MouseButton1Click:Connect(function()
     if currentConfig == "100% AFK Farm" then
         objAutoFarm:Set(true)
-        ob)
+        objAutoFlush:Set(true)
+        objOrbitalSpeed:Set(13)
+        objBuyHealth:Set(true)
+        objBuyPR:Set(true)
+        objBuySL:Set(true)
+        objFarmItems:Set(true)
+        objItemNotif:Set(true)
         objAutoJoin:Set(true)
         objAutoVote:Set(true)
         objAntiAfk:Set(true)
         objAutoChooseWeapon:Set(true)
         if objAutoSkipHeli then objAutoSkipHeli:Set(true) end
+        if objAntiAfkZone then objAntiAfkZone:Set(true) end
     end
 end)
 
@@ -1038,29 +1084,23 @@ task.spawn(function()
     while true do
         task.wait(1)
         if suicideWaveTarget > 0 then
-            local currentTitle = topTitle.Text
-            
-            if string.find(currentTitle, "The game hasn't started") then
-                alreadySuicidedThisWave = false
-            else
-                local waveNode = Workspace:FindFirstChild("Wave")
-                if waveNode then
-                    local waveMatch = string.match(tostring(waveNode.Value), "%d+")
-                    if waveMatch then
-                        local currentWaveNum = tonumber(waveMatch)
-                        
-                        if currentWaveNum == suicideWaveTarget then
-                            if not alreadySuicidedThisWave then
-                                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
-                                    player.Character.HumanoidRootPart.CFrame = CFrame.new(611, -468, 529)
-                                    task.wait(0.3)
-                                    player.Character.Humanoid.Health = 0
-                                    alreadySuicidedThisWave = true
-                                end
+            local waveNode = Workspace:FindFirstChild("Wave")
+            if waveNode then
+                local waveMatch = string.match(tostring(waveNode.Value), "%d+")
+                if waveMatch then
+                    local currentWaveNum = tonumber(waveMatch)
+                    
+                    if currentWaveNum >= suicideWaveTarget then
+                        if not alreadySuicidedThisWave then
+                            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
+                                player.Character.HumanoidRootPart.CFrame = CFrame.new(611, -468, 529)
+                                task.wait(0.3)
+                                player.Character.Humanoid.Health = 0
+                                alreadySuicidedThisWave = true
                             end
-                        else
-                            alreadySuicidedThisWave = false
                         end
+                    else
+                        alreadySuicidedThisWave = false
                     end
                 end
             end
@@ -1113,19 +1153,48 @@ task.spawn(function()
     end
 end)
 
+-- AUTO USE TITAN LÓGICA
+task.spawn(function()
+    while true do
+        task.wait(1)
+        if autoUseTitanAtivo and player.Character then
+            local titanTool = nil
+            
+            for _, t in ipairs(player.Character:GetChildren()) do
+                if t:IsA("Tool") and string.find(string.lower(t.Name), "titan") then
+                    titanTool = t
+                    break
+                end
+            end
+            
+            if not titanTool and player.Backpack then
+                for _, t in ipairs(player.Backpack:GetChildren()) do
+                    if t:IsA("Tool") and string.find(string.lower(t.Name), "titan") then
+                        titanTool = t
+                        local hum = player.Character:FindFirstChild("Humanoid")
+                        if hum then hum:EquipTool(t) end
+                        break
+                    end
+                end
+            end
+            
+            if titanTool and titanTool.Parent == player.Character then
+                pcall(function() ReplicatedStorage:WaitForChild("RequestTitan"):FireServer() end)
+            end
+        end
+    end
+end)
+
 -- ============================================================
--- 🔥 AUTO JOIN LÓGICA (CLÁSSICO REVISADO + ANTI-LIMBO ISOLADO V10.10)
+-- 🔥 AUTO JOIN LÓGICA
 -- ============================================================
 task.spawn(function()
     local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
     local wasJoined = false
-    local lobbyArrivalTime = 0
-    local wasInLobby = false
     
     while true do
         task.wait(2)
-        
-        if not autoJoinAtivo then
+        if not autoJoinAtivo then 
             if wasJoined then
                 pcall(function()
                     readyRemote:FireServer("1", false)
@@ -1134,80 +1203,65 @@ task.spawn(function()
                 end)
                 wasJoined = false
             end
-            continue
+            continue 
         end
 
         local char = player.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChild("Humanoid")
+        local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
         
-        if hrp then
-            -- Se a coordenada Y for menor que 0, assumimos que está no lobby
-            local inLobby = (hrp.Position.Y < 0)
-            
-            if inLobby then
-                if not wasInLobby then
-                    lobbyArrivalTime = tick()
-                    wasInLobby = true
-                    wasJoined = false -- Entrou no lobby, reseta a trava do botão ready!
+        if not (hrp and hum and hum.Health > 0) then continue end
+        
+        local isGuiActive = false
+        if selectGui then
+            pcall(function()
+                if selectGui:IsA("ScreenGui") then
+                    isGuiActive = selectGui.Enabled
+                else
+                    isGuiActive = selectGui.Visible
                 end
-                
-                -- Espera 5 segundos limpos antes de agir e manda uma única vez
-                if (tick() - lobbyArrivalTime) > 5 and not wasJoined then
+            end)
+        end
+
+        if isGuiActive then
+            local targetElevator = Vector3.new(557, -468, 465)
+            local dist = (hrp.Position - targetElevator).Magnitude
+            
+            if dist > 15 then
+                pcall(function()
+                    hrp.CFrame = CFrame.new(targetElevator)
+                    task.wait(0.5)
+                    readyRemote:FireServer("1", true)
+                    wasJoined = true
+                end)
+            else
+                if not wasJoined then
                     pcall(function()
-                        hrp.CFrame = CFrame.new(557, -468, 465) -- Teleporta pro elevador 1
-                        task.wait(0.5)
                         readyRemote:FireServer("1", true)
                         wasJoined = true
                     end)
                 end
-            else
-                wasInLobby = false
-                wasJoined = false
             end
+        else
+            wasJoined = false
         end
     end
 end)
 
--- BACKUP 3 (ANTI-LIMBO ISOLADO)
+-- ============================================================
+-- 🔥 ANTI-LIMBO BÁSICO
+-- ============================================================
 task.spawn(function()
-    local idleStartTime = tick()
-    local lastPos = nil
-    
     while true do
         task.wait(2)
-        -- Só conta se o sistema de auto join estiver ativo para ajudar
-        if not autoJoinAtivo then 
-            idleStartTime = tick()
-            continue 
-        end
-        
         local char = player.Character
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        local hum = char and char:FindFirstChild("Humanoid")
-        
-        if hrp and hum and hum.Health > 0 then
-            -- 1. Void Killer (Caiu no nada)
-            if hrp.Position.Y < -1500 then
-                hum.Health = 0
-                task.wait(5)
-                continue
-            end
-            
-            -- Verifica se o jogador está na coordenada do elevador para poupá-lo do idle kill
-            local isAtElevator = (hrp.Position - Vector3.new(557, -468, 465)).Magnitude < 15
-            
-            if isAtElevator then
-                idleStartTime = tick() -- Se está esperando a partida no elevador, não morre!
-            else
-                if not lastPos or (hrp.Position - lastPos).Magnitude > 2 then
-                    lastPos = hrp.Position
-                    idleStartTime = tick()
-                else
-                    if (tick() - idleStartTime) > 180 then
-                        hum.Health = 0 -- Mata se ficou completamente travado por 3 minutos fora do elevador
-                        idleStartTime = tick()
-                        task.wait(5)
-                    end
+        if char then
+            local hrp = char:FindFirstChild("HumanoidRootPart")
+            local hum = char:FindFirstChild("Humanoid")
+            if hrp and hum and hum.Health > 0 then
+                if hrp.Position.Y < -1500 then
+                    hum.Health = 0
                 end
             end
         end
@@ -1223,36 +1277,67 @@ task.spawn(function()
     end
 end)
 
--- NOTIFICAÇÕES E ITEMS
-local notifContainer = Instance.new("Frame", gui)
-notifContainer.Size, notifContainer.Position, notifContainer.BackgroundTransparency, notifContainer.ZIndex = UDim2.new(0, 370, 0, 600), UDim2.new(0, 10, 0.5, -300), 1, 20
-local notifLayout = Instance.new("UIListLayout", notifContainer); notifLayout.Padding, notifLayout.VerticalAlignment = UDim.new(0, 8), Enum.VerticalAlignment.Top
-local function playAlertSound() pcall(function() local s = Instance.new("Sound"); s.SoundId = SOUND_ID; s.Volume = 5; s.Parent = Workspace.CurrentCamera; s:Play(); Debris:AddItem(s, 3) end) end
+-- ============================================================
+-- ENGINE DE VOO LINEAR (STAY IN ROUND)
+-- ============================================================
+local stayCorners = {
+    Vector3.new(-657, 280, -532), 
+    Vector3.new(-657, 280, 473),  
+    Vector3.new(472, 280, 473),   
+    Vector3.new(476, 280, -527)   
+}
 
-local function showItemNotification(itemModel)
-    local card = Instance.new("Frame", notifContainer); card.Size, card.BackgroundColor3, card.ZIndex = UDim2.new(1, 0, 0, 115), Color3.fromRGB(14, 14, 24), 20; Instance.new("UICorner", card).CornerRadius = UDim.new(0, 14)
-    local stroke = Instance.new("UIStroke", card); stroke.Color, stroke.Thickness = ACCENT, 2.5
-    local bar = Instance.new("Frame", card); bar.Size, bar.Position, bar.BackgroundColor3, bar.ZIndex = UDim2.new(0, 6, 1, -16), UDim2.new(0, 8, 0, 8), Color3.fromRGB(255, 200, 30), 21; Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
-    local alertLbl = Instance.new("TextLabel", card); alertLbl.Size, alertLbl.Position, alertLbl.Text, alertLbl.TextColor3, alertLbl.Font, alertLbl.TextSize, alertLbl.TextXAlignment, alertLbl.BackgroundTransparency, alertLbl.ZIndex = UDim2.new(1, -80, 0, 30), UDim2.new(0, 22, 0, 8), "⚠️  ITEM RARO SPAWNADO!", Color3.fromRGB(255, 210, 40), Enum.Font.GothamBold, 15, Enum.TextXAlignment.Left, 1, 21
-    local nameLbl = Instance.new("TextLabel", card); nameLbl.Size, nameLbl.Position, nameLbl.Text, nameLbl.TextColor3, nameLbl.Font, nameLbl.TextSize, nameLbl.TextXAlignment, nameLbl.TextWrapped, nameLbl.BackgroundTransparency, nameLbl.ZIndex = UDim2.new(1, -30, 0, 42), UDim2.new(0, 22, 0, 36), itemModel.Name, Color3.new(1, 1, 1), Enum.Font.GothamBold, 24, Enum.TextXAlignment.Left, true, 1, 21
-    local statusLbl = Instance.new("TextLabel", card); statusLbl.Size, statusLbl.Position, statusLbl.Text, statusLbl.TextColor3, statusLbl.Font, statusLbl.TextSize, statusLbl.TextXAlignment, statusLbl.BackgroundTransparency, statusLbl.ZIndex = UDim2.new(1, -30, 0, 22), UDim2.new(0, 22, 0, 86), "🟢  No chão — aguardando coleta...", Color3.fromRGB(80, 255, 120), Enum.Font.GothamSemibold, 13, Enum.TextXAlignment.Left, 1, 21
-    local xBtn = Instance.new("TextButton", card); xBtn.Size, xBtn.Position, xBtn.BackgroundTransparency, xBtn.BorderSizePixel, xBtn.Text, xBtn.TextColor3, xBtn.Font, xBtn.TextSize, xBtn.ZIndex = UDim2.new(0, 30, 0, 30), UDim2.new(1, -36, 0, 6), 1, 0, "X", Color3.fromRGB(255, 90, 90), Enum.Font.GothamBold, 18, 22
-    playAlertSound(); card.Position = UDim2.new(-1.1, 0, 0, 0); TweenService:Create(card, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Position = UDim2.new(0, 0, 0, 0) }):Play()
-    local hbConn; local removed = false
-    local function removeCard() if removed then return end; removed = true; if hbConn then hbConn:Disconnect() end; TweenService:Create(card, TweenInfo.new(0.2), { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0) }):Play(); task.delay(0.25, function() if card then card:Destroy() end end) end
-    hbConn = RunService.Heartbeat:Connect(function() if not itemModel or not itemModel.Parent then statusLbl.Text = "🔴  Item sumiu ou foi coletado."; statusLbl.TextColor3 = Color3.fromRGB(255, 80, 80); task.wait(1.5); removeCard() end end)
-    xBtn.MouseButton1Click:Connect(removeCard)
-end
-Workspace.ChildAdded:Connect(function(child) if not ITEM_WHITELIST[child.Name] then return end; if itemAtivo then task.spawn(function() showItemNotification(child) end) end; if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end end)
+local wasStayInRound = false
+
+task.spawn(function()
+    local cIdx = 1
+    RunService.Heartbeat:Connect(function(dt)
+        if stayInRoundAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not farmEnabled then
+            if not wasStayInRound then
+                Workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+                wasStayInRound = true
+            end
+            
+            local hrp = player.Character.HumanoidRootPart
+            local targetPos = stayCorners[cIdx]
+            local dir = (targetPos - hrp.Position)
+            
+            if dir.Magnitude < 10 then
+                cIdx = cIdx + 1
+                if cIdx > #stayCorners then 
+                    cIdx = 1 
+                end
+            else
+                hrp.Velocity = Vector3.new(0, 0, 0)
+                local moveVec = dir.Unit * (_G.StaySpeed * 15) * dt
+                player.Character:PivotTo(CFrame.new(hrp.Position + moveVec))
+                
+                local cam = Workspace.CurrentCamera
+                cam.CFrame = CFrame.lookAt(hrp.Position + Vector3.new(0, 40, 40), Vector3.new(0, 0, 0))
+            end
+        else
+            if wasStayInRound then
+                Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                    Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid
+                end
+                wasStayInRound = false
+            end
+        end
+    end)
+end)
 
 -- ============================================================
--- 🔥 INTERACTION HUB 
+-- LÓGICA DE INTERACTION HUB
 -- ============================================================
 task.spawn(function()
     while true do
         task.wait(0.05) 
         if not interactAtivo and not saveAtivo and not reviveAtivo then continue end
-        for _, model in ipairs(Living:GetChildren()) do
+        local currentLiving = Workspace:FindFirstChild("Living")
+        if not currentLiving then continue end
+        
+        for _, model in ipairs(currentLiving:GetChildren()) do
             if not model:IsA("Model") or model == player.Character then continue end
             for _, obj in ipairs(model:GetDescendants()) do
                 if obj:IsA("ProximityPrompt") then
@@ -1272,7 +1357,38 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 CORE AUTO FARM 
+-- 🔥 ANTI AFK ZONE (DELEÇÃO DE PROMPTS NO LOBBY)
+-- ============================================================
+task.spawn(function()
+    while true do
+        task.wait(2)
+        if antiAfkZoneAtivo then
+            pcall(function()
+                for _, obj in ipairs(Workspace:GetDescendants()) do
+                    if obj:IsA("ProximityPrompt") then
+                        local posObj = obj.Parent
+                        if posObj then
+                            local yPos = nil
+                            if posObj:IsA("BasePart") then
+                                yPos = posObj.Position.Y
+                            elseif posObj:IsA("Model") and posObj.PrimaryPart then
+                                yPos = posObj.PrimaryPart.Position.Y
+                            end
+                            
+                            -- Se o prompt estiver fisicamente no Lobby (Y < -100), apaga da existência
+                            if yPos and yPos < -100 then
+                                obj:Destroy()
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- ============================================================
+-- 🔥 CORE AUTO FARM
 -- ============================================================
 local isShootingRifle = false
 local isReloadingRifle = false
@@ -1315,23 +1431,27 @@ task.spawn(function()
         end
 
         local rawTargets = {}
-        for _, model in ipairs(Living:GetChildren()) do
-            if not SKIBIDI_LIST[model.Name] then continue end
-            if Players:GetPlayerFromCharacter(model) then continue end
-            
-            local torso = model:FindFirstChild("Torso") or model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
-            if not torso then continue end
-            
-            local isDead = false
-            local f1 = model:FindFirstChild("1")
-            if f1 and f1:FindFirstChild("BallSocketConstraint") then isDead = true end
-            local hum = model:FindFirstChildWhichIsA("Humanoid")
-            if hum and hum.Health <= 0 then isDead = true end
-            
-            if not isDead then
-                local fakeHead = model:FindFirstChild("Fake Head")
-                local headSize = (fakeHead and fakeHead:IsA("BasePart")) and fakeHead.Size.Magnitude or 1.0
-                table.insert(rawTargets, {model = model, torso = torso, headSize = headSize})
+        local currentLiving = Workspace:FindFirstChild("Living")
+        
+        if currentLiving then
+            for _, model in ipairs(currentLiving:GetChildren()) do
+                if not SKIBIDI_LIST[model.Name] then continue end
+                if Players:GetPlayerFromCharacter(model) then continue end
+                
+                local torso = model:FindFirstChild("Torso") or model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
+                if not torso then continue end
+                
+                local isDead = false
+                local f1 = model:FindFirstChild("1")
+                if f1 and f1:FindFirstChild("BallSocketConstraint") then isDead = true end
+                local hum = model:FindFirstChildWhichIsA("Humanoid")
+                if hum and hum.Health <= 0 then isDead = true end
+                
+                if not isDead then
+                    local fakeHead = model:FindFirstChild("Fake Head")
+                    local headSize = (fakeHead and fakeHead:IsA("BasePart")) and fakeHead.Size.Magnitude or 1.0
+                    table.insert(rawTargets, {model = model, torso = torso, headSize = headSize})
+                end
             end
         end
 
@@ -1365,8 +1485,6 @@ task.spawn(function()
             local model, torso, headSize = tData.model, tData.torso, tData.headSize
             if currentConnection then currentConnection:Disconnect() end
 
-            _G.IsFarmingTarget = true 
-
             currentConnection = RunService.Heartbeat:Connect(function(dt)
                 local isDeadNow = false
                 local f1 = model:FindFirstChild("1")
@@ -1374,7 +1492,7 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
 
-                if not farmEnabled or not torso.Parent or isDeadNow or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) then
+                if not farmEnabled or not torso.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) then
                     if currentConnection then currentConnection:Disconnect() end
                     return
                 end
@@ -1510,10 +1628,9 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
                 
-            until not farmEnabled or not model.Parent or isDeadNow or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not currentConnection or not currentConnection.Connected
+            until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not currentConnection or not currentConnection.Connected
 
             if currentConnection then currentConnection:Disconnect() end
-            _G.IsFarmingTarget = false 
             
             if isShootingRifle and (activeCombatMethod == "Pulse Rifle") then
                 local vp = Workspace.CurrentCamera.ViewportSize
@@ -1521,6 +1638,21 @@ task.spawn(function()
                 isShootingRifle = false
             end
             break
+        end
+    end
+end)
+
+-- AUTO RUN LÓGICA (TOGGLE PURO & DEBOUNCE TÁTICO)
+task.spawn(function()
+    local runRemote = ReplicatedStorage:WaitForChild("Running")
+    while true do
+        task.wait(0.1)
+        if autoRunAtivo and player.Character then
+            local hum = player.Character:FindFirstChild("Humanoid")
+            if hum and hum.MoveDirection.Magnitude > 0 and hum.WalkSpeed <= 16.5 then 
+                pcall(function() runRemote:FireServer() end)
+                task.wait(0.5) 
+            end
         end
     end
 end)
@@ -1596,4 +1728,4 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V10.10 — Auto Join Retrô perfeitamente integrado e Anti-Limbo blindado!")
+print("✅ V12.7 — Anti AFK Zone implementado. O lobby agora é uma zona livre de prompts.")
