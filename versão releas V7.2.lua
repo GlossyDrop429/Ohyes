@@ -1,4 +1,4 @@
--- 🔥 V12.7 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
+-- 🔥 V12.9 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -18,7 +18,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V12.7"
+local VERSION      = "V12.9"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -33,6 +33,7 @@ _G.PR_Reloading = false
 _G.StaySpeed = 15
 _G.HoldDuration = 3
 _G.IsFarmingTarget = false
+_G.CurrentPunchDistance = -3
 
 -- ============================================================
 -- WHITELIST DOS SKIBIDIS & ITENS
@@ -215,7 +216,7 @@ local farmEnabled, interactAtivo, saveAtivo, itemFarmAtivo, itemAtivo = false, f
 local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoRunAtivo, autoJoinAtivo = false, false, false, false, false
 local autoBuyHealthAtivo, autoBuyPR, autoBuySL, autoBuyBL, autoBuyLensAtivo, autoBuyHeadphoneAtivo = false, false, false, false, false, false
 local autoBuyTitanAtivo, autoUseTitanAtivo = false, false
-local antiAfkZoneAtivo = false
+local antiAfkZoneAtivo, detectSizeAtivo = false, false
 local espToiletsAtivo, espPlayersAtivo, espItemsAtivo = false, false, false
 local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = false, false, false, false
 local suicideWaveTarget = 0
@@ -303,6 +304,17 @@ end
 local itemQueue, isProcessingQueue = {}, false
 local function getItemPos(item) local ok, pos = pcall(function() return item:IsA("Model") and item:GetPivot().Position or item.Position end); return ok and pos or nil end
 local function registerItemLog(itemName) end
+
+local function showItemNotification(item)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "📦 Item Detectado",
+            Text = item.Name .. " apareceu no mapa!",
+            Duration = 5,
+        })
+    end)
+    if registerItemLog then pcall(function() registerItemLog(item.Name) end) end
+end
 
 local INJECTION_TIME = tick()
 
@@ -1026,6 +1038,40 @@ createToggle(tabs.Misc, "Stay In Round",             function(s) stayInRoundAtiv
 createSlider(tabs.Misc, "Stay In Round Speed", 1, 50, 15, function(val) _G.StaySpeed = val end)
 createToggle(tabs.Misc, "Auto Run",                  function(s) autoRunAtivo = s end)
 
+createToggle(tabs.Misc, "Detect Size", function(s)
+    detectSizeAtivo = s
+    if not s then
+        _G.CurrentPunchDistance = -3
+    end
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(2)
+        if detectSizeAtivo then
+            local char = player.Character
+            if char then
+                local parts = {"HumanoidRootPart", "Left Leg", "Right Leg", "Left Arm", "Right Arm", "Head"}
+                local totalSize = 0
+                local count = 0
+                for _, pName in ipairs(parts) do
+                    local part = char:FindFirstChild(pName)
+                    if part and part:IsA("BasePart") then
+                        totalSize = totalSize + part.Size.Magnitude
+                        count = count + 1
+                    end
+                end
+                if count > 0 then
+                    local avgSize = totalSize / count
+                    local baseAvgSize = 2.47
+                    local ratio = avgSize / baseAvgSize
+                    _G.CurrentPunchDistance = -3 * ratio
+                end
+            end
+        end
+    end
+end)
+
 -- ABA 7: TELEPORT
 createTpBtn(tabs.Teleport, "Spawn (Lobby)",   Vector3.new(611, -468, 529), false, {color = "yellow", text = "Be careful not to teleport during the match."})
 createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
@@ -1511,7 +1557,7 @@ task.spawn(function()
 
                 if activeCombatMethod == "Auto Punch" then
                     local distY = (8 + (headSize * 0.8)) * integrity + striderOffset
-                    combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * -3)
+                    combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * _G.CurrentPunchDistance)
                     if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
                 elseif activeCombatMethod == "Orbital Punch" then
@@ -1728,4 +1774,4 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V12.7 — Anti AFK Zone implementado. O lobby agora é uma zona livre de prompts.")
+print("✅ V12.9 — Anti AFK Zone implementado. O lobby agora é uma zona livre de prompts.")
