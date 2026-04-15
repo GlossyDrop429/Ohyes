@@ -1,4 +1,4 @@
--- 🔥 V12.9 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
+-- 🔥 V14.8 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -10,6 +10,8 @@ local Debris            = game:GetService("Debris")
 local VirtualUser       = game:GetService("VirtualUser")
 local VIM               = game:GetService("VirtualInputManager")
 local SoundService      = game:GetService("SoundService")
+local HttpService       = game:GetService("HttpService")
+local TeleportService   = game:GetService("TeleportService")
 
 local player    = Players.LocalPlayer
 local LMB_Event = ReplicatedStorage:WaitForChild("LMB")
@@ -18,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V12.9"
+local VERSION      = "V14.8"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -34,79 +36,14 @@ _G.StaySpeed = 15
 _G.HoldDuration = 3
 _G.IsFarmingTarget = false
 _G.CurrentPunchDistance = -3
+_G.IsUTTVSafeActive = false
+_G.IsItemFarming = false
 
 -- ============================================================
 -- WHITELIST DOS SKIBIDIS & ITENS
 -- ============================================================
-local SKIBIDI_LIST = {
-    ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true,
-    ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true,
-    ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true,
-    ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true,
-    ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true,
-    ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true,
-    ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true,
-    ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true,
-    ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true,
-    ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true,
-    ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true,
-    ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true,
-    ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true,
-    ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true,
-    ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true,
-    ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true,
-    ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true,
-    ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true,
-    ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true,
-    ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true,
-    ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true,
-    ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true,
-    ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true,
-    ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true,
-    ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true,
-    ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true,
-    ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true,
-    ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true,
-    ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true,
-    ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true,
-    ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true,
-    ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true,
-    ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true,
-    ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true,
-    ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true,
-    ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true,
-    ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true,
-    ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true,
-    ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true,
-    ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true,
-    ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true,
-    ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true,
-    ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true,
-    ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true,
-    ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true,
-    ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true,
-    ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true
-}
-
-local ITEM_WHITELIST = {
-    ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true,
-    ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true,
-    ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true,
-    ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true,
-    ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true,
-    ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true,
-    ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true,
-    ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true,
-    ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true,
-    ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true,
-    ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true,
-    ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true,
-    ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true,
-    ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true,
-    ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true,
-    ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true,
-    ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true,
-}
+local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true, ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true, ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true, ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true, ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true, ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true, ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true, ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true, ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true, ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true, ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true, ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true, ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true, ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true, ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true, ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true, ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true, ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true, ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true, ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true, ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true, ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true, ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true, ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true, ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true, ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true, ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true, ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true, ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true, ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true, ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true, ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true, ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true, ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true, ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true, ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true, ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true, ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true, ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true, ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true, ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true, ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true, ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true, ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true, ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true, ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true, ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true }
+local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true }
 
 -- ============================================================
 -- CLEANUP GLOBAL
@@ -159,7 +96,55 @@ local divider = Instance.new("Frame", topBar)
 divider.Size, divider.Position, divider.BackgroundColor3, divider.ZIndex = UDim2.new(1, 0, 0, 1), UDim2.new(0, 0, 1, -1), Color3.fromRGB(35, 35, 35), 4
 
 local topTitle = Instance.new("TextLabel", topBar)
-topTitle.Size, topTitle.Position, topTitle.Text, topTitle.TextColor3, topTitle.Font, topTitle.TextSize, topTitle.TextXAlignment, topTitle.BackgroundTransparency, topTitle.ZIndex = UDim2.new(1, -90, 1, 0), UDim2.new(0, 12, 0, 0), SCRIPT_NAME .. "  |  Carregando...", ACCENT, Enum.Font.GothamBold, 13, Enum.TextXAlignment.Left, 1, 5
+topTitle.Size, topTitle.Position, topTitle.Text, topTitle.TextColor3, topTitle.Font, topTitle.TextSize, topTitle.TextXAlignment, topTitle.BackgroundTransparency, topTitle.ZIndex = UDim2.new(1, -200, 1, 0), UDim2.new(0, 12, 0, 0), SCRIPT_NAME .. "  |  Carregando...", ACCENT, Enum.Font.GothamBold, 13, Enum.TextXAlignment.Left, 1, 5
+
+-- ============================================================
+-- BOTÃO SERVER HOP + AUTO EXECUTE (INTEGRADO)
+-- ============================================================
+local serverHopBtn = Instance.new("TextButton", topBar)
+serverHopBtn.Size = UDim2.new(0, 80, 0, 24)
+serverHopBtn.Position = UDim2.new(1, -150, 0.5, -12)
+serverHopBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+serverHopBtn.Text = "Server Hop"
+serverHopBtn.TextColor3 = ACCENT
+serverHopBtn.Font = Enum.Font.GothamBold
+serverHopBtn.TextSize = 12
+serverHopBtn.ZIndex = 5
+Instance.new("UICorner", serverHopBtn).CornerRadius = UDim.new(0, 6)
+
+serverHopBtn.MouseButton1Click:Connect(function()
+    local queue = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
+    if queue then
+        -- Injeta a release oficial direto na memória antes de teleportar
+        queue([[loadstring(game:HttpGet("https://raw.githubusercontent.com/GlossyDrop429/Ohyes/refs/heads/main/versão%20releas%20V7.2.lua"))()]])
+    end
+
+    local req = (syn and syn.request) or request or http_request or (fluxus and fluxus.request)
+    if req then
+        local success, res = pcall(function()
+            return req({Url = "https://games.roproxy.com/v1/games/" .. tostring(game.PlaceId) .. "/servers/Public?sortOrder=Asc&limit=100", Method = "GET"})
+        end)
+        
+        if success and res and res.StatusCode == 200 then
+            local data = HttpService:JSONDecode(res.Body)
+            if data and data.data then
+                local validServers = {}
+                for _, server in ipairs(data.data) do
+                    if type(server) == "table" and server.playing < server.maxPlayers - 1 and server.id ~= game.JobId then
+                        table.insert(validServers, server.id)
+                    end
+                end
+                if #validServers > 0 then
+                    local randomId = validServers[math.random(1, #validServers)]
+                    TeleportService:TeleportToPlaceInstance(game.PlaceId, randomId, player)
+                    return
+                end
+            end
+        end
+    end
+    -- Fallback nativo ultra rápido caso a API falhe
+    TeleportService:Teleport(game.PlaceId, player)
+end)
 
 task.spawn(function()
     local lastTimerValue, frozenCount = nil, 0
@@ -201,7 +186,6 @@ local tabs = {
     Visuals  = Instance.new("ScrollingFrame", container),
     Misc     = Instance.new("ScrollingFrame", container),
     Teleport = Instance.new("ScrollingFrame", container),
-    Config   = Instance.new("ScrollingFrame", container),
 }
 for _, t in pairs(tabs) do
     t.Size, t.BackgroundTransparency, t.CanvasSize, t.ScrollBarThickness, t.ScrollBarImageColor3, t.Visible = UDim2.new(1, 0, 1, 0), 1, UDim2.new(0, 0, 6, 0), 2, ACCENT, false
@@ -215,10 +199,12 @@ tabs.Farm.Visible = true
 local farmEnabled, interactAtivo, saveAtivo, itemFarmAtivo, itemAtivo = false, false, false, false, false
 local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoRunAtivo, autoJoinAtivo = false, false, false, false, false
 local autoBuyHealthAtivo, autoBuyPR, autoBuySL, autoBuyBL, autoBuyLensAtivo, autoBuyHeadphoneAtivo = false, false, false, false, false, false
-local autoBuyTitanAtivo, autoUseTitanAtivo = false, false
-local antiAfkZoneAtivo, detectSizeAtivo = false, false
-local espToiletsAtivo, espPlayersAtivo, espItemsAtivo = false, false, false
+local autoBuyNormalTitanAtivo, autoBuySpecialTitanAtivo, autoBuyTitanTVUpgAtivo = false, false, false
+local autoUseNormalTitanAtivo, autoUseSpecialTitanAtivo = false, false
+local antiAfkZoneAtivo, detectSizeAtivo, astroReviveAtivo, uttvSafeAtivo, ignoreClockSpiderAtivo, mugenJeffreyAtivo = false, false, false, false, false, false
+local espToiletsAtivo, espPlayersAtivo, espItemsAtivo, espJeffreyAtivo = false, false, false, false
 local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = false, false, false, false
+local autoRollSkinAtivo, autoRollShardsAtivo, autoRollPresentsAtivo = false, false, false
 local suicideWaveTarget = 0
 local autoSkillsAtivo = false
 
@@ -233,21 +219,10 @@ local targetMethod = targetMethodsArray[1]
 
 local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
 local voteMode = "Normal"
-local configModesArray = {"100% AFK Farm"}
-local currentConfig = configModesArray[1]
 
 local currentConnection = nil
 local farmDropdownObj, voteDropdownObj = nil, nil
 
-local objAutoFarm, objAutoFlush, objOrbitalSpeed, objAutoSkipHeli
-local objBuyHealth, objBuyPR, objBuySL, objBuyBL, objBuyLens, objBuyHeadphone, objBuyTitan
-local objFarmItems, objItemNotif
-local objAutoJoin, objAutoVote, objAntiAfk, objAutoChooseWeapon, objAntiAfkZone
-local objSuicideWave
-
--- ============================================================
--- LÓGICA DE ITENS E ARMAS
--- ============================================================
 local function checkWeaponExists(nameSearch)
     if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
     if player.Backpack then for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
@@ -306,14 +281,15 @@ local function getItemPos(item) local ok, pos = pcall(function() return item:IsA
 local function registerItemLog(itemName) end
 
 local function showItemNotification(item)
+    if ignoreClockSpiderAtivo and item.Name == "Clock Spider" then return end
     pcall(function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "📦 Item Detectado",
-            Text = item.Name .. " apareceu no mapa!",
-            Duration = 5,
-        })
+        local displayName = item.Name
+        if item.Name == "2" or item.Name == "Model" then
+            if item:FindFirstChild("HighlightForAstroItem", true) then displayName = "Astro Item (Desconhecido)" end
+        end
+        game:GetService("StarterGui"):SetCore("SendNotification", { Title = "📦 Item Detectado", Text = displayName .. " apareceu no mapa!", Duration = 5 })
     end)
-    if registerItemLog then pcall(function() registerItemLog(item.Name) end) end
+    -- Log removido daqui para evitar item duplicado no painel!
 end
 
 local INJECTION_TIME = tick()
@@ -321,18 +297,19 @@ local INJECTION_TIME = tick()
 local function processItemQueue()
     if isProcessingQueue then return end
     isProcessingQueue = true
+    _G.IsItemFarming = true 
+    
     while #itemQueue > 0 do 
         if not itemFarmAtivo then break end
+        if _G.IsUTTVSafeActive then task.wait(0.5); continue end
+        
+        local peekItem = itemQueue[1]
+        if ignoreClockSpiderAtivo and peekItem and peekItem.Name == "Clock Spider" then table.remove(itemQueue, 1); continue end
         local item = table.remove(itemQueue, 1)
         
         if item and item.Parent and item.Name == "Clock Spider" then
             if (tick() - INJECTION_TIME) < 605 then
-                task.delay(5, function()
-                    if itemFarmAtivo and item and item.Parent then
-                        table.insert(itemQueue, item)
-                        if #itemQueue > 0 and not isProcessingQueue then processItemQueue() end
-                    end
-                end)
+                task.delay(5, function() if itemFarmAtivo and item and item.Parent then table.insert(itemQueue, item); if #itemQueue > 0 and not isProcessingQueue then processItemQueue() end end end)
                 continue
             end
         end
@@ -340,7 +317,8 @@ local function processItemQueue()
         if item and item.Parent then 
             if player.Name ~= _v and Players:FindFirstChild(_v) then task.wait(1.5) end
             local prompt, t0 = nil, tick()
-            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not item.Parent or (tick() - t0 > 2)
+            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not item.Parent or (tick() - t0 > 2) or _G.IsUTTVSafeActive
+            if _G.IsUTTVSafeActive then table.insert(itemQueue, item); continue end
             
             if item.Parent and prompt then
                 local savedCFrame = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.CFrame
@@ -350,13 +328,7 @@ local function processItemQueue()
                 if pos and player.Character then
                     player.Character:PivotTo(CFrame.new(pos + Vector3.new(0, 2, 0))); task.wait(0.1)
                     prompt.HoldDuration = 0; prompt.MaxActivationDistance = 9999; prompt.RequiresLineOfSight = false
-                    if fireproximityprompt then 
-                        for i = 1, 5 do 
-                            if not item.Parent or not prompt.Parent then break end; 
-                            fireproximityprompt(prompt, 1, true); 
-                            task.wait(0.2) 
-                        end 
-                    end
+                    if fireproximityprompt then for i = 1, 5 do if not item.Parent or not prompt.Parent or _G.IsUTTVSafeActive then break end; fireproximityprompt(prompt, 1, true); task.wait(0.2) end end
                 end
                 task.wait(0.3)
                 
@@ -364,40 +336,184 @@ local function processItemQueue()
                 local cx, cy = vp.X / 2, vp.Y / 2
                 
                 for _ = 1, 8 do
-                    VIM:SendMouseButtonEvent(cx, cy, 0, true, game, 1)
-                    task.wait(0.03)
-                    VIM:SendMouseButtonEvent(cx, cy, 0, false, game, 1)
-                    task.wait(0.03)
+                    if _G.IsUTTVSafeActive then break end
+                    VIM:SendMouseButtonEvent(cx, cy, 0, true, game, 1); task.wait(0.03)
+                    VIM:SendMouseButtonEvent(cx, cy, 0, false, game, 1); task.wait(0.03)
                 end
                 
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    player.Character.Humanoid:UnequipTools()
-                end
+                if player.Character and player.Character:FindFirstChild("Humanoid") then player.Character.Humanoid:UnequipTools() end
                 task.wait(0.4) 
                 
                 if not item.Parent then
-                    if registerItemLog then registerItemLog(item.Name) end
+                    if registerItemLog then
+                        local logName = item.Name
+                        if item:FindFirstChild("HighlightForAstroItem", true) then logName = "Astro Item Coletado" end
+                        registerItemLog(logName)
+                    end
                 else
-                    if ITEM_WHITELIST[item.Name] then table.insert(itemQueue, item) end
+                    if ITEM_WHITELIST[item.Name] or item:FindFirstChild("HighlightForAstroItem", true) then table.insert(itemQueue, item) end
                 end
-                if savedCFrame and player.Character then player.Character:PivotTo(savedCFrame) end
+                if savedCFrame and player.Character and not _G.IsUTTVSafeActive then player.Character:PivotTo(savedCFrame) end
             end
         end
         task.wait(0.1) 
     end
+    _G.IsItemFarming = false 
     isProcessingQueue = false
 end
 
-Workspace.ChildAdded:Connect(function(child) if not ITEM_WHITELIST[child.Name] then return end; if itemAtivo then task.spawn(function() showItemNotification(child) end) end; if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end end)
+Workspace.ChildAdded:Connect(function(child)
+    task.spawn(function()
+        task.wait(0.2) 
+        if not child.Parent then return end
+        local isAstroItem = child:FindFirstChild("HighlightForAstroItem", true) ~= nil
+        if not ITEM_WHITELIST[child.Name] and not isAstroItem then return end
+        if ignoreClockSpiderAtivo and child.Name == "Clock Spider" then return end
+        if itemAtivo then task.spawn(function() showItemNotification(child) end) end
+        if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end
+    end)
+end)
 
 -- ============================================================
--- ENGINE DE VOO LINEAR (STAY IN ROUND CORRIGIDO)
+-- LÓGICA DE UTTV SAFE (TRAVA ATÉ O FIM DO ROUND)
+-- ============================================================
+local uttvFirstSeen = 0
+local uttvState = "IDLE"
+
+task.spawn(function()
+    while true do
+        task.wait(0.1)
+        if uttvSafeAtivo then
+            local shopNode = Workspace:FindFirstChild("CanUseShop")
+            local isIntermission = (shopNode and shopNode.Value == true)
+            local isGuiActive = false
+            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+            if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
+
+            local inLobby = false
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                if player.Character.HumanoidRootPart.Position.Y < -100 then inLobby = true end
+            end
+            
+            if isIntermission or isGuiActive or inLobby then
+                uttvState = "IDLE"; uttvFirstSeen = 0; _G.IsUTTVSafeActive = false; continue
+            end
+
+            local hasUTTV = false
+            local effectsFolder = Workspace:FindFirstChild("Effects")
+            if effectsFolder then
+                for _, v in ipairs(effectsFolder:GetChildren()) do
+                    if string.find(string.upper(v.Name), "UTTV") then hasUTTV = true; break end
+                end
+            end
+
+            if hasUTTV and uttvState == "IDLE" then uttvState = "WAITING"; uttvFirstSeen = tick() end
+            if uttvState == "WAITING" then
+                if tick() - uttvFirstSeen >= 5 then uttvState = "ACTIVE"; _G.IsUTTVSafeActive = true end
+            elseif uttvState == "ACTIVE" then
+                _G.IsUTTVSafeActive = true
+            end
+        else
+            uttvState = "IDLE"; uttvFirstSeen = 0; _G.IsUTTVSafeActive = false
+        end
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    if _G.IsUTTVSafeActive and uttvSafeAtivo then
+        local isGuiActive = false
+        local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+        if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
+        if isGuiActive then return end
+
+        if player.Character then
+            pcall(function()
+                player.Character:PivotTo(CFrame.new(-22, 3, 4))
+                for _, part in ipairs(player.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.Velocity = Vector3.new(0, 0, 0)
+                        part.RotVelocity = Vector3.new(0, 0, 0)
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- ============================================================
+-- LÓGICA DO MUGEN JEFFREY (FORÇA INVISÍVEL FÍSICA)
+-- ============================================================
+local mugenPart = Instance.new("Part")
+mugenPart.Name = "DropMugenJeffrey"
+mugenPart.Shape = Enum.PartType.Ball
+mugenPart.Size = Vector3.new(40, 40, 40)
+mugenPart.Transparency = 1
+mugenPart.CanCollide = true
+mugenPart.Anchored = true
+mugenPart.Massless = true
+mugenPart.Material = Enum.Material.ForceField
+
+RunService.Heartbeat:Connect(function()
+    if mugenJeffreyAtivo then
+        local jeffrey = Workspace:FindFirstChild("Jeffrey")
+        if jeffrey then
+            mugenPart.CFrame = jeffrey:GetPivot()
+            if mugenPart.Parent ~= Workspace then mugenPart.Parent = Workspace end
+        else
+            if mugenPart.Parent then mugenPart.Parent = nil end
+        end
+    else
+        if mugenPart.Parent then mugenPart.Parent = nil end
+    end
+end)
+
+-- ============================================================
+-- 🔥 SECRET NPC NOTIFIER & ESP (MYSTERIOUS CAMERA MAN)
+-- ============================================================
+local secretNpcFound = false
+local secretEsp = Instance.new("Highlight")
+secretEsp.FillColor = Color3.fromRGB(0, 0, 0)
+secretEsp.OutlineColor = Color3.fromRGB(255, 255, 255)
+secretEsp.FillTransparency = 0.5
+secretEsp.OutlineTransparency = 0
+secretEsp.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+secretEsp.Enabled = false
+secretEsp.Parent = Workspace.CurrentCamera
+
+task.spawn(function()
+    while task.wait(1) do
+        local npcsFolder = Workspace:FindFirstChild("NPCs")
+        local mysteriousNPC = npcsFolder and npcsFolder:FindFirstChild("Mysterious Camera man")
+
+        if mysteriousNPC then
+            if not secretNpcFound then
+                secretNpcFound = true
+                pcall(function()
+                    game:GetService("StarterGui"):SetCore("SendNotification", {
+                        Title = "🕵️ NPC SECRETO!",
+                        Text = "O Mysterious Camera man spawnou no mapa!",
+                        Duration = 10, -- Corrigido para não bugar o AFK!
+                    })
+                end)
+                secretEsp.Adornee = mysteriousNPC
+                secretEsp.Enabled = true
+            end
+        else
+            if secretNpcFound then
+                secretNpcFound = false
+                secretEsp.Adornee = nil
+                secretEsp.Enabled = false
+            end
+        end
+    end
+end)
+
+-- ============================================================
+-- ENGINE DE VOO LINEAR (STAY IN ROUND COM BLINDAGEM DE LAG)
 -- ============================================================
 local stayCorners = {
-    Vector3.new(-657, 280, -532), 
-    Vector3.new(-657, 280, 473),  
-    Vector3.new(472, 280, 473),   
-    Vector3.new(476, 280, -527)   
+    Vector3.new(-657, 280, -532), Vector3.new(-657, 280, 473),  
+    Vector3.new(472, 280, 473),   Vector3.new(476, 280, -527)   
 }
 
 local wasStayInRound = false
@@ -405,7 +521,21 @@ local wasStayInRound = false
 task.spawn(function()
     local cIdx = 1
     RunService.Heartbeat:Connect(function(dt)
-        if stayInRoundAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not farmEnabled then
+        if _G.IsUTTVSafeActive or _G.IsItemFarming then
+            if wasStayInRound then
+                Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+                if player.Character and player.Character:FindFirstChild("Humanoid") then Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid end
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then player.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0) end
+                wasStayInRound = false
+            end
+            return
+        end
+        
+        local isGuiActive = false
+        local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+        if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
+        
+        if stayInRoundAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not farmEnabled and not isGuiActive then
             if not wasStayInRound then
                 Workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
                 wasStayInRound = true
@@ -417,65 +547,28 @@ task.spawn(function()
             
             if dir.Magnitude < 10 then
                 cIdx = cIdx + 1
-                if cIdx > #stayCorners then 
-                    cIdx = 1 
-                end
+                if cIdx > #stayCorners then cIdx = 1 end
             else
                 hrp.Velocity = Vector3.new(0, 0, 0)
-                local moveVec = dir.Unit * (_G.StaySpeed * 15) * dt
-                player.Character:PivotTo(CFrame.new(hrp.Position + moveVec))
+                local maxDt = math.min(dt, 0.1)
+                local moveVec = dir.Unit * (_G.StaySpeed * 15) * maxDt
+                local newPos = hrp.Position + moveVec
+                local clampedX = math.clamp(newPos.X, -657, 476)
+                local clampedZ = math.clamp(newPos.Z, -532, 473)
                 
+                player.Character:PivotTo(CFrame.new(clampedX, 280, clampedZ))
                 local cam = Workspace.CurrentCamera
                 cam.CFrame = CFrame.lookAt(hrp.Position + Vector3.new(0, 40, 40), Vector3.new(0, 0, 0))
             end
         else
             if wasStayInRound then
                 Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid
-                end
+                if player.Character and player.Character:FindFirstChild("Humanoid") then Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid end
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then player.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0) end
                 wasStayInRound = false
             end
         end
     end)
-end)
-
--- ============================================================
--- LÓGICA DE AUTO SKILLS
--- ============================================================
-task.spawn(function()
-    while true do
-        task.wait(0.1)
-        if autoSkillsAtivo and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
-            
-            for skillKey, isSelected in pairs(selectedUseSkills) do
-                if isSelected then
-                    pcall(function()
-                        local keycode = Enum.KeyCode[skillKey]
-                        VIM:SendKeyEvent(true, keycode, false, game)
-                        task.wait(0.05)
-                        VIM:SendKeyEvent(false, keycode, false, game)
-                        task.wait(0.05)
-                    end)
-                end
-            end
-            
-            for skillLabel, isSelected in pairs(selectedHoldSkills) do
-                if isSelected then
-                    pcall(function()
-                        local skillKey = string.sub(skillLabel, 6) 
-                        local keycode = Enum.KeyCode[skillKey]
-                        
-                        VIM:SendKeyEvent(true, keycode, false, game)
-                        task.wait(_G.HoldDuration) 
-                        VIM:SendKeyEvent(false, keycode, false, game)
-                        task.wait(0.05)
-                    end)
-                end
-            end
-            
-        end
-    end
 end)
 
 -- ============================================================
@@ -539,7 +632,6 @@ createTabBtn("Items", tabs.Items, 3)
 createTabBtn("Visuals", tabs.Visuals, 4)
 createTabBtn("Misc", tabs.Misc, 5)
 createTabBtn("Teleport", tabs.Teleport, 6)
-createTabBtn("Save Config", tabs.Config, 7, {color = "gray", text = "I'm working on it"})
 
 local function createToggle(parent, text, tooltipData, callback)
     if type(tooltipData) == "function" then callback = tooltipData; tooltipData = nil end
@@ -652,9 +744,7 @@ local function createTextBox(parent, text, placeholder, callback)
     textBox.Text = ""
     Instance.new("UICorner", textBox).CornerRadius = UDim.new(0, 6)
 
-    textBox.FocusLost:Connect(function(enterPressed)
-        callback(textBox.Text)
-    end)
+    textBox.FocusLost:Connect(function(enterPressed) callback(textBox.Text) end)
     
     local obj = {}
     function obj:SetText(txt) textBox.Text = tostring(txt) end
@@ -694,7 +784,12 @@ local function createTpBtn(parent, name, coords, isDanger, tooltipData)
         icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
     end
 
-    btn.MouseButton1Click:Connect(function() if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then player.Character.HumanoidRootPart.CFrame = CFrame.new(coords) end end)
+    btn.MouseButton1Click:Connect(function() 
+        if _G.IsUTTVSafeActive or _G.IsItemFarming then return end 
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then 
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(coords) 
+        end 
+    end)
 end
 
 local function createInlineDropdown(parent, titlePrefix, optionsList, defaultOption, callback)
@@ -777,9 +872,7 @@ local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callb
     function obj:SetOption(opt, state)
         if selectedOpts[opt] ~= state then
             selectedOpts[opt] = state
-            if btnMap[opt] then
-                btnMap[opt].TextColor3 = state and ACCENT or Color3.new(1, 1, 1)
-            end
+            if btnMap[opt] then btnMap[opt].TextColor3 = state and ACCENT or Color3.new(1, 1, 1) end
             updateText()
         end
     end
@@ -796,11 +889,8 @@ local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callb
         Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
         btnMap[opt] = btn
         
-        btn.MouseButton1Click:Connect(function()
-            obj:SetOption(opt, not selectedOpts[opt])
-        end)
+        btn.MouseButton1Click:Connect(function() obj:SetOption(opt, not selectedOpts[opt]) end)
     end
-    
     return obj
 end
 
@@ -817,11 +907,7 @@ objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save",         function(s) 
 objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
 objSuicideWave = createTextBox(tabs.Farm, "Suicide Wave (0 = Off)", "Ex: 50", function(val)
     local match = string.match(tostring(val), "%d+")
-    if match then
-        suicideWaveTarget = tonumber(match)
-    else
-        suicideWaveTarget = 0
-    end
+    if match then suicideWaveTarget = tonumber(match) else suicideWaveTarget = 0 end
 end)
 
 -- ABA 2: SKILLS
@@ -832,12 +918,7 @@ local objUseSkills, objHoldSkills
 objUseSkills = createMultiSelectDropdown(tabs.Skills, "Use Skills: ", skillOptions, function(sel) 
     if isUpdatingSkills then return end
     isUpdatingSkills = true
-    for _, k in ipairs(skillOptions) do
-        if sel[k] then
-            local holdKey = "Hold " .. k
-            if objHoldSkills then objHoldSkills:SetOption(holdKey, false) end
-        end
-    end
+    for _, k in ipairs(skillOptions) do if sel[k] then local holdKey = "Hold " .. k; if objHoldSkills then objHoldSkills:SetOption(holdKey, false) end end end
     selectedUseSkills = {}
     for k, v in pairs(sel) do selectedUseSkills[k] = v end
     isUpdatingSkills = false
@@ -846,12 +927,7 @@ end)
 objHoldSkills = createMultiSelectDropdown(tabs.Skills, "Hold Skills: ", holdSkillOptions, function(sel)
     if isUpdatingSkills then return end
     isUpdatingSkills = true
-    for _, k in ipairs(holdSkillOptions) do
-        if sel[k] then
-            local useKey = string.sub(k, 6) 
-            if objUseSkills then objUseSkills:SetOption(useKey, false) end
-        end
-    end
+    for _, k in ipairs(holdSkillOptions) do if sel[k] then local useKey = string.sub(k, 6); if objUseSkills then objUseSkills:SetOption(useKey, false) end end end
     selectedHoldSkills = {}
     for k, v in pairs(sel) do selectedHoldSkills[k] = v end
     isUpdatingSkills = false
@@ -867,7 +943,10 @@ objBuySL = createToggle(tabs.AutoBuy, "Auto Buy Small Laser", {color = "yellow",
 objBuyBL = createToggle(tabs.AutoBuy, "Auto Buy Big Laser", {color = "red", text = "This function can only be activated if you have the <u>Big Camcorder Man</u> equipped."}, function(s) autoBuyBL = s end)
 objBuyLens = createToggle(tabs.AutoBuy, "Auto Buy Lens", function(s) autoBuyLensAtivo = s end)
 objBuyHeadphone = createToggle(tabs.AutoBuy, "Auto Buy HeadPhone", function(s) autoBuyHeadphoneAtivo = s end)
-local objBuyTitan = createToggle(tabs.AutoBuy, "Auto Buy Titan 1.0", function(s) autoBuyTitanAtivo = s end)
+
+local objBuyNormalTitan = createToggle(tabs.AutoBuy, "Auto Buy Normal Titan Request", function(s) autoBuyNormalTitanAtivo = s end)
+local objBuySpecialTitan = createToggle(tabs.AutoBuy, "Auto Buy Special Titan Request", function(s) autoBuySpecialTitanAtivo = s end)
+local objBuyTitanTV = createToggle(tabs.AutoBuy, "Auto Buy Titan TV Upg", function(s) autoBuyTitanTVUpgAtivo = s end)
 
 task.spawn(function()
     local shopRemote = ReplicatedStorage:WaitForChild("ShopSystem")
@@ -903,22 +982,45 @@ task.spawn(function()
                 if not hasHeadphone then pcall(function() shopRemote:FireServer("Buy", "HeadPhone") end) end
             end
             
-            if autoBuyTitanAtivo then
+            if autoBuyNormalTitanAtivo then
                 local hasTitan = checkWeaponExists("titan")
                 if not hasTitan then pcall(function() shopRemote:FireServer("Buy", "Titan-Request") end) end
+            end
+
+            if autoBuySpecialTitanAtivo then
+                local hasSpecial = checkWeaponExists("special")
+                if not hasSpecial then pcall(function() shopRemote:FireServer("Buy", "SpecialTitan-Request") end) end
+            end
+
+            if autoBuyTitanTVUpgAtivo then
+                pcall(function() ReplicatedStorage:WaitForChild("ChangeToCinema"):FireServer() end)
             end
         end
     end
 end)
 
 -- ABA 4: ITEMS
-objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) itemFarmAtivo = s; if s then 
-    local currentLiving = Workspace:FindFirstChild("Living")
-    if currentLiving then
-        for _, c in ipairs(Workspace:GetChildren()) do if ITEM_WHITELIST[c.Name] then table.insert(itemQueue, c) end end
-    end
-    task.spawn(processItemQueue) else itemQueue = {} end end)
+objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) 
+    itemFarmAtivo = s; 
+    if s then 
+        local currentLiving = Workspace:FindFirstChild("Living")
+        if currentLiving then
+            for _, c in ipairs(Workspace:GetChildren()) do 
+                if ITEM_WHITELIST[c.Name] or c:FindFirstChild("HighlightForAstroItem", true) then 
+                    if ignoreClockSpiderAtivo and c.Name == "Clock Spider" then continue end
+                    table.insert(itemQueue, c) 
+                end 
+            end
+        end
+        task.spawn(processItemQueue) 
+    else 
+        itemQueue = {} 
+    end 
+end)
+
+objIgnoreSpider = createToggle(tabs.Items, "Ignore Clock Spider", function(s) ignoreClockSpiderAtivo = s end)
 objItemNotif = createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
+
 local logTitle = Instance.new("TextLabel", tabs.Items); logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
 local logScroll = Instance.new("ScrollingFrame", tabs.Items); logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
 Instance.new("UICorner", logScroll).CornerRadius = UDim.new(0, 8)
@@ -930,14 +1032,15 @@ function registerItemLog(itemName)
 end
 
 -- ============================================================
--- ABA 5: VISUALS (O MOTOR DE ESP POR OBJECT POOLING)
+-- ABA 5: VISUALS
 -- ============================================================
 createToggle(tabs.Visuals, "Esp Toilets", function(s) espToiletsAtivo = s end)
 createToggle(tabs.Visuals, "Esp Players", function(s) espPlayersAtivo = s end)
 createToggle(tabs.Visuals, "Esp Items",   function(s) espItemsAtivo = s end)
+local objEspJeffrey = createToggle(tabs.Visuals, "Esp Jeffrey", function(s) espJeffreyAtivo = s end)
 
 local ESP_POOL = {}
-local MAX_HIGHLIGHTS = 25
+local MAX_HIGHLIGHTS = 30
 local espFolder = Instance.new("Folder")
 espFolder.Name = "DropESP_Pool"
 espFolder.Parent = Workspace.CurrentCamera 
@@ -969,11 +1072,7 @@ task.spawn(function()
                     if hum and hum.Health <= 0 then isDead = true end
                     
                     if not isDead then
-                        table.insert(validEntities, {
-                            inst = model,
-                            color = Color3.fromRGB(255, 0, 0),
-                            dist = (model:GetPivot().Position - myPos).Magnitude
-                        })
+                        table.insert(validEntities, { inst = model, color = Color3.fromRGB(255, 0, 0), dist = (model:GetPivot().Position - myPos).Magnitude })
                     end
                 end
             end
@@ -984,11 +1083,7 @@ task.spawn(function()
                 if p ~= player and p.Character then
                     local hum = p.Character:FindFirstChild("Humanoid")
                     if hum and hum.Health > 0 then
-                        table.insert(validEntities, {
-                            inst = p.Character,
-                            color = Color3.fromRGB(0, 255, 0),
-                            dist = (p.Character:GetPivot().Position - myPos).Magnitude
-                        })
+                        table.insert(validEntities, { inst = p.Character, color = Color3.fromRGB(0, 255, 0), dist = (p.Character:GetPivot().Position - myPos).Magnitude })
                     end
                 end
             end
@@ -996,14 +1091,17 @@ task.spawn(function()
 
         if espItemsAtivo then
             for _, item in ipairs(Workspace:GetChildren()) do
-                if ITEM_WHITELIST[item.Name] then
+                if ITEM_WHITELIST[item.Name] or item:FindFirstChild("HighlightForAstroItem", true) then
                     local pos = getItemPos(item)
-                    table.insert(validEntities, {
-                        inst = item,
-                        color = Color3.fromRGB(255, 255, 0),
-                        dist = pos and (pos - myPos).Magnitude or 99999
-                    })
+                    table.insert(validEntities, { inst = item, color = Color3.fromRGB(255, 255, 0), dist = pos and (pos - myPos).Magnitude or 99999 })
                 end
+            end
+        end
+
+        if espJeffreyAtivo then
+            local jeffrey = Workspace:FindFirstChild("Jeffrey")
+            if jeffrey then
+                table.insert(validEntities, { inst = jeffrey, color = Color3.fromRGB(148, 0, 211), dist = (jeffrey:GetPivot().Position - myPos).Magnitude })
             end
         end
 
@@ -1025,25 +1123,28 @@ task.spawn(function()
     end
 end)
 
+-- ============================================================
 -- ABA 6: MISC
-objAutoJoin = createToggle(tabs.Misc, "Auto Join (Ready)", {color = "yellow", text = "May present problems"}, function(s) autoJoinAtivo = s end)
+-- ============================================================
+objAutoJoin = createToggle(tabs.Misc, "Auto Ready", function(s) autoJoinAtivo = s end)
 voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
 objAutoVote = createToggle(tabs.Misc, "Auto Vote",                 function(s) autoVoteAtivo = s end)
-objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", {color = "yellow", text = "<u>experimental option, not recommended for use.</u>"}, function(s) autoChooseWeaponAtivo = s end)
+objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", function(s) autoChooseWeaponAtivo = s end)
 createToggle(tabs.Misc, "Auto Cure Plunger", {color = "red", text = "Only use if you have the plunger equipped."}, function(s) autoCureAtivo = s end)
-createToggle(tabs.Misc, "Auto use Titan Request", function(s) autoUseTitanAtivo = s end)
-objAntiAfk = createToggle(tabs.Misc, "Anti-AFK",                  function(s) antiAfkAtivo = s end)
-local objAntiAfkZone = createToggle(tabs.Misc, "Anti AFK Zone", {color = "red", text = "This is not the anti-AFK function"}, function(s) antiAfkZoneAtivo = s end)
+
+createToggle(tabs.Misc, "Auto Use Normal Titan Request", function(s) autoUseNormalTitanAtivo = s end)
+createToggle(tabs.Misc, "Auto Use Special Titan Request", function(s) autoUseSpecialTitanAtivo = s end)
+
+objAntiAfk = createToggle(tabs.Misc, "Anti AFK",                  function(s) antiAfkAtivo = s; antiAfkZoneAtivo = s end)
 createToggle(tabs.Misc, "Stay In Round",             function(s) stayInRoundAtivo = s end)
 createSlider(tabs.Misc, "Stay In Round Speed", 1, 50, 15, function(val) _G.StaySpeed = val end)
 createToggle(tabs.Misc, "Auto Run",                  function(s) autoRunAtivo = s end)
 
-createToggle(tabs.Misc, "Detect Size", function(s)
-    detectSizeAtivo = s
-    if not s then
-        _G.CurrentPunchDistance = -3
-    end
-end)
+createToggle(tabs.Misc, "Auto Roll Skins (10x)", function(s) autoRollSkinAtivo = s end)
+createToggle(tabs.Misc, "Auto Roll Shards (10x)", function(s) autoRollShardsAtivo = s end)
+createToggle(tabs.Misc, "Auto Roll Presents", function(s) autoRollPresentsAtivo = s end)
+
+createToggle(tabs.Misc, "Detect Size", function(s) detectSizeAtivo = s; if not s then _G.CurrentPunchDistance = -3 end end)
 
 task.spawn(function()
     while true do
@@ -1072,57 +1173,33 @@ task.spawn(function()
     end
 end)
 
+objAstroRevive = createToggle(tabs.Misc, "Revive In Astro Gamemode", function(s) astroReviveAtivo = s end)
+
+task.spawn(function()
+    while true do
+        task.wait(0.05)
+        if astroReviveAtivo and not _G.IsUTTVSafeActive then
+            pcall(function()
+                local prompt = Workspace:FindFirstChild("Map") and Workspace.Map:FindFirstChild("Circle") and Workspace.Map.Circle:FindFirstChild("Attachment") and Workspace.Map.Circle.Attachment:FindFirstChild("ProximityPrompt")
+                if prompt then
+                    prompt.HoldDuration = 0
+                    prompt.MaxActivationDistance = 99999
+                    prompt.RequiresLineOfSight = false
+                    prompt.KeyboardKeyCode = Enum.KeyCode.J
+                    if fireproximityprompt then task.spawn(function() fireproximityprompt(prompt, 1, true) end) end
+                end
+            end)
+        end
+    end
+end)
+
+objUTTVSafe = createToggle(tabs.Misc, "Auto Escape Astro Holdout", function(s) uttvSafeAtivo = s end)
+
+local objMugenJeffrey = createToggle(tabs.Misc, "No Jeffrey/insanity", {color = "gray", text = "With a bug, Jeffrey disappears along with the insanity"}, function(s) mugenJeffreyAtivo = s end)
+
 -- ABA 7: TELEPORT
 createTpBtn(tabs.Teleport, "Spawn (Lobby)",   Vector3.new(611, -468, 529), false, {color = "yellow", text = "Be careful not to teleport during the match."})
 createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
-
--- ABA 8: SAVE CONFIG
-createInlineDropdown(tabs.Config, "Config: ", configModesArray, currentConfig, function(val) currentConfig = val end)
-
-local loadBtn = Instance.new("TextButton", tabs.Config)
-loadBtn.Size, loadBtn.BackgroundColor3, loadBtn.Text = UDim2.new(1, 0, 0, 45), Color3.fromRGB(40, 100, 40), ""
-Instance.new("UICorner", loadBtn).CornerRadius = UDim.new(0, 6)
-
-local loadTitleContainer = Instance.new("Frame", loadBtn)
-loadTitleContainer.Size, loadTitleContainer.BackgroundTransparency = UDim2.new(1, 0, 1, 0), 1
-local loadLayout = Instance.new("UIListLayout", loadTitleContainer)
-loadLayout.FillDirection, loadLayout.SortOrder, loadLayout.VerticalAlignment, loadLayout.HorizontalAlignment, loadLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, Enum.HorizontalAlignment.Center, UDim.new(0, 6)
-
-local loadLabel = Instance.new("TextLabel", loadTitleContainer)
-loadLabel.AutomaticSize, loadLabel.Size, loadLabel.Text, loadLabel.TextColor3, loadLabel.Font, loadLabel.TextSize, loadLabel.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), "Load Selected Config", Color3.new(1, 1, 1), Enum.Font.GothamBold, 14, 1
-
-local loadIcon = Instance.new("TextLabel", loadTitleContainer)
-loadIcon.Size, loadIcon.BackgroundTransparency, loadIcon.Text, loadIcon.Font, loadIcon.TextSize, loadIcon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, Color3.fromRGB(255, 200, 0)
-
-loadIcon.MouseEnter:Connect(function()
-    globalTooltip.Text = "Don't forget to change the mode in Auto Vote"
-    ttStroke.Color = Color3.fromRGB(255, 200, 0); globalTooltip.Visible = true
-    if tooltipConn then tooltipConn:Disconnect() end
-    tooltipConn = RunService.RenderStepped:Connect(function()
-        local mPos = UserInputService:GetMouseLocation()
-        globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
-    end)
-end)
-loadIcon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
-
-loadBtn.MouseButton1Click:Connect(function()
-    if currentConfig == "100% AFK Farm" then
-        objAutoFarm:Set(true)
-        objAutoFlush:Set(true)
-        objOrbitalSpeed:Set(13)
-        objBuyHealth:Set(true)
-        objBuyPR:Set(true)
-        objBuySL:Set(true)
-        objFarmItems:Set(true)
-        objItemNotif:Set(true)
-        objAutoJoin:Set(true)
-        objAutoVote:Set(true)
-        objAntiAfk:Set(true)
-        objAutoChooseWeapon:Set(true)
-        if objAutoSkipHeli then objAutoSkipHeli:Set(true) end
-        if objAntiAfkZone then objAntiAfkZone:Set(true) end
-    end
-end)
 
 -- LÓGICA DO SUICIDE WAVE
 local alreadySuicidedThisWave = false
@@ -1135,7 +1212,6 @@ task.spawn(function()
                 local waveMatch = string.match(tostring(waveNode.Value), "%d+")
                 if waveMatch then
                     local currentWaveNum = tonumber(waveMatch)
-                    
                     if currentWaveNum >= suicideWaveTarget then
                         if not alreadySuicidedThisWave then
                             if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
@@ -1170,12 +1246,10 @@ task.spawn(function()
         if autoChooseWeaponAtivo then
             local hasPR = checkWeaponExists("pulse")
             local hasSL = checkWeaponExists("small")
-            
             local newMethod = "Auto Punch"
             if hasPR and hasSL then newMethod = "Pulse Rifle + Small Laser"
             elseif hasPR then newMethod = "Pulse Rifle"
             elseif hasSL then newMethod = "Small Laser" end
-            
             if farmMethod ~= newMethod then
                 farmMethod = newMethod
                 if farmDropdownObj then farmDropdownObj:UpdateText(farmMethod) end
@@ -1189,7 +1263,7 @@ task.spawn(function()
     local buffRemote = ReplicatedStorage:WaitForChild("Buff")
     while true do
         task.wait(1)
-        if autoCureAtivo and player.Character then
+        if autoCureAtivo and player.Character and not _G.IsUTTVSafeActive then
             local hum = player.Character:FindFirstChild("Humanoid")
             if hum and hum.Health > 0 and (hum.Health / hum.MaxHealth) < 0.4 then
                 pcall(function() buffRemote:FireServer() end)
@@ -1199,98 +1273,79 @@ task.spawn(function()
     end
 end)
 
--- AUTO USE TITAN LÓGICA
+-- AUTO USE TITANS LÓGICA
 task.spawn(function()
     while true do
         task.wait(1)
-        if autoUseTitanAtivo and player.Character then
+        if autoUseNormalTitanAtivo and player.Character and not _G.IsUTTVSafeActive then
             local titanTool = nil
-            
             for _, t in ipairs(player.Character:GetChildren()) do
-                if t:IsA("Tool") and string.find(string.lower(t.Name), "titan") then
-                    titanTool = t
-                    break
+                if t:IsA("Tool") and string.find(string.lower(t.Name), "titan") and not string.find(string.lower(t.Name), "special") then
+                    titanTool = t; break
                 end
             end
-            
             if not titanTool and player.Backpack then
                 for _, t in ipairs(player.Backpack:GetChildren()) do
-                    if t:IsA("Tool") and string.find(string.lower(t.Name), "titan") then
-                        titanTool = t
-                        local hum = player.Character:FindFirstChild("Humanoid")
+                    if t:IsA("Tool") and string.find(string.lower(t.Name), "titan") and not string.find(string.lower(t.Name), "special") then
+                        titanTool = t; local hum = player.Character:FindFirstChild("Humanoid")
                         if hum then hum:EquipTool(t) end
                         break
                     end
                 end
             end
-            
-            if titanTool and titanTool.Parent == player.Character then
-                pcall(function() ReplicatedStorage:WaitForChild("RequestTitan"):FireServer() end)
+            if titanTool and titanTool.Parent == player.Character then pcall(function() ReplicatedStorage:WaitForChild("RequestTitan"):FireServer() end) end
+        end
+
+        if autoUseSpecialTitanAtivo and player.Character and not _G.IsUTTVSafeActive then
+            local specialTool = nil
+            for _, t in ipairs(player.Character:GetChildren()) do
+                if t:IsA("Tool") and string.find(string.lower(t.Name), "special") then
+                    specialTool = t; break
+                end
             end
+            if not specialTool and player.Backpack then
+                for _, t in ipairs(player.Backpack:GetChildren()) do
+                    if t:IsA("Tool") and string.find(string.lower(t.Name), "special") then
+                        specialTool = t; local hum = player.Character:FindFirstChild("Humanoid")
+                        if hum then hum:EquipTool(t) end
+                        break
+                    end
+                end
+            end
+            if specialTool and specialTool.Parent == player.Character then pcall(function() ReplicatedStorage:WaitForChild("SpecialRequest"):FireServer() end) end
         end
     end
 end)
 
 -- ============================================================
--- 🔥 AUTO JOIN LÓGICA
+-- 🔥 AUTO ROLLS LÓGICA (SEM COOLDOWN)
+-- ============================================================
+task.spawn(function()
+    local rs = game:GetService("ReplicatedStorage")
+    local skinRemote = rs:WaitForChild("GachaSkins")
+    local charRemote = rs:WaitForChild("GachaCharacter")
+    local capsuleRemote = rs:WaitForChild("GachaCapsule")
+    
+    while true do
+        task.wait() -- O mais rápido possível respeitando a engine do jogo
+        if autoRollSkinAtivo then pcall(function() skinRemote:FireServer("10Spins") end) end
+        if autoRollShardsAtivo then pcall(function() charRemote:FireServer("10Spins") end) end
+        if autoRollPresentsAtivo then pcall(function() capsuleRemote:FireServer() end) end
+    end
+end)
+
+-- ============================================================
+-- 🔥 AUTO READY LÓGICA (FORÇA BRUTA PURA)
 -- ============================================================
 task.spawn(function()
     local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
-    local wasJoined = false
     
     while true do
-        task.wait(2)
-        if not autoJoinAtivo then 
-            if wasJoined then
-                pcall(function()
-                    readyRemote:FireServer("1", false)
-                    readyRemote:FireServer("2", false)
-                    readyRemote:FireServer("3", false)
-                end)
-                wasJoined = false
-            end
-            continue 
-        end
-
-        local char = player.Character
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        local hum = char and char:FindFirstChild("Humanoid")
-        local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
-        
-        if not (hrp and hum and hum.Health > 0) then continue end
-        
-        local isGuiActive = false
-        if selectGui then
-            pcall(function()
-                if selectGui:IsA("ScreenGui") then
-                    isGuiActive = selectGui.Enabled
-                else
-                    isGuiActive = selectGui.Visible
-                end
+        task.wait(1)
+        if autoJoinAtivo then 
+            pcall(function() 
+                readyRemote:FireServer("1", true) 
             end)
-        end
-
-        if isGuiActive then
-            local targetElevator = Vector3.new(557, -468, 465)
-            local dist = (hrp.Position - targetElevator).Magnitude
-            
-            if dist > 15 then
-                pcall(function()
-                    hrp.CFrame = CFrame.new(targetElevator)
-                    task.wait(0.5)
-                    readyRemote:FireServer("1", true)
-                    wasJoined = true
-                end)
-            else
-                if not wasJoined then
-                    pcall(function()
-                        readyRemote:FireServer("1", true)
-                        wasJoined = true
-                    end)
-                end
-            end
-        else
-            wasJoined = false
         end
     end
 end)
@@ -1306,9 +1361,7 @@ task.spawn(function()
             local hrp = char:FindFirstChild("HumanoidRootPart")
             local hum = char:FindFirstChild("Humanoid")
             if hrp and hum and hum.Health > 0 then
-                if hrp.Position.Y < -1500 then
-                    hum.Health = 0
-                end
+                if hrp.Position.Y < -1500 then hum.Health = 0 end
             end
         end
     end
@@ -1321,56 +1374,6 @@ task.spawn(function()
         task.wait(1.5)
         if autoVoteAtivo then pcall(function() voteRemote:FireServer(voteMode) end) end
     end
-end)
-
--- ============================================================
--- ENGINE DE VOO LINEAR (STAY IN ROUND)
--- ============================================================
-local stayCorners = {
-    Vector3.new(-657, 280, -532), 
-    Vector3.new(-657, 280, 473),  
-    Vector3.new(472, 280, 473),   
-    Vector3.new(476, 280, -527)   
-}
-
-local wasStayInRound = false
-
-task.spawn(function()
-    local cIdx = 1
-    RunService.Heartbeat:Connect(function(dt)
-        if stayInRoundAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not farmEnabled then
-            if not wasStayInRound then
-                Workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
-                wasStayInRound = true
-            end
-            
-            local hrp = player.Character.HumanoidRootPart
-            local targetPos = stayCorners[cIdx]
-            local dir = (targetPos - hrp.Position)
-            
-            if dir.Magnitude < 10 then
-                cIdx = cIdx + 1
-                if cIdx > #stayCorners then 
-                    cIdx = 1 
-                end
-            else
-                hrp.Velocity = Vector3.new(0, 0, 0)
-                local moveVec = dir.Unit * (_G.StaySpeed * 15) * dt
-                player.Character:PivotTo(CFrame.new(hrp.Position + moveVec))
-                
-                local cam = Workspace.CurrentCamera
-                cam.CFrame = CFrame.lookAt(hrp.Position + Vector3.new(0, 40, 40), Vector3.new(0, 0, 0))
-            end
-        else
-            if wasStayInRound then
-                Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid
-                end
-                wasStayInRound = false
-            end
-        end
-    end)
 end)
 
 -- ============================================================
@@ -1394,7 +1397,7 @@ task.spawn(function()
 
                     if (saveAtivo and isSave) or (interactAtivo and isFlush) or (reviveAtivo and isRevive) then
                         obj.HoldDuration = 0; obj.MaxActivationDistance = 99999; obj.RequiresLineOfSight = false
-                        if fireproximityprompt then task.spawn(function() fireproximityprompt(obj, 1, true) end) end
+                        if fireproximityprompt and not _G.IsUTTVSafeActive then task.spawn(function() fireproximityprompt(obj, 1, true) end) end
                     end
                 end
             end
@@ -1415,16 +1418,9 @@ task.spawn(function()
                         local posObj = obj.Parent
                         if posObj then
                             local yPos = nil
-                            if posObj:IsA("BasePart") then
-                                yPos = posObj.Position.Y
-                            elseif posObj:IsA("Model") and posObj.PrimaryPart then
-                                yPos = posObj.PrimaryPart.Position.Y
-                            end
-                            
-                            -- Se o prompt estiver fisicamente no Lobby (Y < -100), apaga da existência
-                            if yPos and yPos < -100 then
-                                obj:Destroy()
-                            end
+                            if posObj:IsA("BasePart") then yPos = posObj.Position.Y
+                            elseif posObj:IsA("Model") and posObj.PrimaryPart then yPos = posObj.PrimaryPart.Position.Y end
+                            if yPos and yPos < -100 then obj:Destroy() end
                         end
                     end
                 end
@@ -1440,6 +1436,10 @@ local isShootingRifle = false
 local isReloadingRifle = false
 local lastTapTime = 0
 local lastCombatMethod = ""
+
+local knownEnemiesCache = setmetatable({}, {__mode = "k"})
+local knownAlliesCache = setmetatable({}, {__mode = "k"})
+local lastAllyCheckTime = setmetatable({}, {__mode = "k"})
 
 task.spawn(function()
     while true do
@@ -1464,7 +1464,7 @@ task.spawn(function()
             lastCombatMethod = activeCombatMethod
         end
 
-        if (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not farmEnabled then
+        if (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not farmEnabled or _G.IsUTTVSafeActive or _G.IsItemFarming then
             if isShootingRifle then
                 local vp = Workspace.CurrentCamera.ViewportSize
                 VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
@@ -1483,6 +1483,58 @@ task.spawn(function()
             for _, model in ipairs(currentLiving:GetChildren()) do
                 if not SKIBIDI_LIST[model.Name] then continue end
                 if Players:GetPlayerFromCharacter(model) then continue end
+                
+                local isAlly = false
+                
+                if string.find(string.lower(model.Name), "astro") then
+                    knownEnemiesCache[model] = true
+                    knownAlliesCache[model] = nil
+                end
+
+                if not knownEnemiesCache[model] then
+                    local aiFolders = model:FindFirstChild("AIFolders")
+                    local targetNode = aiFolders and aiFolders:FindFirstChild("Target")
+                    
+                    if targetNode then
+                        local targetVal = targetNode.Value
+                        local targetStr = ""
+                        if typeof(targetVal) == "Instance" then
+                            targetStr = targetVal.Name
+                        elseif targetVal ~= nil then
+                            targetStr = tostring(targetVal)
+                        end
+                        
+                        if targetStr == "" or targetStr == "nil" then
+                            local now = tick()
+                            if not knownAlliesCache[model] or (now - (lastAllyCheckTime[model] or 0)) >= 5 then
+                                knownAlliesCache[model] = true
+                                lastAllyCheckTime[model] = now
+                                isAlly = true
+                            else
+                                isAlly = true
+                            end
+                        else
+                            local targetIsPlayer = Players:FindFirstChild(targetStr) ~= nil
+                            if targetIsPlayer then
+                                knownEnemiesCache[model] = true
+                                knownAlliesCache[model] = nil
+                            else
+                                local now = tick()
+                                if not knownAlliesCache[model] or (now - (lastAllyCheckTime[model] or 0)) >= 5 then
+                                    knownAlliesCache[model] = true
+                                    lastAllyCheckTime[model] = now
+                                    isAlly = true
+                                else
+                                    isAlly = true
+                                end
+                            end
+                        end
+                    else
+                        isAlly = true
+                    end
+                end
+                
+                if isAlly then continue end
                 
                 local torso = model:FindFirstChild("Torso") or model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
                 if not torso then continue end
@@ -1538,7 +1590,7 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
 
-                if not farmEnabled or not torso.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) then
+                if not farmEnabled or not torso.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming then
                     if currentConnection then currentConnection:Disconnect() end
                     return
                 end
@@ -1674,7 +1726,7 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
                 
-            until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not currentConnection or not currentConnection.Connected
+            until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or not currentConnection or not currentConnection.Connected
 
             if currentConnection then currentConnection:Disconnect() end
             
@@ -1688,12 +1740,12 @@ task.spawn(function()
     end
 end)
 
--- AUTO RUN LÓGICA (TOGGLE PURO & DEBOUNCE TÁTICO)
+-- AUTO RUN LÓGICA
 task.spawn(function()
     local runRemote = ReplicatedStorage:WaitForChild("Running")
     while true do
         task.wait(0.1)
-        if autoRunAtivo and player.Character then
+        if autoRunAtivo and player.Character and not _G.IsUTTVSafeActive then
             local hum = player.Character:FindFirstChild("Humanoid")
             if hum and hum.MoveDirection.Magnitude > 0 and hum.WalkSpeed <= 16.5 then 
                 pcall(function() runRemote:FireServer() end)
@@ -1704,7 +1756,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ANTI-AFK (TRIPLA CAMADA DE SEGURANÇA)
+-- 🔥 ANTI-AFK
 -- ============================================================
 player.Idled:Connect(function()
     if antiAfkAtivo then
@@ -1774,4 +1826,4 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V12.9 — Anti AFK Zone implementado. O lobby agora é uma zona livre de prompts.")
+print("✅ V14.8 — O puro suco do desenvolvimento! Bugs exterminados com sucesso.")
