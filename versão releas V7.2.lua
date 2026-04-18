@@ -1,4 +1,4 @@
--- 🔥 V16.3 - DROP SCRIPTS | THE FATALITY UPDATE (ULTIMATE FIX) 🔥
+-- 🔥 V16.8 - DROP SCRIPTS | THE FATALITY UPDATE (ULTIMATE GUI & AFK ARENA FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -15,13 +15,12 @@ local TeleportService   = game:GetService("TeleportService")
 
 local player    = Players.LocalPlayer
 local LMB_Event = ReplicatedStorage:WaitForChild("LMB")
-local shopRemote = ReplicatedStorage:WaitForChild("ShopSystem", 10)
 
 local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V16.3"
+local VERSION      = "V16.8"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -40,9 +39,8 @@ _G.CurrentPunchDistance = -3
 _G.IsUTTVSafeActive = false
 _G.IsItemFarming = false
 _G.TimeInLobby = 0
-_G.IsSuiciding = false -- 🔥 Trava Suprema do Suicide Wave
+_G.IsSuiciding = false
 
--- Radar de Permanência no Lobby
 RunService.Heartbeat:Connect(function(dt)
     local char = player.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -53,30 +51,27 @@ RunService.Heartbeat:Connect(function(dt)
     end
 end)
 
--- ============================================================
--- 🔥 AUTO EXECUTE UNIVERSAL
--- ============================================================
+local hasVotedThisRound = false
+task.spawn(function()
+    while task.wait(1) do
+        local char = player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp and hrp.Position.Y > -100 then
+            hasVotedThisRound = false
+        end
+    end
+end)
+
 local queue = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
 if queue then
     pcall(function()
         queue([[loadstring(game:HttpGet("https://raw.githubusercontent.com/GlossyDrop429/Ohyes/refs/heads/main/versão%20releas%20V7.2.lua"))()]])
     end)
-    player.OnTeleport:Connect(function(teleportState)
-        pcall(function()
-            queue([[loadstring(game:HttpGet("https://raw.githubusercontent.com/GlossyDrop429/Ohyes/refs/heads/main/versão%20releas%20V7.2.lua"))()]])
-        end)
-    end)
 end
 
--- ============================================================
--- WHITELIST DOS SKIBIDIS & ITENS
--- ============================================================
 local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true, ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true, ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true, ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true, ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true, ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true, ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true, ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true, ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true, ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true, ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true, ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true, ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true, ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true, ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true, ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true, ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true, ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true, ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true, ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true, ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true, ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true, ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true, ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true, ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true, ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true, ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true, ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true, ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true, ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true, ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true, ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true, ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true, ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true, ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true, ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true, ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true, ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true, ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true, ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true, ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true, ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true, ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true, ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true, ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true, ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true, ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true }
 local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true }
 
--- ============================================================
--- CLEANUP GLOBAL E INICIALIZAÇÃO DA UI
--- ============================================================
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
     if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
 end
@@ -84,8 +79,7 @@ local oldPool = Workspace.CurrentCamera:FindFirstChild("DropESP_Pool")
 if oldPool then oldPool:Destroy() end
 
 local gui = Instance.new("ScreenGui")
-gui.Name = SCRIPT_NAME; gui.ResetOnSpawn = false;
-gui.Parent = player:WaitForChild("PlayerGui")
+gui.Name = SCRIPT_NAME; gui.ResetOnSpawn = false; gui.Parent = player:WaitForChild("PlayerGui")
 
 local globalTooltip = Instance.new("TextLabel", gui)
 globalTooltip.Size = UDim2.new(0, 260, 0, 0)
@@ -126,7 +120,7 @@ local divider = Instance.new("Frame", topBar)
 divider.Size, divider.Position, divider.BackgroundColor3, divider.ZIndex = UDim2.new(1, 0, 0, 1), UDim2.new(0, 0, 1, -1), Color3.fromRGB(35, 35, 35), 4
 
 local topTitle = Instance.new("TextLabel", topBar)
-topTitle.Size, topTitle.Position, topTitle.Text, topTitle.TextColor3, topTitle.Font, topTitle.TextSize, topTitle.TextXAlignment, topTitle.BackgroundTransparency, topTitle.ZIndex = UDim2.new(1, -200, 1, 0), UDim2.new(0, 12, 0, 0), SCRIPT_NAME .. "  | Carregando...", ACCENT, Enum.Font.GothamBold, 13, Enum.TextXAlignment.Left, 1, 5
+topTitle.Size, topTitle.Position, topTitle.Text, topTitle.TextColor3, topTitle.Font, topTitle.TextSize, topTitle.TextXAlignment, topTitle.BackgroundTransparency, topTitle.ZIndex = UDim2.new(1, -200, 1, 0), UDim2.new(0, 12, 0, 0), SCRIPT_NAME .. "  |  Carregando...", ACCENT, Enum.Font.GothamBold, 13, Enum.TextXAlignment.Left, 1, 5
 
 local serverHopBtn = Instance.new("TextButton", topBar)
 serverHopBtn.Size = UDim2.new(0, 80, 0, 24)
@@ -205,23 +199,51 @@ local tabs = {
     AutoBuy  = Instance.new("ScrollingFrame", container),
     Items    = Instance.new("ScrollingFrame", container),
     Visuals  = Instance.new("ScrollingFrame", container),
+    AutoShop = Instance.new("ScrollingFrame", container),
     Misc     = Instance.new("ScrollingFrame", container),
     Teleport = Instance.new("ScrollingFrame", container),
 }
+
 for _, t in pairs(tabs) do
     t.Size, t.BackgroundTransparency, t.CanvasSize, t.ScrollBarThickness, t.ScrollBarImageColor3, t.Visible = UDim2.new(1, 0, 1, 0), 1, UDim2.new(0, 0, 6, 0), 2, ACCENT, false
-    Instance.new("UIListLayout", t).Padding = UDim.new(0, 8)
+    local listLayout = Instance.new("UIListLayout", t)
+    listLayout.Padding = UDim.new(0, 8)
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder 
 end
 tabs.Farm.Visible = true
 
-local function getPlayerMoney()
-    local money = 0
-    local success = pcall(function()
-        money = tonumber(player.Data.MoneysInShop.Value)
-    end)
-    if success and money then return money end
-    return math.huge 
+local globalUIOrder = 0
+local function getNextUIOrder()
+    globalUIOrder = globalUIOrder + 1
+    return globalUIOrder
 end
+
+local farmEnabled, interactAtivo, saveAtivo, itemFarmAtivo, itemAtivo = false, false, false, false, false
+local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoRunAtivo, autoJoinAtivo = false, false, false, false, false
+local autoUseNormalTitanAtivo, autoUseSpecialTitanAtivo = false, false
+local antiAfkZoneAtivo, detectSizeAtivo, astroReviveAtivo, uttvSafeAtivo, ignoreClockSpiderAtivo, mugenJeffreyAtivo = false, false, false, false, false, false
+local espToiletsAtivo, espPlayersAtivo, espItemsAtivo, espJeffreyAtivo = false, false, false, false
+local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = false, false, false, false
+local autoRollSkinAtivo, autoRollShardsAtivo, autoRollPresentsAtivo = false, false, false
+local suicideWaveTarget = 0
+local autoSkillsAtivo = false
+
+local skillOptions = {"E", "R", "T", "Y", "F", "G", "H"}
+local holdSkillOptions = {"Hold E", "Hold R", "Hold T", "Hold Y", "Hold F", "Hold G", "Hold H"}
+local selectedUseSkills = {}
+local selectedHoldSkills = {}
+local isUpdatingSkills = false
+
+local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Pulse Rifle + Small Laser"}
+local farmMethod = farmMethodsArray[1]
+local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
+local targetMethod = targetMethodsArray[1]
+
+local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
+local voteMode = "Normal"
+
+local currentConnection = nil
+local farmDropdownObj, voteDropdownObj = nil, nil
 
 local function checkWeaponExists(nameSearch)
     if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
@@ -373,9 +395,6 @@ Workspace.ChildAdded:Connect(function(child)
     end)
 end)
 
--- ============================================================
--- LÓGICA DE UTTV SAFE (TRAVA ATÉ O FIM DO ROUND)
--- ============================================================
 local uttvFirstSeen = 0
 local uttvState = "IDLE"
 
@@ -439,9 +458,6 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- ============================================================
--- LÓGICA DO MUGEN JEFFREY (FORÇA INVISÍVEL FÍSICA)
--- ============================================================
 local mugenPart = Instance.new("Part")
 mugenPart.Name = "DropMugenJeffrey"
 mugenPart.Shape = Enum.PartType.Ball
@@ -466,9 +482,6 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- ============================================================
--- 🔥 SECRET NPC NOTIFIER & ESP (MYSTERIOUS CAMERA MAN)
--- ============================================================
 local secretNpcFound = false
 local secretEsp = Instance.new("Highlight")
 secretEsp.FillColor = Color3.fromRGB(0, 0, 0)
@@ -507,16 +520,12 @@ task.spawn(function()
     end
 end)
 
--- ============================================================
--- ENGINE DE VOO LINEAR (STAY IN ROUND COM BLINDAGEM DE LAG)
--- ============================================================
 local stayCorners = {
     Vector3.new(-657, 280, -532), Vector3.new(-657, 280, 473),  
     Vector3.new(472, 280, 473),   Vector3.new(476, 280, -527)   
 }
 
 local wasStayInRound = false
-
 task.spawn(function()
     local cIdx = 1
     RunService.Heartbeat:Connect(function(dt)
@@ -570,9 +579,6 @@ task.spawn(function()
     end)
 end)
 
--- ============================================================
--- MENUS LATERAIS E CONSTRUTORES UI NATIVOS
--- ============================================================
 closeBtn.MouseButton1Click:Connect(function() gui:Destroy() end)
 hideBtn.MouseButton1Click:Connect(function() main.Visible = false; minBtn.Visible = true end)
 
@@ -629,14 +635,22 @@ createTabBtn("Skills", tabs.Skills, 1)
 createTabBtn("Auto Buy", tabs.AutoBuy, 2)
 createTabBtn("Items", tabs.Items, 3)
 createTabBtn("Visuals", tabs.Visuals, 4)
-createTabBtn("Misc", tabs.Misc, 5)
-createTabBtn("Teleport", tabs.Teleport, 6)
+createTabBtn("Auto Shop", tabs.AutoShop, 5)
+createTabBtn("Misc", tabs.Misc, 6)
+createTabBtn("Teleport", tabs.Teleport, 7)
+
+local function getPlayerMoney()
+    local money = 0
+    local success = pcall(function() money = tonumber(player.Data.MoneysInShop.Value) end)
+    if success and money then return money end return math.huge 
+end
 
 local function createToggle(parent, text, tooltipData, callback)
     if type(tooltipData) == "function" then callback = tooltipData; tooltipData = nil end
 
     local frame = Instance.new("Frame", parent); frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 45), BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    frame.LayoutOrder = getNextUIOrder()
 
     local titleContainer = Instance.new("Frame", frame)
     titleContainer.Size, titleContainer.Position, titleContainer.BackgroundTransparency = UDim2.new(0.75, 0, 1, 0), UDim2.new(0, 10, 0, 0), 1
@@ -674,7 +688,8 @@ local function createToggle(parent, text, tooltipData, callback)
     local state = false; local btn = Instance.new("TextButton", frame); btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(0, 100, 1, 0), UDim2.new(1, -100, 0, 0), 1, ""
     
     local obj = {}
-    obj.frame = frame
+    obj.frame = frame 
+    
     function obj:Set(newState)
         if state == newState then return end
         state = newState
@@ -683,6 +698,221 @@ local function createToggle(parent, text, tooltipData, callback)
         callback(state)
     end
     btn.MouseButton1Click:Connect(function() obj:Set(not state) end)
+    return obj
+end
+
+local function createSlider(parent, text, min, max, default, callback)
+    local frame = Instance.new("Frame", parent); frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 50), BG_SECONDARY
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    frame.LayoutOrder = getNextUIOrder()
+    
+    local label = Instance.new("TextLabel", frame); label.Size, label.Position, label.Text, label.TextColor3, label.Font, label.TextSize, label.TextXAlignment, label.BackgroundTransparency = UDim2.new(1, -20, 0, 20), UDim2.new(0, 10, 0, 5), text .. ": " .. default, Color3.new(1,1,1), Enum.Font.Ubuntu, 14, Enum.TextXAlignment.Left, 1
+    local track = Instance.new("Frame", frame); track.Size, track.Position, track.BackgroundColor3 = UDim2.new(1, -20, 0, 6), UDim2.new(0, 10, 0, 32), Color3.fromRGB(40,40,40)
+    Instance.new("UICorner", track).CornerRadius = UDim.new(1,0)
+    local fill = Instance.new("Frame", track); fill.Size, fill.BackgroundColor3 = UDim2.new((default - min)/(max - min), 0, 1, 0), ACCENT
+    Instance.new("UICorner", fill).CornerRadius = UDim.new(1,0)
+    local knob = Instance.new("Frame", fill); knob.Size, knob.Position, knob.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(1, -7, 0.5, -7), Color3.new(1,1,1)
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(1,0)
+    local btn = Instance.new("TextButton", track); btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 20), UDim2.new(0, 0, 0.5, -10), 1, ""
+    local dragging = false
+    
+    local obj = {}
+    function obj:Set(val)
+        val = math.clamp(val, min, max)
+        local percent = (val - min) / (max - min)
+        fill.Size = UDim2.new(percent, 0, 1, 0); label.Text = text .. ": " .. val; callback(val)
+    end
+
+    local function update(input)
+        local pos = math.clamp(input.Position.X - track.AbsolutePosition.X, 0, track.AbsoluteSize.X)
+        local percent = pos / track.AbsoluteSize.X; local val = math.floor(min + (max - min) * percent)
+        obj:Set(val)
+    end
+    btn.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input) end end)
+    UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end end)
+    UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
+    return obj
+end
+
+local function createTextBox(parent, text, placeholder, callback)
+    local frame = Instance.new("Frame", parent)
+    frame.Size = UDim2.new(1, 0, 0, 45)
+    frame.BackgroundColor3 = BG_SECONDARY
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    frame.LayoutOrder = getNextUIOrder()
+
+    local label = Instance.new("TextLabel", frame)
+    label.Size = UDim2.new(0.5, 0, 1, 0)
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.Text = text
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.Font = Enum.Font.Ubuntu
+    label.TextSize = 16
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.BackgroundTransparency = 1
+
+    local textBox = Instance.new("TextBox", frame)
+    textBox.Size = UDim2.new(0.4, 0, 0, 30)
+    textBox.Position = UDim2.new(0.6, -10, 0.5, -15)
+    textBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    textBox.TextColor3 = Color3.new(1, 1, 1)
+    textBox.Font = Enum.Font.Ubuntu
+    textBox.TextSize = 14
+    textBox.PlaceholderText = placeholder
+    textBox.Text = ""
+    Instance.new("UICorner", textBox).CornerRadius = UDim.new(0, 6)
+
+    textBox.FocusLost:Connect(function(enterPressed) callback(textBox.Text) end)
+    
+    local obj = {}
+    function obj:SetText(txt) textBox.Text = tostring(txt) end
+    return obj
+end
+
+local function createTpBtn(parent, name, coords, isDanger, tooltipData)
+    local btn = Instance.new("TextButton", parent)
+    btn.Size, btn.BackgroundColor3, btn.Text = UDim2.new(1, 0, 0, 40), isDanger and Color3.fromRGB(120, 40, 40) or Color3.fromRGB(35, 35, 35), ""
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    btn.LayoutOrder = getNextUIOrder()
+
+    local titleContainer = Instance.new("Frame", btn)
+    titleContainer.Size, titleContainer.BackgroundTransparency = UDim2.new(1, 0, 1, 0), 1
+    local listLayout = Instance.new("UIListLayout", titleContainer)
+    listLayout.FillDirection, listLayout.SortOrder, listLayout.VerticalAlignment, listLayout.HorizontalAlignment, listLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, Enum.HorizontalAlignment.Center, UDim.new(0, 6)
+
+    local label = Instance.new("TextLabel", titleContainer)
+    label.AutomaticSize, label.Size, label.Text, label.TextColor3, label.Font, label.TextSize, label.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), name, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 14, 1
+
+    if tooltipData then
+        local tColor = Color3.fromRGB(150, 150, 150); local hexColor = "#969696"
+        if tooltipData.color == "red" then tColor = Color3.fromRGB(255, 50, 50); hexColor = "#FF3232"
+        elseif tooltipData.color == "yellow" then tColor = Color3.fromRGB(255, 200, 0); hexColor = "#FFC800" end
+
+        local parsedText = string.gsub(tooltipData.text, "<u>(.-)</u>", "<u><font color=\""..hexColor.."\">%1</font></u>")
+        local icon = Instance.new("TextLabel", titleContainer)
+        icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
+        
+        icon.MouseEnter:Connect(function()
+            globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
+            if tooltipConn then tooltipConn:Disconnect() end
+            tooltipConn = RunService.RenderStepped:Connect(function()
+                local mPos = UserInputService:GetMouseLocation()
+                globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
+            end)
+        end)
+        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+    end
+
+    btn.MouseButton1Click:Connect(function() 
+        if _G.IsUTTVSafeActive or _G.IsItemFarming then return end 
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then 
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(coords) 
+        end 
+    end)
+end
+
+local function createInlineDropdown(parent, titlePrefix, optionsList, defaultOption, callback)
+    local container = Instance.new("Frame", parent)
+    container.Size, container.BackgroundTransparency, container.ClipsDescendants = UDim2.new(1, 0, 0, 40), 1, true
+    container.LayoutOrder = getNextUIOrder()
+    
+    local mainBtn = Instance.new("TextButton", container)
+    mainBtn.Size, mainBtn.BackgroundColor3, mainBtn.Text, mainBtn.TextColor3, mainBtn.Font, mainBtn.TextSize = UDim2.new(1, 0, 0, 40), Color3.fromRGB(30, 30, 45), titlePrefix .. defaultOption, ACCENT, Enum.Font.GothamBold, 14
+    Instance.new("UICorner", mainBtn).CornerRadius = UDim.new(0, 6)
+    local optionsFrame = Instance.new("Frame", container)
+    optionsFrame.Size, optionsFrame.Position, optionsFrame.BackgroundTransparency = UDim2.new(1, 0, 0, #optionsList * 36 + (#optionsList - 1) * 4), UDim2.new(0, 0, 0, 44), 1
+    local optLayout = Instance.new("UIListLayout", optionsFrame); optLayout.Padding, optLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
+
+    local isOpen = false
+    mainBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        TweenService:Create(container, TweenInfo.new(0.2), {Size = isOpen and UDim2.new(1, 0, 0, 44 + optionsFrame.Size.Y.Offset) or UDim2.new(1, 0, 0, 40)}):Play()
+    end)
+    
+    local obj = {}
+    function obj:UpdateText(txt) mainBtn.Text = titlePrefix .. txt end
+
+    for _, opt in ipairs(optionsList) do
+        local btn = Instance.new("TextButton", optionsFrame)
+        btn.Size, btn.BackgroundColor3, btn.Text, btn.TextColor3, btn.Font, btn.TextSize = UDim2.new(1, 0, 0, 36), Color3.fromRGB(20, 20, 30), opt, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 13
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+        btn.MouseButton1Click:Connect(function()
+            obj:UpdateText(opt); isOpen = false; TweenService:Create(container, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 40)}):Play()
+            callback(opt)
+        end)
+    end
+    return obj
+end
+
+local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callback)
+    local container = Instance.new("Frame", parent)
+    container.Size = UDim2.new(1, 0, 0, 40)
+    container.BackgroundTransparency = 1
+    container.ClipsDescendants = true
+    container.LayoutOrder = getNextUIOrder()
+
+    local mainBtn = Instance.new("TextButton", container)
+    mainBtn.Size = UDim2.new(1, 0, 0, 40)
+    mainBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+    mainBtn.Text = titlePrefix .. "None"
+    mainBtn.TextColor3 = ACCENT
+    mainBtn.Font = Enum.Font.GothamBold
+    mainBtn.TextSize = 14
+    Instance.new("UICorner", mainBtn).CornerRadius = UDim.new(0, 6)
+
+    local optionsFrame = Instance.new("Frame", container)
+    optionsFrame.Size = UDim2.new(1, 0, 0, #optionsList * 36 + (#optionsList - 1) * 4)
+    optionsFrame.Position = UDim2.new(0, 0, 0, 44)
+    optionsFrame.BackgroundTransparency = 1
+    local optLayout = Instance.new("UIListLayout", optionsFrame)
+    optLayout.Padding = UDim.new(0, 4)
+    optLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    local isOpen = false
+    mainBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        TweenService:Create(container, TweenInfo.new(0.2), {Size = isOpen and UDim2.new(1, 0, 0, 44 + optionsFrame.Size.Y.Offset) or UDim2.new(1, 0, 0, 40)}):Play()
+    end)
+
+    local selectedOpts = {}
+    local btnMap = {}
+    
+    local function updateText()
+        local sel = {}
+        for _, opt in ipairs(optionsList) do
+            if selectedOpts[opt] then table.insert(sel, opt) end
+        end
+        if #sel == 0 then 
+            mainBtn.Text = titlePrefix .. "None"
+        else 
+            mainBtn.Text = titlePrefix .. table.concat(sel, ", ") 
+        end
+        callback(selectedOpts)
+    end
+
+    local obj = {}
+    function obj:SetOption(opt, state)
+        if selectedOpts[opt] ~= state then
+            selectedOpts[opt] = state
+            if btnMap[opt] then btnMap[opt].TextColor3 = state and ACCENT or Color3.new(1, 1, 1) end
+            updateText()
+        end
+    end
+
+    for _, opt in ipairs(optionsList) do
+        selectedOpts[opt] = false
+        local btn = Instance.new("TextButton", optionsFrame)
+        btn.Size = UDim2.new(1, 0, 0, 36)
+        btn.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+        btn.Text = opt
+        btn.TextColor3 = Color3.new(1, 1, 1)
+        btn.Font = Enum.Font.GothamSemibold
+        btn.TextSize = 13
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+        btnMap[opt] = btn
+        
+        btn.MouseButton1Click:Connect(function() obj:SetOption(opt, not selectedOpts[opt]) end)
+    end
     return obj
 end
 
@@ -695,7 +925,7 @@ local function createPriorityRow(parent, rowIndex, onSwap)
     local frame = Instance.new("Frame", parent)
     frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 45), BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-    frame.LayoutOrder = rowIndex + 1 
+    frame.LayoutOrder = getNextUIOrder()
 
     local numInput = Instance.new("TextBox", frame)
     numInput.Size, numInput.Position = UDim2.new(0, 30, 0, 30), UDim2.new(0, 10, 0.5, -15)
@@ -785,9 +1015,97 @@ local function createPriorityRow(parent, rowIndex, onSwap)
     autoBuyUIRows[rowIndex] = rowData
 end
 
+-- ============================================================
+-- POPULANDO AS ABAS
+-- ============================================================
+-- ABA 1: FARM
+farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
+createInlineDropdown(tabs.Farm, "Target: ", targetMethodsArray, targetMethod, function(val) targetMethod = val end)
+objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
+objAutoFarm = createToggle(tabs.Farm, "Auto Farm", function(s) farmEnabled = s end)
+createToggle(tabs.Farm, "Auto Revive Player", function(s) reviveAtivo = s end)
+local objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save", function(s) interactAtivo = s; saveAtivo = s end)
+local objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
+local objSuicideWave = createTextBox(tabs.Farm, "Suicide Wave (0 = Off)", "Ex: 50", function(val)
+    local match = string.match(tostring(val), "%d+")
+    if match then suicideWaveTarget = tonumber(match) else suicideWaveTarget = 0 end
+end)
+
+-- ABA 2: SKILLS
+local objUseSkills = createMultiSelectDropdown(tabs.Skills, "Use Skills: ", skillOptions, function(sel) 
+    if isUpdatingSkills then return end
+    isUpdatingSkills = true
+    for _, k in ipairs(skillOptions) do if sel[k] then local holdKey = "Hold " .. k; if objHoldSkills then objHoldSkills:SetOption(holdKey, false) end end end
+    selectedUseSkills = {}
+    for k, v in pairs(sel) do selectedUseSkills[k] = v end
+    isUpdatingSkills = false
+end)
+
+local objHoldSkills = createMultiSelectDropdown(tabs.Skills, "Hold Skills: ", holdSkillOptions, function(sel)
+    if isUpdatingSkills then return end
+    isUpdatingSkills = true
+    for _, k in ipairs(holdSkillOptions) do if sel[k] then local useKey = string.sub(k, 6); if objUseSkills then objUseSkills:SetOption(useKey, false) end end end
+    selectedHoldSkills = {}
+    for k, v in pairs(sel) do selectedHoldSkills[k] = v end
+    isUpdatingSkills = false
+end)
+
+createSlider(tabs.Skills, "Hold Duration (Seconds)", 1, 30, 3, function(val) _G.HoldDuration = val end)
+createToggle(tabs.Skills, "Auto Use Skills", function(s) autoSkillsAtivo = s end)
+
+local nextHoldTime = {}
+task.spawn(function()
+    while true do
+        task.wait(0.5)
+        if autoSkillsAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not _G.IsUTTVSafeActive then
+            local isGuiActive = false
+            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+            if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
+            
+            local shopNode = Workspace:FindFirstChild("CanUseShop")
+            local isIntermission = (shopNode and shopNode.Value == true)
+
+            if not isGuiActive and not isIntermission then
+                for key, state in pairs(selectedUseSkills) do
+                    if state then
+                        local keyCode = Enum.KeyCode[key]
+                        if keyCode then
+                            pcall(function()
+                                VIM:SendKeyEvent(true, keyCode, false, game)
+                                task.wait(0.05)
+                                VIM:SendKeyEvent(false, keyCode, false, game)
+                            end)
+                        end
+                    end
+                end
+                
+                local now = tick()
+                for key, state in pairs(selectedHoldSkills) do
+                    if state then
+                        local realKey = string.sub(key, 6)
+                        local keyCode = Enum.KeyCode[realKey]
+                        if keyCode then
+                            if now >= (nextHoldTime[realKey] or 0) then
+                                nextHoldTime[realKey] = now + _G.HoldDuration + 0.5
+                                pcall(function()
+                                    task.spawn(function()
+                                        VIM:SendKeyEvent(true, keyCode, false, game)
+                                        task.wait(_G.HoldDuration)
+                                        VIM:SendKeyEvent(false, keyCode, false, game)
+                                    end)
+                                end)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- ABA 3: AUTO BUY
 local ultraPriorityActive = false
 local objUltra = createToggle(tabs.AutoBuy, "Ultra Priority", {color="gray", text="Give top priority to the order of purchase, foregoing the purchase of other items in order to always buy them in that order"}, function(s) ultraPriorityActive = s end)
-objUltra.frame.LayoutOrder = 0
 
 local autoBuyItems = {
     { id = "Health", name = "Auto Buy Health", active = false, order = 1, verifiable = true,
@@ -879,7 +1197,6 @@ for i = 1, 9 do
 end
 RefreshAutoBuyUI()
 
--- LÓGICA DO AUTO BUY COM PRIORIDADE ABSOLUTA E DINHEIRO
 task.spawn(function()
     while true do
         task.wait(1) 
@@ -911,318 +1228,7 @@ task.spawn(function()
     end
 end)
 
-local function createSlider(parent, text, min, max, default, callback)
-    local frame = Instance.new("Frame", parent); frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 50), BG_SECONDARY
-    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-    local label = Instance.new("TextLabel", frame); label.Size, label.Position, label.Text, label.TextColor3, label.Font, label.TextSize, label.TextXAlignment, label.BackgroundTransparency = UDim2.new(1, -20, 0, 20), UDim2.new(0, 10, 0, 5), text .. ": " .. default, Color3.new(1,1,1), Enum.Font.Ubuntu, 14, Enum.TextXAlignment.Left, 1
-    local track = Instance.new("Frame", frame); track.Size, track.Position, track.BackgroundColor3 = UDim2.new(1, -20, 0, 6), UDim2.new(0, 10, 0, 32), Color3.fromRGB(40,40,40)
-    Instance.new("UICorner", track).CornerRadius = UDim.new(1,0)
-    local fill = Instance.new("Frame", track); fill.Size, fill.BackgroundColor3 = UDim2.new((default - min)/(max - min), 0, 1, 0), ACCENT
-    Instance.new("UICorner", fill).CornerRadius = UDim.new(1,0)
-    local knob = Instance.new("Frame", fill); knob.Size, knob.Position, knob.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(1, -7, 0.5, -7), Color3.new(1,1,1)
-    Instance.new("UICorner", knob).CornerRadius = UDim.new(1,0)
-    local btn = Instance.new("TextButton", track); btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 20), UDim2.new(0, 0, 0.5, -10), 1, ""
-    local dragging = false
-    
-    local obj = {}
-    function obj:Set(val)
-        val = math.clamp(val, min, max)
-        local percent = (val - min) / (max - min)
-        fill.Size = UDim2.new(percent, 0, 1, 0); label.Text = text .. ": " .. val; callback(val)
-    end
-
-    local function update(input)
-        local pos = math.clamp(input.Position.X - track.AbsolutePosition.X, 0, track.AbsoluteSize.X)
-        local percent = pos / track.AbsoluteSize.X; local val = math.floor(min + (max - min) * percent)
-        obj:Set(val)
-    end
-    btn.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input) end end)
-    UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end end)
-    UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
-    return obj
-end
-
-local function createTextBox(parent, text, placeholder, callback)
-    local frame = Instance.new("Frame", parent)
-    frame.Size = UDim2.new(1, 0, 0, 45)
-    frame.BackgroundColor3 = BG_SECONDARY
-    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-
-    local label = Instance.new("TextLabel", frame)
-    label.Size = UDim2.new(0.5, 0, 1, 0)
-    label.Position = UDim2.new(0, 10, 0, 0)
-    label.Text = text
-    label.TextColor3 = Color3.new(1, 1, 1)
-    label.Font = Enum.Font.Ubuntu
-    label.TextSize = 16
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.BackgroundTransparency = 1
-
-    local textBox = Instance.new("TextBox", frame)
-    textBox.Size = UDim2.new(0.4, 0, 0, 30)
-    textBox.Position = UDim2.new(0.6, -10, 0.5, -15)
-    textBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    textBox.TextColor3 = Color3.new(1, 1, 1)
-    textBox.Font = Enum.Font.Ubuntu
-    textBox.TextSize = 14
-    textBox.PlaceholderText = placeholder
-    textBox.Text = ""
-    Instance.new("UICorner", textBox).CornerRadius = UDim.new(0, 6)
-
-    textBox.FocusLost:Connect(function(enterPressed) callback(textBox.Text) end)
-    
-    local obj = {}
-    function obj:SetText(txt) textBox.Text = tostring(txt) end
-    return obj
-end
-
-local function createTpBtn(parent, name, coords, isDanger, tooltipData)
-    local btn = Instance.new("TextButton", parent)
-    btn.Size, btn.BackgroundColor3, btn.Text = UDim2.new(1, 0, 0, 40), isDanger and Color3.fromRGB(120, 40, 40) or Color3.fromRGB(35, 35, 35), ""
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-
-    local titleContainer = Instance.new("Frame", btn)
-    titleContainer.Size, titleContainer.BackgroundTransparency = UDim2.new(1, 0, 1, 0), 1
-    local listLayout = Instance.new("UIListLayout", titleContainer)
-    listLayout.FillDirection, listLayout.SortOrder, listLayout.VerticalAlignment, listLayout.HorizontalAlignment, listLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, Enum.HorizontalAlignment.Center, UDim.new(0, 6)
-
-    local label = Instance.new("TextLabel", titleContainer)
-    label.AutomaticSize, label.Size, label.Text, label.TextColor3, label.Font, label.TextSize, label.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), name, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 14, 1
-
-    if tooltipData then
-        local tColor = Color3.fromRGB(150, 150, 150); local hexColor = "#969696"
-        if tooltipData.color == "red" then tColor = Color3.fromRGB(255, 50, 50); hexColor = "#FF3232"
-        elseif tooltipData.color == "yellow" then tColor = Color3.fromRGB(255, 200, 0); hexColor = "#FFC800" end
-
-        local parsedText = string.gsub(tooltipData.text, "<u>(.-)</u>", "<u><font color=\""..hexColor.."\">%1</font></u>")
-        local icon = Instance.new("TextLabel", titleContainer)
-        icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
-        
-        icon.MouseEnter:Connect(function()
-            globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
-            if tooltipConn then tooltipConn:Disconnect() end
-            tooltipConn = RunService.RenderStepped:Connect(function()
-                local mPos = UserInputService:GetMouseLocation()
-                globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
-            end)
-        end)
-        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
-    end
-
-    btn.MouseButton1Click:Connect(function() 
-        if _G.IsUTTVSafeActive or _G.IsItemFarming then return end 
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then 
-            player.Character.HumanoidRootPart.CFrame = CFrame.new(coords) 
-        end 
-    end)
-end
-
-local function createInlineDropdown(parent, titlePrefix, optionsList, defaultOption, callback)
-    local container = Instance.new("Frame", parent)
-    container.Size, container.BackgroundTransparency, container.ClipsDescendants = UDim2.new(1, 0, 0, 40), 1, true
-    local mainBtn = Instance.new("TextButton", container)
-    mainBtn.Size, mainBtn.BackgroundColor3, mainBtn.Text, mainBtn.TextColor3, mainBtn.Font, mainBtn.TextSize = UDim2.new(1, 0, 0, 40), Color3.fromRGB(30, 30, 45), titlePrefix .. defaultOption, ACCENT, Enum.Font.GothamBold, 14
-    Instance.new("UICorner", mainBtn).CornerRadius = UDim.new(0, 6)
-    local optionsFrame = Instance.new("Frame", container)
-    optionsFrame.Size, optionsFrame.Position, optionsFrame.BackgroundTransparency = UDim2.new(1, 0, 0, #optionsList * 36 + (#optionsList - 1) * 4), UDim2.new(0, 0, 0, 44), 1
-    local optLayout = Instance.new("UIListLayout", optionsFrame); optLayout.Padding, optLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
-
-    local isOpen = false
-    mainBtn.MouseButton1Click:Connect(function()
-        isOpen = not isOpen
-        TweenService:Create(container, TweenInfo.new(0.2), {Size = isOpen and UDim2.new(1, 0, 0, 44 + optionsFrame.Size.Y.Offset) or UDim2.new(1, 0, 0, 40)}):Play()
-    end)
-    
-    local obj = {}
-    function obj:UpdateText(txt) mainBtn.Text = titlePrefix .. txt end
-
-    for _, opt in ipairs(optionsList) do
-        local btn = Instance.new("TextButton", optionsFrame)
-        btn.Size, btn.BackgroundColor3, btn.Text, btn.TextColor3, btn.Font, btn.TextSize = UDim2.new(1, 0, 0, 36), Color3.fromRGB(20, 20, 30), opt, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 13
-        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-        btn.MouseButton1Click:Connect(function()
-            obj:UpdateText(opt); isOpen = false; TweenService:Create(container, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 40)}):Play()
-            callback(opt)
-        end)
-    end
-    return obj
-end
-
-local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callback)
-    local container = Instance.new("Frame", parent)
-    container.Size = UDim2.new(1, 0, 0, 40)
-    container.BackgroundTransparency = 1
-    container.ClipsDescendants = true
-
-    local mainBtn = Instance.new("TextButton", container)
-    mainBtn.Size = UDim2.new(1, 0, 0, 40)
-    mainBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
-    mainBtn.Text = titlePrefix .. "None"
-    mainBtn.TextColor3 = ACCENT
-    mainBtn.Font = Enum.Font.GothamBold
-    mainBtn.TextSize = 14
-    Instance.new("UICorner", mainBtn).CornerRadius = UDim.new(0, 6)
-
-    local optionsFrame = Instance.new("Frame", container)
-    optionsFrame.Size = UDim2.new(1, 0, 0, #optionsList * 36 + (#optionsList - 1) * 4)
-    optionsFrame.Position = UDim2.new(0, 0, 0, 44)
-    optionsFrame.BackgroundTransparency = 1
-    local optLayout = Instance.new("UIListLayout", optionsFrame)
-    optLayout.Padding = UDim.new(0, 4)
-    optLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-    local isOpen = false
-    mainBtn.MouseButton1Click:Connect(function()
-        isOpen = not isOpen
-        TweenService:Create(container, TweenInfo.new(0.2), {Size = isOpen and UDim2.new(1, 0, 0, 44 + optionsFrame.Size.Y.Offset) or UDim2.new(1, 0, 0, 40)}):Play()
-    end)
-
-    local selectedOpts = {}
-    local btnMap = {}
-    
-    local function updateText()
-        local sel = {}
-        for _, opt in ipairs(optionsList) do
-            if selectedOpts[opt] then table.insert(sel, opt) end
-        end
-        if #sel == 0 then 
-            mainBtn.Text = titlePrefix .. "None"
-        else 
-            mainBtn.Text = titlePrefix .. table.concat(sel, ", ") 
-        end
-        callback(selectedOpts)
-    end
-
-    local obj = {}
-    function obj:SetOption(opt, state)
-        if selectedOpts[opt] ~= state then
-            selectedOpts[opt] = state
-            if btnMap[opt] then btnMap[opt].TextColor3 = state and ACCENT or Color3.new(1, 1, 1) end
-            updateText()
-        end
-    end
-
-    for _, opt in ipairs(optionsList) do
-        selectedOpts[opt] = false
-        local btn = Instance.new("TextButton", optionsFrame)
-        btn.Size = UDim2.new(1, 0, 0, 36)
-        btn.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-        btn.Text = opt
-        btn.TextColor3 = Color3.new(1, 1, 1)
-        btn.Font = Enum.Font.GothamSemibold
-        btn.TextSize = 13
-        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-        btnMap[opt] = btn
-        
-        btn.MouseButton1Click:Connect(function() obj:SetOption(opt, not selectedOpts[opt]) end)
-    end
-    return obj
-end
-
--- ============================================================
--- POPULANDO AS ABAS
--- ============================================================
--- ABA 1: FARM
-local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Pulse Rifle + Small Laser"}
-local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
-local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
-local farmMethod = farmMethodsArray[1]
-local targetMethod = targetMethodsArray[1]
-local voteMode = "Normal"
-
-local farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
-createInlineDropdown(tabs.Farm, "Target: ", targetMethodsArray, targetMethod, function(val) targetMethod = val end)
-local objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
-local objAutoFarm = createToggle(tabs.Farm, "Auto Farm", function(s) farmEnabled = s end)
-createToggle(tabs.Farm, "Auto Revive Player", function(s) reviveAtivo = s end)
-local objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save", function(s) interactAtivo = s; saveAtivo = s end)
-local objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
-local suicideWaveTarget = 0
-local objSuicideWave = createTextBox(tabs.Farm, "Suicide Wave (0 = Off)", "Ex: 50", function(val)
-    local match = string.match(tostring(val), "%d+")
-    if match then suicideWaveTarget = tonumber(match) else suicideWaveTarget = 0 end
-end)
-
--- ABA 2: SKILLS
-local skillOptions = {"E", "R", "T", "Y", "F", "G", "H"}
-local holdSkillOptions = {"Hold E", "Hold R", "Hold T", "Hold Y", "Hold F", "Hold G", "Hold H"}
-local objUseSkills, objHoldSkills
-local selectedUseSkills, selectedHoldSkills = {}, {}
-local isUpdatingSkills = false
-
-objUseSkills = createMultiSelectDropdown(tabs.Skills, "Use Skills: ", skillOptions, function(sel) 
-    if isUpdatingSkills then return end
-    isUpdatingSkills = true
-    for _, k in ipairs(skillOptions) do if sel[k] then local holdKey = "Hold " .. k; if objHoldSkills then objHoldSkills:SetOption(holdKey, false) end end end
-    selectedUseSkills = {}
-    for k, v in pairs(sel) do selectedUseSkills[k] = v end
-    isUpdatingSkills = false
-end)
-
-objHoldSkills = createMultiSelectDropdown(tabs.Skills, "Hold Skills: ", holdSkillOptions, function(sel)
-    if isUpdatingSkills then return end
-    isUpdatingSkills = true
-    for _, k in ipairs(holdSkillOptions) do if sel[k] then local useKey = string.sub(k, 6); if objUseSkills then objUseSkills:SetOption(useKey, false) end end end
-    selectedHoldSkills = {}
-    for k, v in pairs(sel) do selectedHoldSkills[k] = v end
-    isUpdatingSkills = false
-end)
-
-createSlider(tabs.Skills, "Hold Duration (Seconds)", 1, 30, 3, function(val) _G.HoldDuration = val end)
-createToggle(tabs.Skills, "Auto Use Skills", function(s) autoSkillsAtivo = s end)
-
-local nextHoldTime = {}
-task.spawn(function()
-    while true do
-        task.wait(0.5)
-        if autoSkillsAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not _G.IsUTTVSafeActive then
-            local isGuiActive = false
-            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
-            if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
-            
-            local shopNode = Workspace:FindFirstChild("CanUseShop")
-            local isIntermission = (shopNode and shopNode.Value == true)
-
-            if not isGuiActive and not isIntermission then
-                for key, state in pairs(selectedUseSkills) do
-                    if state then
-                        local keyCode = Enum.KeyCode[key]
-                        if keyCode then
-                            pcall(function()
-                                VIM:SendKeyEvent(true, keyCode, false, game)
-                                task.wait(0.05)
-                                VIM:SendKeyEvent(false, keyCode, false, game)
-                            end)
-                        end
-                    end
-                end
-                
-                local now = tick()
-                for key, state in pairs(selectedHoldSkills) do
-                    if state then
-                        local realKey = string.sub(key, 6)
-                        local keyCode = Enum.KeyCode[realKey]
-                        if keyCode then
-                            if now >= (nextHoldTime[realKey] or 0) then
-                                nextHoldTime[realKey] = now + _G.HoldDuration + 0.5
-                                pcall(function()
-                                    task.spawn(function()
-                                        VIM:SendKeyEvent(true, keyCode, false, game)
-                                        task.wait(_G.HoldDuration)
-                                        VIM:SendKeyEvent(false, keyCode, false, game)
-                                    end)
-                                end)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-end)
-
 -- ABA 4: ITEMS
-local itemFarmAtivo, ignoreClockSpiderAtivo, itemAtivo = false, false, false
 local objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) 
     itemFarmAtivo = s; if s then 
         local currentLiving = Workspace:FindFirstChild("Living")
@@ -1244,8 +1250,12 @@ local objIgnoreSpider = createToggle(tabs.Items, "Ignore Clock Spider", function
 local objItemNotif = createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
 
 local logTitle = Instance.new("TextLabel", tabs.Items); logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
+logTitle.LayoutOrder = getNextUIOrder()
+
 local logScroll = Instance.new("ScrollingFrame", tabs.Items); logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
 Instance.new("UICorner", logScroll).CornerRadius = UDim.new(0, 8)
+logScroll.LayoutOrder = getNextUIOrder()
+
 local logScrollLayout = Instance.new("UIListLayout", logScroll); logScrollLayout.Padding, logScrollLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
 
 function registerItemLog(itemName)
@@ -1256,7 +1266,6 @@ end
 -- ============================================================
 -- ABA 5: VISUALS
 -- ============================================================
-local espToiletsAtivo, espPlayersAtivo, espItemsAtivo, espJeffreyAtivo = false, false, false, false
 createToggle(tabs.Visuals, "Esp Toilets", function(s) espToiletsAtivo = s end)
 createToggle(tabs.Visuals, "Esp Players", function(s) espPlayersAtivo = s end)
 createToggle(tabs.Visuals, "Esp Items",   function(s) espItemsAtivo = s end)
@@ -1347,10 +1356,209 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- ABA 6: MISC
+-- 🔥 ABA 6: AUTO SHOP (NOVA LOJA HOURLY) 🔥
 -- ============================================================
-local autoJoinAtivo, autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoUseNormalTitanAtivo, autoUseSpecialTitanAtivo, antiAfkAtivo, antiAfkZoneAtivo, stayInRoundAtivo, autoRunAtivo, autoRollSkinAtivo, autoRollShardsAtivo, autoRollPresentsAtivo, detectSizeAtivo, astroReviveAtivo, uttvSafeAtivo, mugenJeffreyAtivo = false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+local autoShopSettings = {}
 
+local function createCategoryLabel(parent, text)
+    local frame = Instance.new("Frame", parent)
+    frame.Size = UDim2.new(1, 0, 0, 30)
+    frame.BackgroundColor3 = Color3.fromRGB(40, 60, 100)
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+    frame.LayoutOrder = getNextUIOrder()
+
+    local lbl = Instance.new("TextLabel", frame)
+    lbl.Size = UDim2.new(1, -10, 1, 0)
+    lbl.Position = UDim2.new(0, 10, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = text
+    lbl.TextColor3 = Color3.new(1, 1, 1)
+    lbl.Font = Enum.Font.GothamBlack
+    lbl.TextSize = 14
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    
+    return frame
+end
+
+local function createShopToggle(parent, itemName)
+    local setting = { active = false, quantity = 0, ui = nil }
+    autoShopSettings[itemName] = setting
+
+    local frame = Instance.new("Frame", parent)
+    frame.Size = UDim2.new(1, 0, 0, 45)
+    frame.BackgroundColor3 = BG_SECONDARY
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    frame.LayoutOrder = getNextUIOrder()
+
+    local title = Instance.new("TextLabel", frame)
+    title.Size = UDim2.new(0.55, 0, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.Text = itemName
+    title.TextColor3 = Color3.new(1, 1, 1)
+    title.Font = Enum.Font.Ubuntu
+    title.TextSize = 14
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.BackgroundTransparency = 1
+    title.TextWrapped = true
+
+    local qtyBox = Instance.new("TextBox", frame)
+    qtyBox.Size = UDim2.new(0, 40, 0, 26)
+    qtyBox.Position = UDim2.new(1, -110, 0.5, -13)
+    qtyBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    qtyBox.TextColor3 = Color3.new(1,1,1)
+    qtyBox.Font = Enum.Font.Ubuntu
+    qtyBox.TextSize = 14
+    qtyBox.PlaceholderText = "Qty"
+    qtyBox.Text = "0"
+    Instance.new("UICorner", qtyBox).CornerRadius = UDim.new(0, 4)
+
+    local switchBG = Instance.new("Frame", frame)
+    switchBG.Size = UDim2.new(0, 36, 0, 18)
+    switchBG.Position = UDim2.new(1, -46, 0.5, -9)
+    switchBG.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Instance.new("UICorner", switchBG).CornerRadius = UDim.new(1, 0)
+    
+    local circle = Instance.new("Frame", switchBG)
+    circle.Size = UDim2.new(0, 14, 0, 14)
+    circle.Position = UDim2.new(0, 2, 0.5, -7)
+    circle.BackgroundColor3 = Color3.new(1, 1, 1)
+    Instance.new("UICorner", circle).CornerRadius = UDim.new(1, 0)
+    
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(0, 60, 1, 0)
+    btn.Position = UDim2.new(1, -60, 0, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = ""
+
+    local obj = {}
+    function obj.SetToggle(state)
+        setting.active = state
+        TweenService:Create(circle, TweenInfo.new(0.2), { Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7) }):Play()
+        TweenService:Create(switchBG, TweenInfo.new(0.2), { BackgroundColor3 = state and ACCENT or Color3.fromRGB(40, 40, 40) }):Play()
+    end
+
+    function obj.UpdateQuantity(val)
+        qtyBox.Text = tostring(val)
+    end
+
+    btn.MouseButton1Click:Connect(function()
+        obj.SetToggle(not setting.active)
+    end)
+
+    qtyBox.FocusLost:Connect(function()
+        local num = tonumber(qtyBox.Text)
+        if num and num >= 0 then
+            setting.quantity = math.floor(num)
+            qtyBox.Text = tostring(setting.quantity)
+        else
+            qtyBox.Text = tostring(setting.quantity)
+        end
+    end)
+
+    setting.ui = obj
+end
+
+-- POPULANDO AUTO SHOP (SEM EMOJIS)
+createCategoryLabel(tabs.AutoShop, "Boosters")
+createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 30Min")
+createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 1Hour")
+createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 6Hour")
+createShopToggle(tabs.AutoShop, "Booster X2 Points : 30Min")
+createShopToggle(tabs.AutoShop, "Booster X2 Points : 1Hour")
+createShopToggle(tabs.AutoShop, "Booster X2 Points : 6Hour")
+createShopToggle(tabs.AutoShop, "Potion")
+createShopToggle(tabs.AutoShop, "Potion II")
+createShopToggle(tabs.AutoShop, "Potion III")
+
+createCategoryLabel(tabs.AutoShop, "Mastery Cards")
+createShopToggle(tabs.AutoShop, "Mastery Card : Normal")
+createShopToggle(tabs.AutoShop, "Mastery Card : Normal II")
+createShopToggle(tabs.AutoShop, "Mastery Card : Normal III")
+createShopToggle(tabs.AutoShop, "Mastery Card : Normal Titan")
+createShopToggle(tabs.AutoShop, "Mastery Card : Normal Titan II")
+createShopToggle(tabs.AutoShop, "Mastery Card : Normal Titan III")
+createShopToggle(tabs.AutoShop, "Mastery Card : Special Titan")
+createShopToggle(tabs.AutoShop, "Mastery Card : Special Titan II")
+createShopToggle(tabs.AutoShop, "Mastery Card : Special Titan III")
+
+createCategoryLabel(tabs.AutoShop, "Flash Drives")
+createShopToggle(tabs.AutoShop, "Flash Drive #1")
+createShopToggle(tabs.AutoShop, "Flash Drive #2")
+createShopToggle(tabs.AutoShop, "Flash Drive #3")
+createShopToggle(tabs.AutoShop, "Flash Drive #4")
+createShopToggle(tabs.AutoShop, "Flash Drive #5")
+createShopToggle(tabs.AutoShop, "Flash Drive #6")
+
+createCategoryLabel(tabs.AutoShop, "Drives")
+createShopToggle(tabs.AutoShop, "Drive #A")
+createShopToggle(tabs.AutoShop, "Drive #B")
+createShopToggle(tabs.AutoShop, "Drive #C")
+createShopToggle(tabs.AutoShop, "Drive #D")
+createShopToggle(tabs.AutoShop, "Drive #E")
+createShopToggle(tabs.AutoShop, "Drive #SdFE0")
+
+createCategoryLabel(tabs.AutoShop, "Others")
+createShopToggle(tabs.AutoShop, "Keycard")
+createShopToggle(tabs.AutoShop, "Legendary Ticket")
+createShopToggle(tabs.AutoShop, "Scorching Ember")
+createShopToggle(tabs.AutoShop, "Toilet Token")
+
+task.spawn(function()
+    local buyRemote = ReplicatedStorage:WaitForChild("BuyItemFromShopHourly", 10)
+    
+    while true do
+        task.wait(3)
+        if not player.PlayerGui then continue end
+        local dailyShop = player.PlayerGui:FindFirstChild("DailyShop")
+        if not dailyShop then continue end
+        local mainNode = dailyShop:FindFirstChild("Main")
+        if not mainNode then continue end
+        local frameNode = mainNode:FindFirstChild("Frame")
+        if not frameNode then continue end
+        
+        for _, slot in ipairs(frameNode:GetChildren()) do
+            if slot:IsA("Frame") or slot:IsA("ImageLabel") then
+                local nameLbl = slot:FindFirstChild("NameItem")
+                local stockLbl = slot:FindFirstChild("Stock")
+                
+                if nameLbl and stockLbl then
+                    local rawName = nameLbl.Text
+                    local stockMatch = string.match(stockLbl.Text, "%d+")
+                    local currentStock = stockMatch and tonumber(stockMatch) or 0
+                    
+                    local setting = autoShopSettings[rawName]
+                    if setting and setting.active and setting.quantity > 0 and currentStock > 0 then
+                        local amountToBuy = math.min(setting.quantity, currentStock)
+                        
+                        local internalName = string.gsub(rawName, " ", "")
+                        internalName = string.gsub(internalName, "MasteryCard", "MasterCard")
+                        
+                        if buyRemote then
+                            pcall(function()
+                                buyRemote:FireServer(internalName, amountToBuy)
+                            end)
+                            
+                            setting.quantity = setting.quantity - amountToBuy
+                            if setting.ui then
+                                setting.ui.UpdateQuantity(setting.quantity)
+                                if setting.quantity <= 0 then
+                                    setting.ui.SetToggle(false)
+                                end
+                            end
+                            
+                            task.wait(0.5) 
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+
+-- ============================================================
+-- ABA 7: MISC
+-- ============================================================
 local objAutoJoin = createToggle(tabs.Misc, "Auto Ready", function(s) autoJoinAtivo = s end)
 local voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
 local objAutoVote = createToggle(tabs.Misc, "Auto Vote", function(s) autoVoteAtivo = s end)
@@ -1422,7 +1630,7 @@ local objUTTVSafe = createToggle(tabs.Misc, "Auto Escape Astro Holdout", functio
 
 local objMugenJeffrey = createToggle(tabs.Misc, "No Jeffrey/insanity", {color = "gray", text = "With a bug, Jeffrey disappears along with the insanity"}, function(s) mugenJeffreyAtivo = s end)
 
--- ABA 7: TELEPORT
+-- ABA 8: TELEPORT
 createTpBtn(tabs.Teleport, "Spawn (Lobby)",   Vector3.new(611, -468, 529), false, {color = "yellow", text = "Be careful not to teleport during the match."})
 createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
 
@@ -1581,17 +1789,16 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 AUTO VOTE LÓGICA (DESVINCULADO E APRIMORADO)
+-- 🔥 AUTO VOTE LÓGICA (DESVINCULADO)
 -- ============================================================
 task.spawn(function()
     local voteRemote = ReplicatedStorage:WaitForChild("Vote")
     while true do
-        task.wait(2) 
+        task.wait(1.5) 
         if autoVoteAtivo then 
             local char = player.Character
             local hum = char and char:FindFirstChild("Humanoid")
             
-            -- Não importa se já votou ou não. Ele sempre tenta garantir o voto a cada 2s no lobby.
             if hum and hum.Health > 0 and _G.TimeInLobby > 2 then
                 pcall(function() voteRemote:FireServer(voteMode) end) 
             end
@@ -1600,7 +1807,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 AUTO READY LÓGICA (DESVINCULADO E APRIMORADO)
+-- 🔥 AUTO READY LÓGICA (DESVINCULADO)
 -- ============================================================
 task.spawn(function()
     local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
@@ -1629,7 +1836,7 @@ task.spawn(function()
             local hrp = char:FindFirstChild("HumanoidRootPart")
             local hum = char:FindFirstChild("Humanoid")
             if hrp and hum and hum.Health > 0 then
-                -- Apenas teleporte seguro, sem zerar a vida in-game
+                -- Apenas teleporte seguro pro Lobby
                 if hrp.Position.Y < -1500 then 
                     hrp.Velocity = Vector3.new(0,0,0)
                     hrp.CFrame = CFrame.new(611, -468, 529) 
@@ -1669,7 +1876,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ANTI AFK ZONE (DELEÇÃO DE PROMPTS NO LOBBY)
+-- 🔥 ANTI AFK ZONE E DETECTOR DE ARENA
 -- ============================================================
 task.spawn(function()
     while true do
@@ -1691,6 +1898,45 @@ task.spawn(function()
         end
     end
 end)
+
+-- 🔥 AFK ARENA DETECTOR (DENTRO DA FUNÇÃO ANTI AFK)
+local timeAfkInArena = 0
+task.spawn(function()
+    while task.wait(1) do
+        if antiAfkAtivo then
+            local char = player.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+            
+            local isGuiActive = false
+            if selectGui then
+                pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end)
+            end
+            
+            if hrp then
+                -- Verifica se o jogador NÃO está no lobby (Y > -100) E o menu está na tela
+                if hrp.Position.Y > -100 and isGuiActive then
+                    timeAfkInArena = timeAfkInArena + 1
+                    -- Se ficar 120 segundos (2 minutos) com o menu preso na tela da arena...
+                    if timeAfkInArena >= 120 then
+                        pcall(function()
+                            hrp.Velocity = Vector3.new(0, 0, 0)
+                            hrp.CFrame = CFrame.new(611, -468, 529) -- Traz de volta pro Lobby
+                        end)
+                        timeAfkInArena = 0 -- Reseta após teleportar
+                    end
+                else
+                    timeAfkInArena = 0 -- Reseta o tempo se as condições não baterem
+                end
+            else
+                timeAfkInArena = 0
+            end
+        else
+            timeAfkInArena = 0
+        end
+    end
+end)
+
 
 -- ============================================================
 -- 🔥 CORE AUTO FARM
@@ -2032,7 +2278,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ANTI-AFK
+-- 🔥 ANTI-AFK DEFAULT LÓGICA
 -- ============================================================
 player.Idled:Connect(function()
     if antiAfkAtivo then
@@ -2102,4 +2348,4 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V16.3 — Agora sim! Auto Buy Priority salvo, Auto Join/Vote desbugados, e Modo Deus no Suicide Wave!")
+print("✅ V16.8 — Perfeição Absoluta: Auto Shop Limpo, Anti AFK Arena Integrado, Ready/Vote Estáveis e Suicide Wave no Controle!")
