@@ -1,4 +1,4 @@
--- 🔥 V16.8 - DROP SCRIPTS | THE FATALITY UPDATE (ULTIMATE GUI & AFK ARENA FIX) 🔥
+-- 🔥 V17.0 - DROP SCRIPTS | THE FATALITY UPDATE (ULTIMATE AUTO BUY FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -20,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V16.8"
+local VERSION      = "V17.0"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -238,7 +238,6 @@ local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Las
 local farmMethod = farmMethodsArray[1]
 local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
 local targetMethod = targetMethodsArray[1]
-
 local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
 local voteMode = "Normal"
 
@@ -639,12 +638,6 @@ createTabBtn("Auto Shop", tabs.AutoShop, 5)
 createTabBtn("Misc", tabs.Misc, 6)
 createTabBtn("Teleport", tabs.Teleport, 7)
 
-local function getPlayerMoney()
-    local money = 0
-    local success = pcall(function() money = tonumber(player.Data.MoneysInShop.Value) end)
-    if success and money then return money end return math.huge 
-end
-
 local function createToggle(parent, text, tooltipData, callback)
     if type(tooltipData) == "function" then callback = tooltipData; tooltipData = nil end
 
@@ -925,7 +918,7 @@ local function createPriorityRow(parent, rowIndex, onSwap)
     local frame = Instance.new("Frame", parent)
     frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 45), BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-    frame.LayoutOrder = getNextUIOrder()
+    frame.LayoutOrder = getNextUIOrder() 
 
     local numInput = Instance.new("TextBox", frame)
     numInput.Size, numInput.Position = UDim2.new(0, 30, 0, 30), UDim2.new(0, 10, 0.5, -15)
@@ -1103,56 +1096,46 @@ task.spawn(function()
     end
 end)
 
--- ABA 3: AUTO BUY
+-- ============================================================
+-- 🔥 ABA 3: AUTO BUY (REFEITA COM PRIORIDADE E COMPRA REAL) 🔥
+-- ============================================================
 local ultraPriorityActive = false
 local objUltra = createToggle(tabs.AutoBuy, "Ultra Priority", {color="gray", text="Give top priority to the order of purchase, foregoing the purchase of other items in order to always buy them in that order"}, function(s) ultraPriorityActive = s end)
 
 local autoBuyItems = {
     { id = "Health", name = "Auto Buy Health", active = false, order = 1, verifiable = true,
-      price = function()
-          local hum = player.Character and player.Character:FindFirstChild("Humanoid")
-          if hum and hum.Health > 0 and hum.Health < hum.MaxHealth then return math.floor((hum.MaxHealth - hum.Health) * 2) end return 0
-      end,
       check = function() local hum = player.Character and player.Character:FindFirstChild("Humanoid"); return not hum or (hum.Health >= hum.MaxHealth - 5) end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "FillHP") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "FillHP") end) end },
       
     { id = "PulseRifle", name = "Auto Buy Pulse Rifle", tooltip = {color="yellow", text="Only activate if character has it"}, active = false, order = 2, verifiable = true,
-      price = function() return 600 end,
       check = function() return checkWeaponExists("pulse") end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Pulse Rifle") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Pulse Rifle") end) end },
       
     { id = "SmallLaser", name = "Auto Buy Small Laser", tooltip = {color="yellow", text="Only activate if character has it"}, active = false, order = 3, verifiable = true,
-      price = function() return 1200 end,
       check = function() return checkWeaponExists("small") end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Small Laser Gun") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Small Laser Gun") end) end },
       
     { id = "BigLaser", name = "Auto Buy Big Laser", tooltip = {color="red", text="Only with Big Camcorder Man"}, active = false, order = 4, verifiable = true,
-      price = function() return 1500 end, 
       check = function() return checkWeaponExists("large") end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Large Laser Gun") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Large Laser Gun") end) end },
 
     { id = "Lens", name = "Auto Buy Lens", active = false, order = 5, verifiable = true,
-      price = function() return 500 end,
       check = function() if not player.Character then return false end; for _, v in ipairs(player.Character:GetChildren()) do if string.find(string.lower(v.Name), "lens") then return true end end return false end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Lens") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Lens") end) end },
 
     { id = "Headphone", name = "Auto Buy HeadPhone", active = false, order = 6, verifiable = true,
-      price = function() return 500 end,
       check = function() if not player.Character then return false end; for _, v in ipairs(player.Character:GetChildren()) do if string.find(string.lower(v.Name), "headphone") then return true end end return false end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "HeadPhone") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "HeadPhone") end) end },
 
     { id = "NormalTitan", name = "Auto Buy Normal Titan Request", active = false, order = 7, verifiable = true,
-      price = function() return 2200 end,
       check = function() return checkWeaponExists("titan") end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Titan-Request") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Titan-Request") end) end },
 
     { id = "SpecialTitan", name = "Auto Buy Special Titan Request", active = false, order = 8, verifiable = true,
-      price = function() return 7000 end,
       check = function() return checkWeaponExists("special") end,
-      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "SpecialTitan-Request") end) end end },
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "SpecialTitan-Request") end) end },
 
     { id = "TitanTV", name = "Auto Buy Titan TV Upg", active = false, order = 9, verifiable = false,
-      price = function() return 4500 end,
       check = function() return false end,
       buy = function() pcall(function() ReplicatedStorage:WaitForChild("ChangeToCinema"):FireServer() end) end }
 }
@@ -1197,6 +1180,7 @@ for i = 1, 9 do
 end
 RefreshAutoBuyUI()
 
+-- LÓGICA DO AUTO BUY COM PRIORIDADE ABSOLUTA
 task.spawn(function()
     while true do
         task.wait(1) 
@@ -1208,18 +1192,12 @@ task.spawn(function()
 
             for _, item in ipairs(sortedItems) do
                 if item.active then
-                    local hasItem = item.check()
-                    if not hasItem then
-                        local currentMoney = getPlayerMoney()
-                        local itemCost = item.price()
-                        if currentMoney >= itemCost then
-                            item.buy()
-                            task.wait(0.3)
-                            if item.verifiable and not item.check() then
-                                if ultraPriorityActive then break end
-                            end
-                        else
-                            if ultraPriorityActive then break else continue end
+                    if not item.check() then
+                        item.buy() -- Manda a ordem de compra pro servidor
+                        task.wait(0.5) -- Aguarda pra ver se a compra foi validada pelo servidor
+                        if item.verifiable and not item.check() then
+                            -- Se o item ainda não tá lá, provavelmente acabou o dinheiro
+                            if ultraPriorityActive then break end -- Pausa a fila se Ultra Priority tiver on
                         end
                     end
                 end
@@ -1458,7 +1436,7 @@ local function createShopToggle(parent, itemName)
     setting.ui = obj
 end
 
--- POPULANDO AUTO SHOP (SEM EMOJIS)
+-- POPULANDO AUTO SHOP
 createCategoryLabel(tabs.AutoShop, "Boosters")
 createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 30Min")
 createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 1Hour")
@@ -1658,14 +1636,12 @@ task.spawn(function()
                     local currentWaveNum = tonumber(waveMatch)
                     if currentWaveNum >= suicideWaveTarget then
                         if not alreadySuicidedThisWave then
-                            -- Grita para as outras funções: PAREM TUDO, EU VOU MORRER!
                             _G.IsSuiciding = true
                             
                             local char = player.Character
                             local hum = char and char:FindFirstChild("Humanoid")
                             
                             if hum and hum.Health <= 0 then
-                                -- Morreu! Pode voltar ao normal.
                                 alreadySuicidedThisWave = true
                                 _G.IsSuiciding = false
                             end
@@ -1789,7 +1765,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 AUTO VOTE LÓGICA (DESVINCULADO)
+-- 🔥 AUTO VOTE LÓGICA
 -- ============================================================
 task.spawn(function()
     local voteRemote = ReplicatedStorage:WaitForChild("Vote")
@@ -1807,7 +1783,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 AUTO READY LÓGICA (DESVINCULADO)
+-- 🔥 AUTO READY LÓGICA
 -- ============================================================
 task.spawn(function()
     local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
@@ -1899,7 +1875,6 @@ task.spawn(function()
     end
 end)
 
--- 🔥 AFK ARENA DETECTOR (DENTRO DA FUNÇÃO ANTI AFK)
 local timeAfkInArena = 0
 task.spawn(function()
     while task.wait(1) do
@@ -1914,19 +1889,17 @@ task.spawn(function()
             end
             
             if hrp then
-                -- Verifica se o jogador NÃO está no lobby (Y > -100) E o menu está na tela
                 if hrp.Position.Y > -100 and isGuiActive then
                     timeAfkInArena = timeAfkInArena + 1
-                    -- Se ficar 120 segundos (2 minutos) com o menu preso na tela da arena...
                     if timeAfkInArena >= 120 then
                         pcall(function()
                             hrp.Velocity = Vector3.new(0, 0, 0)
-                            hrp.CFrame = CFrame.new(611, -468, 529) -- Traz de volta pro Lobby
+                            hrp.CFrame = CFrame.new(611, -468, 529) 
                         end)
-                        timeAfkInArena = 0 -- Reseta após teleportar
+                        timeAfkInArena = 0 
                     end
                 else
-                    timeAfkInArena = 0 -- Reseta o tempo se as condições não baterem
+                    timeAfkInArena = 0 
                 end
             else
                 timeAfkInArena = 0
@@ -1936,7 +1909,6 @@ task.spawn(function()
         end
     end
 end)
-
 
 -- ============================================================
 -- 🔥 CORE AUTO FARM
@@ -2278,7 +2250,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ANTI-AFK DEFAULT LÓGICA
+-- 🔥 ANTI-AFK
 -- ============================================================
 player.Idled:Connect(function()
     if antiAfkAtivo then
@@ -2348,4 +2320,4 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V16.8 — Perfeição Absoluta: Auto Shop Limpo, Anti AFK Arena Integrado, Ready/Vote Estáveis e Suicide Wave no Controle!")
+print("✅ V17.0 — O AUTO BUY VOLTOU! Dinheiro ignorado pelo client e remotes infalíveis.")
