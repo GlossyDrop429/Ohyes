@@ -1,4 +1,4 @@
--- 🔥 V14.8 - DROP SCRIPTS | THE FATALITY UPDATE (PURE TOGGLE AUTO RUN FIX) 🔥
+-- 🔥 V16.3 - DROP SCRIPTS | THE FATALITY UPDATE (ULTIMATE FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -15,12 +15,13 @@ local TeleportService   = game:GetService("TeleportService")
 
 local player    = Players.LocalPlayer
 local LMB_Event = ReplicatedStorage:WaitForChild("LMB")
+local shopRemote = ReplicatedStorage:WaitForChild("ShopSystem", 10)
 
 local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V14.8"
+local VERSION      = "V16.3"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -38,6 +39,34 @@ _G.IsFarmingTarget = false
 _G.CurrentPunchDistance = -3
 _G.IsUTTVSafeActive = false
 _G.IsItemFarming = false
+_G.TimeInLobby = 0
+_G.IsSuiciding = false -- 🔥 Trava Suprema do Suicide Wave
+
+-- Radar de Permanência no Lobby
+RunService.Heartbeat:Connect(function(dt)
+    local char = player.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if hrp and hrp.Position.Y < -350 and hrp.Position.Y > -600 then
+        _G.TimeInLobby = _G.TimeInLobby + dt
+    else
+        _G.TimeInLobby = 0
+    end
+end)
+
+-- ============================================================
+-- 🔥 AUTO EXECUTE UNIVERSAL
+-- ============================================================
+local queue = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
+if queue then
+    pcall(function()
+        queue([[loadstring(game:HttpGet("https://raw.githubusercontent.com/GlossyDrop429/Ohyes/refs/heads/main/versão%20releas%20V7.2.lua"))()]])
+    end)
+    player.OnTeleport:Connect(function(teleportState)
+        pcall(function()
+            queue([[loadstring(game:HttpGet("https://raw.githubusercontent.com/GlossyDrop429/Ohyes/refs/heads/main/versão%20releas%20V7.2.lua"))()]])
+        end)
+    end)
+end
 
 -- ============================================================
 -- WHITELIST DOS SKIBIDIS & ITENS
@@ -46,7 +75,7 @@ local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = 
 local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true }
 
 -- ============================================================
--- CLEANUP GLOBAL
+-- CLEANUP GLOBAL E INICIALIZAÇÃO DA UI
 -- ============================================================
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
     if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
@@ -55,7 +84,8 @@ local oldPool = Workspace.CurrentCamera:FindFirstChild("DropESP_Pool")
 if oldPool then oldPool:Destroy() end
 
 local gui = Instance.new("ScreenGui")
-gui.Name = SCRIPT_NAME; gui.ResetOnSpawn = false; gui.Parent = player:WaitForChild("PlayerGui")
+gui.Name = SCRIPT_NAME; gui.ResetOnSpawn = false;
+gui.Parent = player:WaitForChild("PlayerGui")
 
 local globalTooltip = Instance.new("TextLabel", gui)
 globalTooltip.Size = UDim2.new(0, 260, 0, 0)
@@ -96,11 +126,8 @@ local divider = Instance.new("Frame", topBar)
 divider.Size, divider.Position, divider.BackgroundColor3, divider.ZIndex = UDim2.new(1, 0, 0, 1), UDim2.new(0, 0, 1, -1), Color3.fromRGB(35, 35, 35), 4
 
 local topTitle = Instance.new("TextLabel", topBar)
-topTitle.Size, topTitle.Position, topTitle.Text, topTitle.TextColor3, topTitle.Font, topTitle.TextSize, topTitle.TextXAlignment, topTitle.BackgroundTransparency, topTitle.ZIndex = UDim2.new(1, -200, 1, 0), UDim2.new(0, 12, 0, 0), SCRIPT_NAME .. "  |  Carregando...", ACCENT, Enum.Font.GothamBold, 13, Enum.TextXAlignment.Left, 1, 5
+topTitle.Size, topTitle.Position, topTitle.Text, topTitle.TextColor3, topTitle.Font, topTitle.TextSize, topTitle.TextXAlignment, topTitle.BackgroundTransparency, topTitle.ZIndex = UDim2.new(1, -200, 1, 0), UDim2.new(0, 12, 0, 0), SCRIPT_NAME .. "  | Carregando...", ACCENT, Enum.Font.GothamBold, 13, Enum.TextXAlignment.Left, 1, 5
 
--- ============================================================
--- BOTÃO SERVER HOP + AUTO EXECUTE (INTEGRADO)
--- ============================================================
 local serverHopBtn = Instance.new("TextButton", topBar)
 serverHopBtn.Size = UDim2.new(0, 80, 0, 24)
 serverHopBtn.Position = UDim2.new(1, -150, 0.5, -12)
@@ -113,16 +140,10 @@ serverHopBtn.ZIndex = 5
 Instance.new("UICorner", serverHopBtn).CornerRadius = UDim.new(0, 6)
 
 serverHopBtn.MouseButton1Click:Connect(function()
-    local queue = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
-    if queue then
-        -- Injeta a release oficial direto na memória antes de teleportar
-        queue([[loadstring(game:HttpGet("https://raw.githubusercontent.com/GlossyDrop429/Ohyes/refs/heads/main/versão%20releas%20V7.2.lua"))()]])
-    end
-
     local req = (syn and syn.request) or request or http_request or (fluxus and fluxus.request)
     if req then
         local success, res = pcall(function()
-            return req({Url = "https://games.roproxy.com/v1/games/" .. tostring(game.PlaceId) .. "/servers/Public?sortOrder=Asc&limit=100", Method = "GET"})
+            return req({Url = "https://games.roproxy.com/v1/games/" .. tostring(game.PlaceId) .. "/servers/Public?sortOrder=Desc&limit=100", Method = "GET"})
         end)
         
         if success and res and res.StatusCode == 200 then
@@ -135,14 +156,14 @@ serverHopBtn.MouseButton1Click:Connect(function()
                     end
                 end
                 if #validServers > 0 then
-                    local randomId = validServers[math.random(1, #validServers)]
+                    local range = math.min(#validServers, 30)
+                    local randomId = validServers[math.random(1, range)]
                     TeleportService:TeleportToPlaceInstance(game.PlaceId, randomId, player)
                     return
                 end
             end
         end
     end
-    -- Fallback nativo ultra rápido caso a API falhe
     TeleportService:Teleport(game.PlaceId, player)
 end)
 
@@ -193,35 +214,14 @@ for _, t in pairs(tabs) do
 end
 tabs.Farm.Visible = true
 
--- ============================================================
--- ESTADOS GLOBAIS E FUNÇÕES UI
--- ============================================================
-local farmEnabled, interactAtivo, saveAtivo, itemFarmAtivo, itemAtivo = false, false, false, false, false
-local reviveAtivo, antiAfkAtivo, stayInRoundAtivo, autoRunAtivo, autoJoinAtivo = false, false, false, false, false
-local autoBuyHealthAtivo, autoBuyPR, autoBuySL, autoBuyBL, autoBuyLensAtivo, autoBuyHeadphoneAtivo = false, false, false, false, false, false
-local autoBuyNormalTitanAtivo, autoBuySpecialTitanAtivo, autoBuyTitanTVUpgAtivo = false, false, false
-local autoUseNormalTitanAtivo, autoUseSpecialTitanAtivo = false, false
-local antiAfkZoneAtivo, detectSizeAtivo, astroReviveAtivo, uttvSafeAtivo, ignoreClockSpiderAtivo, mugenJeffreyAtivo = false, false, false, false, false, false
-local espToiletsAtivo, espPlayersAtivo, espItemsAtivo, espJeffreyAtivo = false, false, false, false
-local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = false, false, false, false
-local autoRollSkinAtivo, autoRollShardsAtivo, autoRollPresentsAtivo = false, false, false
-local suicideWaveTarget = 0
-local autoSkillsAtivo = false
-
-local selectedUseSkills = {}
-local selectedHoldSkills = {}
-local isUpdatingSkills = false
-
-local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Pulse Rifle + Small Laser"}
-local farmMethod = farmMethodsArray[3]
-local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
-local targetMethod = targetMethodsArray[1]
-
-local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
-local voteMode = "Normal"
-
-local currentConnection = nil
-local farmDropdownObj, voteDropdownObj = nil, nil
+local function getPlayerMoney()
+    local money = 0
+    local success = pcall(function()
+        money = tonumber(player.Data.MoneysInShop.Value)
+    end)
+    if success and money then return money end
+    return math.huge 
+end
 
 local function checkWeaponExists(nameSearch)
     if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
@@ -289,7 +289,6 @@ local function showItemNotification(item)
         end
         game:GetService("StarterGui"):SetCore("SendNotification", { Title = "📦 Item Detectado", Text = displayName .. " apareceu no mapa!", Duration = 5 })
     end)
-    -- Log removido daqui para evitar item duplicado no painel!
 end
 
 local INJECTION_TIME = tick()
@@ -301,7 +300,7 @@ local function processItemQueue()
     
     while #itemQueue > 0 do 
         if not itemFarmAtivo then break end
-        if _G.IsUTTVSafeActive then task.wait(0.5); continue end
+        if _G.IsUTTVSafeActive or _G.IsSuiciding then task.wait(0.5); continue end
         
         local peekItem = itemQueue[1]
         if ignoreClockSpiderAtivo and peekItem and peekItem.Name == "Clock Spider" then table.remove(itemQueue, 1); continue end
@@ -317,8 +316,8 @@ local function processItemQueue()
         if item and item.Parent then 
             if player.Name ~= _v and Players:FindFirstChild(_v) then task.wait(1.5) end
             local prompt, t0 = nil, tick()
-            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not item.Parent or (tick() - t0 > 2) or _G.IsUTTVSafeActive
-            if _G.IsUTTVSafeActive then table.insert(itemQueue, item); continue end
+            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not item.Parent or (tick() - t0 > 2) or _G.IsUTTVSafeActive or _G.IsSuiciding
+            if _G.IsUTTVSafeActive or _G.IsSuiciding then table.insert(itemQueue, item); continue end
             
             if item.Parent and prompt then
                 local savedCFrame = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.CFrame
@@ -328,7 +327,7 @@ local function processItemQueue()
                 if pos and player.Character then
                     player.Character:PivotTo(CFrame.new(pos + Vector3.new(0, 2, 0))); task.wait(0.1)
                     prompt.HoldDuration = 0; prompt.MaxActivationDistance = 9999; prompt.RequiresLineOfSight = false
-                    if fireproximityprompt then for i = 1, 5 do if not item.Parent or not prompt.Parent or _G.IsUTTVSafeActive then break end; fireproximityprompt(prompt, 1, true); task.wait(0.2) end end
+                    if fireproximityprompt then for i = 1, 5 do if not item.Parent or not prompt.Parent or _G.IsUTTVSafeActive or _G.IsSuiciding then break end; fireproximityprompt(prompt, 1, true); task.wait(0.2) end end
                 end
                 task.wait(0.3)
                 
@@ -336,7 +335,7 @@ local function processItemQueue()
                 local cx, cy = vp.X / 2, vp.Y / 2
                 
                 for _ = 1, 8 do
-                    if _G.IsUTTVSafeActive then break end
+                    if _G.IsUTTVSafeActive or _G.IsSuiciding then break end
                     VIM:SendMouseButtonEvent(cx, cy, 0, true, game, 1); task.wait(0.03)
                     VIM:SendMouseButtonEvent(cx, cy, 0, false, game, 1); task.wait(0.03)
                 end
@@ -353,7 +352,7 @@ local function processItemQueue()
                 else
                     if ITEM_WHITELIST[item.Name] or item:FindFirstChild("HighlightForAstroItem", true) then table.insert(itemQueue, item) end
                 end
-                if savedCFrame and player.Character and not _G.IsUTTVSafeActive then player.Character:PivotTo(savedCFrame) end
+                if savedCFrame and player.Character and not _G.IsUTTVSafeActive and not _G.IsSuiciding then player.Character:PivotTo(savedCFrame) end
             end
         end
         task.wait(0.1) 
@@ -420,7 +419,7 @@ task.spawn(function()
 end)
 
 RunService.Heartbeat:Connect(function()
-    if _G.IsUTTVSafeActive and uttvSafeAtivo then
+    if _G.IsUTTVSafeActive and uttvSafeAtivo and not _G.IsSuiciding then
         local isGuiActive = false
         local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
         if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
@@ -492,7 +491,7 @@ task.spawn(function()
                     game:GetService("StarterGui"):SetCore("SendNotification", {
                         Title = "🕵️ NPC SECRETO!",
                         Text = "O Mysterious Camera man spawnou no mapa!",
-                        Duration = 10, -- Corrigido para não bugar o AFK!
+                        Duration = 10,
                     })
                 end)
                 secretEsp.Adornee = mysteriousNPC
@@ -521,7 +520,7 @@ local wasStayInRound = false
 task.spawn(function()
     local cIdx = 1
     RunService.Heartbeat:Connect(function(dt)
-        if _G.IsUTTVSafeActive or _G.IsItemFarming then
+        if _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
             if wasStayInRound then
                 Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
                 if player.Character and player.Character:FindFirstChild("Humanoid") then Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid end
@@ -672,9 +671,10 @@ local function createToggle(parent, text, tooltipData, callback)
     local circle = Instance.new("Frame", switchBG); circle.Size, circle.Position, circle.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(0, 2, 0.5, -7), Color3.new(1, 1, 1)
     Instance.new("UICorner", circle).CornerRadius = UDim.new(1, 0)
     
-    local state = false; local btn = Instance.new("TextButton", frame); btn.Size, btn.BackgroundTransparency, btn.Text = UDim2.new(1, 0, 1, 0), 1, ""
+    local state = false; local btn = Instance.new("TextButton", frame); btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(0, 100, 1, 0), UDim2.new(1, -100, 0, 0), 1, ""
     
     local obj = {}
+    obj.frame = frame
     function obj:Set(newState)
         if state == newState then return end
         state = newState
@@ -685,6 +685,231 @@ local function createToggle(parent, text, tooltipData, callback)
     btn.MouseButton1Click:Connect(function() obj:Set(not state) end)
     return obj
 end
+
+-- ============================================================
+-- 🔥 AUTO BUY PRIORITY UI GENERATOR
+-- ============================================================
+local autoBuyUIRows = {}
+
+local function createPriorityRow(parent, rowIndex, onSwap)
+    local frame = Instance.new("Frame", parent)
+    frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 45), BG_SECONDARY
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    frame.LayoutOrder = rowIndex + 1 
+
+    local numInput = Instance.new("TextBox", frame)
+    numInput.Size, numInput.Position = UDim2.new(0, 30, 0, 30), UDim2.new(0, 10, 0.5, -15)
+    numInput.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    numInput.TextColor3 = ACCENT
+    numInput.Font = Enum.Font.GothamBlack
+    numInput.TextSize = 14
+    numInput.Text = tostring(rowIndex)
+    Instance.new("UICorner", numInput).CornerRadius = UDim.new(0, 4)
+
+    local titleContainer = Instance.new("Frame", frame)
+    titleContainer.Size, titleContainer.Position, titleContainer.BackgroundTransparency = UDim2.new(0.65, 0, 1, 0), UDim2.new(0, 50, 0, 0), 1
+    local listLayout = Instance.new("UIListLayout", titleContainer)
+    listLayout.FillDirection, listLayout.SortOrder, listLayout.VerticalAlignment, listLayout.Padding = Enum.FillDirection.Horizontal, Enum.SortOrder.LayoutOrder, Enum.VerticalAlignment.Center, UDim.new(0, 6)
+
+    local nameLabel = Instance.new("TextLabel", titleContainer)
+    nameLabel.AutomaticSize, nameLabel.Size, nameLabel.BackgroundTransparency = Enum.AutomaticSize.X, UDim2.new(0, 0, 1, 0), 1
+    nameLabel.TextColor3 = Color3.new(1, 1, 1)
+    nameLabel.Font = Enum.Font.Ubuntu
+    nameLabel.TextSize = 16
+
+    local icon = Instance.new("TextLabel", titleContainer)
+    icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18
+    icon.Visible = false
+
+    local switchBG = Instance.new("Frame", frame)
+    switchBG.Size, switchBG.Position, switchBG.BackgroundColor3 = UDim2.new(0, 36, 0, 18), UDim2.new(1, -46, 0.5, -9), Color3.fromRGB(40, 40, 40)
+    Instance.new("UICorner", switchBG).CornerRadius = UDim.new(1, 0)
+    local circle = Instance.new("Frame", switchBG)
+    circle.Size, circle.Position, circle.BackgroundColor3 = UDim2.new(0, 14, 0, 14), UDim2.new(0, 2, 0.5, -7), Color3.new(1, 1, 1)
+    Instance.new("UICorner", circle).CornerRadius = UDim.new(1, 0)
+    
+    local btn = Instance.new("TextButton", frame)
+    btn.Size, btn.Position, btn.BackgroundTransparency, btn.Text = UDim2.new(0, 100, 1, 0), UDim2.new(1, -100, 0, 0), 1, ""
+    
+    local rowData = {
+        frame = frame,
+        numInput = numInput,
+        nameLabel = nameLabel,
+        icon = icon,
+        currentItem = nil,
+        setToggle = function(state, skipAnim)
+            if skipAnim then
+                circle.Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)
+                switchBG.BackgroundColor3 = state and ACCENT or Color3.fromRGB(40, 40, 40)
+            else
+                TweenService:Create(circle, TweenInfo.new(0.2), { Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7) }):Play()
+                TweenService:Create(switchBG, TweenInfo.new(0.2), { BackgroundColor3 = state and ACCENT or Color3.fromRGB(40, 40, 40) }):Play()
+            end
+        end
+    }
+
+    btn.MouseButton1Click:Connect(function()
+        if rowData.currentItem then
+            rowData.currentItem.active = not rowData.currentItem.active
+            rowData.setToggle(rowData.currentItem.active, false)
+        end
+    end)
+
+    numInput.FocusLost:Connect(function()
+        local n = tonumber(numInput.Text)
+        if n and n >= 1 and n <= 9 and n ~= rowIndex then
+            onSwap(rowIndex, math.floor(n))
+        else
+            numInput.Text = tostring(rowIndex)
+        end
+    end)
+
+    icon.MouseEnter:Connect(function()
+        if rowData.currentItem and rowData.currentItem.tooltip then
+            local tColor = Color3.fromRGB(150, 150, 150); local hexColor = "#969696"
+            if rowData.currentItem.tooltip.color == "red" then tColor = Color3.fromRGB(255, 50, 50); hexColor = "#FF3232"
+            elseif rowData.currentItem.tooltip.color == "yellow" then tColor = Color3.fromRGB(255, 200, 0); hexColor = "#FFC800" end
+
+            local parsedText = string.gsub(rowData.currentItem.tooltip.text, "<u>(.-)</u>", "<u><font color=\""..hexColor.."\">%1</font></u>")
+            globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
+            
+            if tooltipConn then tooltipConn:Disconnect() end
+            tooltipConn = RunService.RenderStepped:Connect(function()
+                local mPos = UserInputService:GetMouseLocation()
+                globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
+            end)
+        end
+    end)
+    icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+
+    autoBuyUIRows[rowIndex] = rowData
+end
+
+local ultraPriorityActive = false
+local objUltra = createToggle(tabs.AutoBuy, "Ultra Priority", {color="gray", text="Give top priority to the order of purchase, foregoing the purchase of other items in order to always buy them in that order"}, function(s) ultraPriorityActive = s end)
+objUltra.frame.LayoutOrder = 0
+
+local autoBuyItems = {
+    { id = "Health", name = "Auto Buy Health", active = false, order = 1, verifiable = true,
+      price = function()
+          local hum = player.Character and player.Character:FindFirstChild("Humanoid")
+          if hum and hum.Health > 0 and hum.Health < hum.MaxHealth then return math.floor((hum.MaxHealth - hum.Health) * 2) end return 0
+      end,
+      check = function() local hum = player.Character and player.Character:FindFirstChild("Humanoid"); return not hum or (hum.Health >= hum.MaxHealth - 5) end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "FillHP") end) end end },
+      
+    { id = "PulseRifle", name = "Auto Buy Pulse Rifle", tooltip = {color="yellow", text="Only activate if character has it"}, active = false, order = 2, verifiable = true,
+      price = function() return 600 end,
+      check = function() return checkWeaponExists("pulse") end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Pulse Rifle") end) end end },
+      
+    { id = "SmallLaser", name = "Auto Buy Small Laser", tooltip = {color="yellow", text="Only activate if character has it"}, active = false, order = 3, verifiable = true,
+      price = function() return 1200 end,
+      check = function() return checkWeaponExists("small") end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Small Laser Gun") end) end end },
+      
+    { id = "BigLaser", name = "Auto Buy Big Laser", tooltip = {color="red", text="Only with Big Camcorder Man"}, active = false, order = 4, verifiable = true,
+      price = function() return 1500 end, 
+      check = function() return checkWeaponExists("large") end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Large Laser Gun") end) end end },
+
+    { id = "Lens", name = "Auto Buy Lens", active = false, order = 5, verifiable = true,
+      price = function() return 500 end,
+      check = function() if not player.Character then return false end; for _, v in ipairs(player.Character:GetChildren()) do if string.find(string.lower(v.Name), "lens") then return true end end return false end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Lens") end) end end },
+
+    { id = "Headphone", name = "Auto Buy HeadPhone", active = false, order = 6, verifiable = true,
+      price = function() return 500 end,
+      check = function() if not player.Character then return false end; for _, v in ipairs(player.Character:GetChildren()) do if string.find(string.lower(v.Name), "headphone") then return true end end return false end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "HeadPhone") end) end end },
+
+    { id = "NormalTitan", name = "Auto Buy Normal Titan Request", active = false, order = 7, verifiable = true,
+      price = function() return 2200 end,
+      check = function() return checkWeaponExists("titan") end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "Titan-Request") end) end end },
+
+    { id = "SpecialTitan", name = "Auto Buy Special Titan Request", active = false, order = 8, verifiable = true,
+      price = function() return 7000 end,
+      check = function() return checkWeaponExists("special") end,
+      buy = function() if shopRemote then pcall(function() shopRemote:FireServer("Buy", "SpecialTitan-Request") end) end end },
+
+    { id = "TitanTV", name = "Auto Buy Titan TV Upg", active = false, order = 9, verifiable = false,
+      price = function() return 4500 end,
+      check = function() return false end,
+      buy = function() pcall(function() ReplicatedStorage:WaitForChild("ChangeToCinema"):FireServer() end) end }
+}
+
+local function RefreshAutoBuyUI()
+    table.sort(autoBuyItems, function(a, b) return a.order < b.order end)
+    for i = 1, 9 do
+        local item = autoBuyItems[i]
+        local row = autoBuyUIRows[i]
+        
+        row.currentItem = item
+        row.nameLabel.Text = item.name
+        row.numInput.Text = tostring(i)
+        row.setToggle(item.active, true)
+        
+        if item.tooltip then
+            row.icon.Visible = true
+            if item.tooltip.color == "red" then row.icon.TextColor3 = Color3.fromRGB(255, 50, 50)
+            elseif item.tooltip.color == "yellow" then row.icon.TextColor3 = Color3.fromRGB(255, 200, 0)
+            else row.icon.TextColor3 = Color3.fromRGB(150, 150, 150) end
+        else
+            row.icon.Visible = false
+        end
+    end
+end
+
+local function SwapItems(oldOrder, newOrder)
+    local itemA, itemB
+    for _, item in ipairs(autoBuyItems) do
+        if item.order == oldOrder then itemA = item
+        elseif item.order == newOrder then itemB = item end
+    end
+    if itemA and itemB then
+        itemA.order = newOrder
+        itemB.order = oldOrder
+        RefreshAutoBuyUI()
+    end
+end
+
+for i = 1, 9 do
+    createPriorityRow(tabs.AutoBuy, i, SwapItems)
+end
+RefreshAutoBuyUI()
+
+-- LÓGICA DO AUTO BUY COM PRIORIDADE ABSOLUTA E DINHEIRO
+task.spawn(function()
+    while true do
+        task.wait(1) 
+        local shopNode = Workspace:FindFirstChild("CanUseShop")
+        if shopNode and shopNode.Value == true then
+            local sortedItems = {}
+            for _, item in ipairs(autoBuyItems) do table.insert(sortedItems, item) end
+            table.sort(sortedItems, function(a, b) return a.order < b.order end)
+
+            for _, item in ipairs(sortedItems) do
+                if item.active then
+                    local hasItem = item.check()
+                    if not hasItem then
+                        local currentMoney = getPlayerMoney()
+                        local itemCost = item.price()
+                        if currentMoney >= itemCost then
+                            item.buy()
+                            task.wait(0.3)
+                            if item.verifiable and not item.check() then
+                                if ultraPriorityActive then break end
+                            end
+                        else
+                            if ultraPriorityActive then break else continue end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
 
 local function createSlider(parent, text, min, max, default, callback)
     local frame = Instance.new("Frame", parent); frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 50), BG_SECONDARY
@@ -854,7 +1079,6 @@ local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callb
 
     local selectedOpts = {}
     local btnMap = {}
-    local obj = {}
     
     local function updateText()
         local sel = {}
@@ -869,6 +1093,7 @@ local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callb
         callback(selectedOpts)
     end
 
+    local obj = {}
     function obj:SetOption(opt, state)
         if selectedOpts[opt] ~= state then
             selectedOpts[opt] = state
@@ -898,14 +1123,22 @@ end
 -- POPULANDO AS ABAS
 -- ============================================================
 -- ABA 1: FARM
-farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
+local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Pulse Rifle + Small Laser"}
+local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
+local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
+local farmMethod = farmMethodsArray[1]
+local targetMethod = targetMethodsArray[1]
+local voteMode = "Normal"
+
+local farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
 createInlineDropdown(tabs.Farm, "Target: ", targetMethodsArray, targetMethod, function(val) targetMethod = val end)
-objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
-objAutoFarm = createToggle(tabs.Farm, "Auto Farm",                 function(s) farmEnabled   = s end)
-createToggle(tabs.Farm, "Auto Revive Player",        function(s) reviveAtivo   = s end)
-objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save",         function(s) interactAtivo = s; saveAtivo = s end)
-objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
-objSuicideWave = createTextBox(tabs.Farm, "Suicide Wave (0 = Off)", "Ex: 50", function(val)
+local objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
+local objAutoFarm = createToggle(tabs.Farm, "Auto Farm", function(s) farmEnabled = s end)
+createToggle(tabs.Farm, "Auto Revive Player", function(s) reviveAtivo = s end)
+local objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save", function(s) interactAtivo = s; saveAtivo = s end)
+local objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
+local suicideWaveTarget = 0
+local objSuicideWave = createTextBox(tabs.Farm, "Suicide Wave (0 = Off)", "Ex: 50", function(val)
     local match = string.match(tostring(val), "%d+")
     if match then suicideWaveTarget = tonumber(match) else suicideWaveTarget = 0 end
 end)
@@ -914,6 +1147,8 @@ end)
 local skillOptions = {"E", "R", "T", "Y", "F", "G", "H"}
 local holdSkillOptions = {"Hold E", "Hold R", "Hold T", "Hold Y", "Hold F", "Hold G", "Hold H"}
 local objUseSkills, objHoldSkills
+local selectedUseSkills, selectedHoldSkills = {}, {}
+local isUpdatingSkills = false
 
 objUseSkills = createMultiSelectDropdown(tabs.Skills, "Use Skills: ", skillOptions, function(sel) 
     if isUpdatingSkills then return end
@@ -936,73 +1171,60 @@ end)
 createSlider(tabs.Skills, "Hold Duration (Seconds)", 1, 30, 3, function(val) _G.HoldDuration = val end)
 createToggle(tabs.Skills, "Auto Use Skills", function(s) autoSkillsAtivo = s end)
 
--- ABA 3: AUTO BUY
-objBuyHealth = createToggle(tabs.AutoBuy, "Auto Buy Health",       function(s) autoBuyHealthAtivo = s end)
-objBuyPR = createToggle(tabs.AutoBuy, "Auto Buy Pulse Rifle", {color = "yellow", text = "Only activate this option if your character has it in that store"}, function(s) autoBuyPR = s end)
-objBuySL = createToggle(tabs.AutoBuy, "Auto Buy Small Laser", {color = "yellow", text = "Only activate this option if your character has it in that store"}, function(s) autoBuySL = s end)
-objBuyBL = createToggle(tabs.AutoBuy, "Auto Buy Big Laser", {color = "red", text = "This function can only be activated if you have the <u>Big Camcorder Man</u> equipped."}, function(s) autoBuyBL = s end)
-objBuyLens = createToggle(tabs.AutoBuy, "Auto Buy Lens", function(s) autoBuyLensAtivo = s end)
-objBuyHeadphone = createToggle(tabs.AutoBuy, "Auto Buy HeadPhone", function(s) autoBuyHeadphoneAtivo = s end)
-
-local objBuyNormalTitan = createToggle(tabs.AutoBuy, "Auto Buy Normal Titan Request", function(s) autoBuyNormalTitanAtivo = s end)
-local objBuySpecialTitan = createToggle(tabs.AutoBuy, "Auto Buy Special Titan Request", function(s) autoBuySpecialTitanAtivo = s end)
-local objBuyTitanTV = createToggle(tabs.AutoBuy, "Auto Buy Titan TV Upg", function(s) autoBuyTitanTVUpgAtivo = s end)
-
+local nextHoldTime = {}
 task.spawn(function()
-    local shopRemote = ReplicatedStorage:WaitForChild("ShopSystem")
     while true do
-        task.wait(1) 
-        local shopNode = Workspace:FindFirstChild("CanUseShop")
-        if shopNode and shopNode.Value == true then
-            if autoBuyHealthAtivo and player.Character then
-                local hum = player.Character:FindFirstChildWhichIsA("Humanoid")
-                if hum and hum.Health < hum.MaxHealth and hum.Health > 0 then pcall(function() shopRemote:FireServer("Buy", "FillHP") end) end
-            end
-            if autoBuyPR and not checkWeaponExists("pulse") then pcall(function() shopRemote:FireServer("Buy", "Pulse Rifle") end) end
-            if autoBuySL and not checkWeaponExists("small") then pcall(function() shopRemote:FireServer("Buy", "Small Laser Gun") end) end
-            if autoBuyBL and not checkWeaponExists("large") then pcall(function() shopRemote:FireServer("Buy", "Large Laser Gun") end) end
+        task.wait(0.5)
+        if autoSkillsAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not _G.IsUTTVSafeActive then
+            local isGuiActive = false
+            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+            if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
             
-            if autoBuyLensAtivo then
-                local hasLens = false
-                if player.Character then
-                    for _, v in ipairs(player.Character:GetChildren()) do
-                        if string.find(string.lower(v.Name), "lens") then hasLens = true; break end
+            local shopNode = Workspace:FindFirstChild("CanUseShop")
+            local isIntermission = (shopNode and shopNode.Value == true)
+
+            if not isGuiActive and not isIntermission then
+                for key, state in pairs(selectedUseSkills) do
+                    if state then
+                        local keyCode = Enum.KeyCode[key]
+                        if keyCode then
+                            pcall(function()
+                                VIM:SendKeyEvent(true, keyCode, false, game)
+                                task.wait(0.05)
+                                VIM:SendKeyEvent(false, keyCode, false, game)
+                            end)
+                        end
                     end
                 end
-                if not hasLens then pcall(function() shopRemote:FireServer("Buy", "Lens") end) end
-            end
-
-            if autoBuyHeadphoneAtivo then
-                local hasHeadphone = false
-                if player.Character then
-                    for _, v in ipairs(player.Character:GetChildren()) do
-                        if string.find(string.lower(v.Name), "headphone") then hasHeadphone = true; break end
+                
+                local now = tick()
+                for key, state in pairs(selectedHoldSkills) do
+                    if state then
+                        local realKey = string.sub(key, 6)
+                        local keyCode = Enum.KeyCode[realKey]
+                        if keyCode then
+                            if now >= (nextHoldTime[realKey] or 0) then
+                                nextHoldTime[realKey] = now + _G.HoldDuration + 0.5
+                                pcall(function()
+                                    task.spawn(function()
+                                        VIM:SendKeyEvent(true, keyCode, false, game)
+                                        task.wait(_G.HoldDuration)
+                                        VIM:SendKeyEvent(false, keyCode, false, game)
+                                    end)
+                                end)
+                            end
+                        end
                     end
                 end
-                if not hasHeadphone then pcall(function() shopRemote:FireServer("Buy", "HeadPhone") end) end
-            end
-            
-            if autoBuyNormalTitanAtivo then
-                local hasTitan = checkWeaponExists("titan")
-                if not hasTitan then pcall(function() shopRemote:FireServer("Buy", "Titan-Request") end) end
-            end
-
-            if autoBuySpecialTitanAtivo then
-                local hasSpecial = checkWeaponExists("special")
-                if not hasSpecial then pcall(function() shopRemote:FireServer("Buy", "SpecialTitan-Request") end) end
-            end
-
-            if autoBuyTitanTVUpgAtivo then
-                pcall(function() ReplicatedStorage:WaitForChild("ChangeToCinema"):FireServer() end)
             end
         end
     end
 end)
 
 -- ABA 4: ITEMS
-objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) 
-    itemFarmAtivo = s; 
-    if s then 
+local itemFarmAtivo, ignoreClockSpiderAtivo, itemAtivo = false, false, false
+local objFarmItems = createToggle(tabs.Items, "Farm Items", function(s) 
+    itemFarmAtivo = s; if s then 
         local currentLiving = Workspace:FindFirstChild("Living")
         if currentLiving then
             for _, c in ipairs(Workspace:GetChildren()) do 
@@ -1018,8 +1240,8 @@ objFarmItems = createToggle(tabs.Items, "Farm Items", function(s)
     end 
 end)
 
-objIgnoreSpider = createToggle(tabs.Items, "Ignore Clock Spider", function(s) ignoreClockSpiderAtivo = s end)
-objItemNotif = createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
+local objIgnoreSpider = createToggle(tabs.Items, "Ignore Clock Spider", function(s) ignoreClockSpiderAtivo = s end)
+local objItemNotif = createToggle(tabs.Items, "Item Notifier", function(s) itemAtivo = s end)
 
 local logTitle = Instance.new("TextLabel", tabs.Items); logTitle.Size, logTitle.Text, logTitle.TextColor3, logTitle.Font, logTitle.TextSize, logTitle.BackgroundTransparency = UDim2.new(1, 0, 0, 30), "📝 ITEM LOG", Color3.fromRGB(150, 150, 150), Enum.Font.GothamBold, 13, 1
 local logScroll = Instance.new("ScrollingFrame", tabs.Items); logScroll.Size, logScroll.BackgroundColor3, logScroll.ScrollBarThickness, logScroll.CanvasSize = UDim2.new(1, 0, 0, 150), Color3.fromRGB(18, 18, 18), 2, UDim2.new(0, 0, 0, 0)
@@ -1034,6 +1256,7 @@ end
 -- ============================================================
 -- ABA 5: VISUALS
 -- ============================================================
+local espToiletsAtivo, espPlayersAtivo, espItemsAtivo, espJeffreyAtivo = false, false, false, false
 createToggle(tabs.Visuals, "Esp Toilets", function(s) espToiletsAtivo = s end)
 createToggle(tabs.Visuals, "Esp Players", function(s) espPlayersAtivo = s end)
 createToggle(tabs.Visuals, "Esp Items",   function(s) espItemsAtivo = s end)
@@ -1080,11 +1303,11 @@ task.spawn(function()
 
         if espPlayersAtivo then
             for _, p in ipairs(Players:GetPlayers()) do
-                if p ~= player and p.Character then
+                 if p ~= player and p.Character then
                     local hum = p.Character:FindFirstChild("Humanoid")
                     if hum and hum.Health > 0 then
                         table.insert(validEntities, { inst = p.Character, color = Color3.fromRGB(0, 255, 0), dist = (p.Character:GetPivot().Position - myPos).Magnitude })
-                    end
+                     end
                 end
             end
         end
@@ -1098,7 +1321,7 @@ task.spawn(function()
             end
         end
 
-        if espJeffreyAtivo then
+         if espJeffreyAtivo then
             local jeffrey = Workspace:FindFirstChild("Jeffrey")
             if jeffrey then
                 table.insert(validEntities, { inst = jeffrey, color = Color3.fromRGB(148, 0, 211), dist = (jeffrey:GetPivot().Position - myPos).Magnitude })
@@ -1113,7 +1336,7 @@ task.spawn(function()
             
             if targetData then
                 if hl.Adornee ~= targetData.inst then hl.Adornee = targetData.inst end
-                if hl.FillColor ~= targetData.color then hl.FillColor = targetData.color end
+                 if hl.FillColor ~= targetData.color then hl.FillColor = targetData.color end
                 if not hl.Enabled then hl.Enabled = true end
             else
                 if hl.Adornee ~= nil then hl.Adornee = nil end
@@ -1126,19 +1349,21 @@ end)
 -- ============================================================
 -- ABA 6: MISC
 -- ============================================================
-objAutoJoin = createToggle(tabs.Misc, "Auto Ready", function(s) autoJoinAtivo = s end)
-voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
-objAutoVote = createToggle(tabs.Misc, "Auto Vote",                 function(s) autoVoteAtivo = s end)
-objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", function(s) autoChooseWeaponAtivo = s end)
+local autoJoinAtivo, autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoUseNormalTitanAtivo, autoUseSpecialTitanAtivo, antiAfkAtivo, antiAfkZoneAtivo, stayInRoundAtivo, autoRunAtivo, autoRollSkinAtivo, autoRollShardsAtivo, autoRollPresentsAtivo, detectSizeAtivo, astroReviveAtivo, uttvSafeAtivo, mugenJeffreyAtivo = false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+
+local objAutoJoin = createToggle(tabs.Misc, "Auto Ready", function(s) autoJoinAtivo = s end)
+local voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
+local objAutoVote = createToggle(tabs.Misc, "Auto Vote", function(s) autoVoteAtivo = s end)
+local objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", function(s) autoChooseWeaponAtivo = s end)
 createToggle(tabs.Misc, "Auto Cure Plunger", {color = "red", text = "Only use if you have the plunger equipped."}, function(s) autoCureAtivo = s end)
 
 createToggle(tabs.Misc, "Auto Use Normal Titan Request", function(s) autoUseNormalTitanAtivo = s end)
 createToggle(tabs.Misc, "Auto Use Special Titan Request", function(s) autoUseSpecialTitanAtivo = s end)
 
-objAntiAfk = createToggle(tabs.Misc, "Anti AFK",                  function(s) antiAfkAtivo = s; antiAfkZoneAtivo = s end)
-createToggle(tabs.Misc, "Stay In Round",             function(s) stayInRoundAtivo = s end)
+local objAntiAfk = createToggle(tabs.Misc, "Anti AFK", function(s) antiAfkAtivo = s; antiAfkZoneAtivo = s end)
+createToggle(tabs.Misc, "Stay In Round", function(s) stayInRoundAtivo = s end)
 createSlider(tabs.Misc, "Stay In Round Speed", 1, 50, 15, function(val) _G.StaySpeed = val end)
-createToggle(tabs.Misc, "Auto Run",                  function(s) autoRunAtivo = s end)
+createToggle(tabs.Misc, "Auto Run", function(s) autoRunAtivo = s end)
 
 createToggle(tabs.Misc, "Auto Roll Skins (10x)", function(s) autoRollSkinAtivo = s end)
 createToggle(tabs.Misc, "Auto Roll Shards (10x)", function(s) autoRollShardsAtivo = s end)
@@ -1173,7 +1398,7 @@ task.spawn(function()
     end
 end)
 
-objAstroRevive = createToggle(tabs.Misc, "Revive In Astro Gamemode", function(s) astroReviveAtivo = s end)
+local objAstroRevive = createToggle(tabs.Misc, "Revive In Astro Gamemode", function(s) astroReviveAtivo = s end)
 
 task.spawn(function()
     while true do
@@ -1193,7 +1418,7 @@ task.spawn(function()
     end
 end)
 
-objUTTVSafe = createToggle(tabs.Misc, "Auto Escape Astro Holdout", function(s) uttvSafeAtivo = s end)
+local objUTTVSafe = createToggle(tabs.Misc, "Auto Escape Astro Holdout", function(s) uttvSafeAtivo = s end)
 
 local objMugenJeffrey = createToggle(tabs.Misc, "No Jeffrey/insanity", {color = "gray", text = "With a bug, Jeffrey disappears along with the insanity"}, function(s) mugenJeffreyAtivo = s end)
 
@@ -1201,11 +1426,22 @@ local objMugenJeffrey = createToggle(tabs.Misc, "No Jeffrey/insanity", {color = 
 createTpBtn(tabs.Teleport, "Spawn (Lobby)",   Vector3.new(611, -468, 529), false, {color = "yellow", text = "Be careful not to teleport during the match."})
 createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
 
--- LÓGICA DO SUICIDE WAVE
+-- 🔥 LÓGICA DO SUICIDE WAVE (100% BLINDADA COM INSTA-KILL DO LOBBY)
 local alreadySuicidedThisWave = false
+
+RunService.Heartbeat:Connect(function()
+    if _G.IsSuiciding and player.Character then
+        local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.Velocity = Vector3.new(0, 0, 0)
+            hrp.CFrame = CFrame.new(611, -468, 529)
+        end
+    end
+end)
+
 task.spawn(function()
     while true do
-        task.wait(1)
+        task.wait(0.1)
         if suicideWaveTarget > 0 then
             local waveNode = Workspace:FindFirstChild("Wave")
             if waveNode then
@@ -1214,18 +1450,26 @@ task.spawn(function()
                     local currentWaveNum = tonumber(waveMatch)
                     if currentWaveNum >= suicideWaveTarget then
                         if not alreadySuicidedThisWave then
-                            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
-                                player.Character.HumanoidRootPart.CFrame = CFrame.new(611, -468, 529)
-                                task.wait(0.3)
-                                player.Character.Humanoid.Health = 0
+                            -- Grita para as outras funções: PAREM TUDO, EU VOU MORRER!
+                            _G.IsSuiciding = true
+                            
+                            local char = player.Character
+                            local hum = char and char:FindFirstChild("Humanoid")
+                            
+                            if hum and hum.Health <= 0 then
+                                -- Morreu! Pode voltar ao normal.
                                 alreadySuicidedThisWave = true
+                                _G.IsSuiciding = false
                             end
                         end
                     else
                         alreadySuicidedThisWave = false
+                        _G.IsSuiciding = false
                     end
                 end
             end
+        else
+            _G.IsSuiciding = false
         end
     end
 end)
@@ -1287,7 +1531,8 @@ task.spawn(function()
             if not titanTool and player.Backpack then
                 for _, t in ipairs(player.Backpack:GetChildren()) do
                     if t:IsA("Tool") and string.find(string.lower(t.Name), "titan") and not string.find(string.lower(t.Name), "special") then
-                        titanTool = t; local hum = player.Character:FindFirstChild("Humanoid")
+                        titanTool = t;
+                        local hum = player.Character:FindFirstChild("Humanoid")
                         if hum then hum:EquipTool(t) end
                         break
                     end
@@ -1306,7 +1551,8 @@ task.spawn(function()
             if not specialTool and player.Backpack then
                 for _, t in ipairs(player.Backpack:GetChildren()) do
                     if t:IsA("Tool") and string.find(string.lower(t.Name), "special") then
-                        specialTool = t; local hum = player.Character:FindFirstChild("Humanoid")
+                        specialTool = t;
+                        local hum = player.Character:FindFirstChild("Humanoid")
                         if hum then hum:EquipTool(t) end
                         break
                     end
@@ -1327,7 +1573,7 @@ task.spawn(function()
     local capsuleRemote = rs:WaitForChild("GachaCapsule")
     
     while true do
-        task.wait() -- O mais rápido possível respeitando a engine do jogo
+        task.wait() 
         if autoRollSkinAtivo then pcall(function() skinRemote:FireServer("10Spins") end) end
         if autoRollShardsAtivo then pcall(function() charRemote:FireServer("10Spins") end) end
         if autoRollPresentsAtivo then pcall(function() capsuleRemote:FireServer() end) end
@@ -1335,17 +1581,39 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 AUTO READY LÓGICA (FORÇA BRUTA PURA)
+-- 🔥 AUTO VOTE LÓGICA (DESVINCULADO E APRIMORADO)
+-- ============================================================
+task.spawn(function()
+    local voteRemote = ReplicatedStorage:WaitForChild("Vote")
+    while true do
+        task.wait(2) 
+        if autoVoteAtivo then 
+            local char = player.Character
+            local hum = char and char:FindFirstChild("Humanoid")
+            
+            -- Não importa se já votou ou não. Ele sempre tenta garantir o voto a cada 2s no lobby.
+            if hum and hum.Health > 0 and _G.TimeInLobby > 2 then
+                pcall(function() voteRemote:FireServer(voteMode) end) 
+            end
+        end
+    end
+end)
+
+-- ============================================================
+-- 🔥 AUTO READY LÓGICA (DESVINCULADO E APRIMORADO)
 -- ============================================================
 task.spawn(function()
     local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
     
     while true do
-        task.wait(1)
+        task.wait(1.5) 
         if autoJoinAtivo then 
-            pcall(function() 
-                readyRemote:FireServer("1", true) 
-            end)
+            local char = player.Character
+            local hum = char and char:FindFirstChild("Humanoid")
+
+            if hum and hum.Health > 0 and _G.TimeInLobby > 2 then
+                pcall(function() readyRemote:FireServer("1", true) end) 
+            end
         end
     end
 end)
@@ -1361,18 +1629,13 @@ task.spawn(function()
             local hrp = char:FindFirstChild("HumanoidRootPart")
             local hum = char:FindFirstChild("Humanoid")
             if hrp and hum and hum.Health > 0 then
-                if hrp.Position.Y < -1500 then hum.Health = 0 end
+                -- Apenas teleporte seguro, sem zerar a vida in-game
+                if hrp.Position.Y < -1500 then 
+                    hrp.Velocity = Vector3.new(0,0,0)
+                    hrp.CFrame = CFrame.new(611, -468, 529) 
+                end
             end
         end
-    end
-end)
-
--- AUTO VOTE LÓGICA
-task.spawn(function()
-    local voteRemote = ReplicatedStorage:WaitForChild("Vote")
-    while true do
-        task.wait(1.5)
-        if autoVoteAtivo then pcall(function() voteRemote:FireServer(voteMode) end) end
     end
 end)
 
@@ -1397,7 +1660,7 @@ task.spawn(function()
 
                     if (saveAtivo and isSave) or (interactAtivo and isFlush) or (reviveAtivo and isRevive) then
                         obj.HoldDuration = 0; obj.MaxActivationDistance = 99999; obj.RequiresLineOfSight = false
-                        if fireproximityprompt and not _G.IsUTTVSafeActive then task.spawn(function() fireproximityprompt(obj, 1, true) end) end
+                        if fireproximityprompt and not _G.IsUTTVSafeActive and not _G.IsSuiciding then task.spawn(function() fireproximityprompt(obj, 1, true) end) end
                     end
                 end
             end
@@ -1420,7 +1683,7 @@ task.spawn(function()
                             local yPos = nil
                             if posObj:IsA("BasePart") then yPos = posObj.Position.Y
                             elseif posObj:IsA("Model") and posObj.PrimaryPart then yPos = posObj.PrimaryPart.Position.Y end
-                            if yPos and yPos < -100 then obj:Destroy() end
+                            if yPos and yPos < -300 then obj:Destroy() end
                         end
                     end
                 end
@@ -1432,6 +1695,7 @@ end)
 -- ============================================================
 -- 🔥 CORE AUTO FARM
 -- ============================================================
+local currentConnection = nil
 local isShootingRifle = false
 local isReloadingRifle = false
 local lastTapTime = 0
@@ -1464,7 +1728,7 @@ task.spawn(function()
             lastCombatMethod = activeCombatMethod
         end
 
-        if (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not farmEnabled or _G.IsUTTVSafeActive or _G.IsItemFarming then
+        if (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not farmEnabled or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
             if isShootingRifle then
                 local vp = Workspace.CurrentCamera.ViewportSize
                 VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
@@ -1505,14 +1769,9 @@ task.spawn(function()
                         end
                         
                         if targetStr == "" or targetStr == "nil" then
-                            local now = tick()
-                            if not knownAlliesCache[model] or (now - (lastAllyCheckTime[model] or 0)) >= 5 then
-                                knownAlliesCache[model] = true
-                                lastAllyCheckTime[model] = now
-                                isAlly = true
-                            else
-                                isAlly = true
-                            end
+                            knownEnemiesCache[model] = true
+                            knownAlliesCache[model] = nil
+                            isAlly = false
                         else
                             local targetIsPlayer = Players:FindFirstChild(targetStr) ~= nil
                             if targetIsPlayer then
@@ -1575,7 +1834,14 @@ task.spawn(function()
             if #validTargets == 0 then validTargets = rawTargets end 
         else
             validTargets = rawTargets
-            if targetMethod == "Weakest First" then table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
+            if targetMethod == "Normal" then 
+                local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    table.sort(validTargets, function(a, b) 
+                        return (a.torso.Position - hrp.Position).Magnitude < (b.torso.Position - hrp.Position).Magnitude 
+                    end)
+                end
+            elseif targetMethod == "Weakest First" then table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
             elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
         end
 
@@ -1590,7 +1856,7 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
 
-                if not farmEnabled or not torso.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming then
+                if not farmEnabled or not torso.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
                     if currentConnection then currentConnection:Disconnect() end
                     return
                 end
@@ -1608,14 +1874,24 @@ task.spawn(function()
                 local orbitHeight = isAerial and 5 or (30 + (headSize * 2.0))
 
                 if activeCombatMethod == "Auto Punch" then
+                    local punchDist = _G.CurrentPunchDistance
                     local distY = (8 + (headSize * 0.8)) * integrity + striderOffset
-                    combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * _G.CurrentPunchDistance)
+                    if model.Name == "Giant Robber" then
+                        distY = distY - 12
+                        punchDist = punchDist - 8
+                    end
+                    combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * punchDist)
                     if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
                 elseif activeCombatMethod == "Orbital Punch" then
                     _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
                     local orbitRadius = (7 + (headSize * 0.6)) * integrity
-                    combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, (8 + (headSize * 1.0)) + striderOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
+                    local orbitY = (8 + (headSize * 1.0)) + striderOffset
+                    if model.Name == "Giant Robber" then
+                        orbitRadius = orbitRadius + 8
+                        orbitY = orbitY - 12
+                    end
+                    combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitY, math.sin(_G.OrbitalAngle) * orbitRadius)
                     if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
                 elseif activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" then
@@ -1726,7 +2002,7 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
                 
-            until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or not currentConnection or not currentConnection.Connected
+            until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding or not currentConnection or not currentConnection.Connected
 
             if currentConnection then currentConnection:Disconnect() end
             
@@ -1826,4 +2102,4 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V14.8 — O puro suco do desenvolvimento! Bugs exterminados com sucesso.")
+print("✅ V16.3 — Agora sim! Auto Buy Priority salvo, Auto Join/Vote desbugados, e Modo Deus no Suicide Wave!")
