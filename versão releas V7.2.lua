@@ -1,4 +1,4 @@
--- 🔥 V17.0 - DROP SCRIPTS | THE FATALITY UPDATE (ULTIMATE AUTO BUY FIX) 🔥
+-- 🔥 V18.3 - DROP SCRIPTS | THE ASTRO UPDATE (DUAL RELOAD PERFECT FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -20,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V17.0"
+local VERSION      = "V18.3"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -158,7 +158,12 @@ serverHopBtn.MouseButton1Click:Connect(function()
             end
         end
     end
-    TeleportService:Teleport(game.PlaceId, player)
+    
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Server Hop",
+        Text = "Não foi possível encontrar um novo servidor.",
+        Duration = 3
+    })
 end)
 
 task.spawn(function()
@@ -234,7 +239,7 @@ local selectedUseSkills = {}
 local selectedHoldSkills = {}
 local isUpdatingSkills = false
 
-local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Pulse Rifle + Small Laser"}
+local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Astro Blaster", "Pulse Rifle + Small Laser", "Pulse Rifle + Astro Blaster"}
 local farmMethod = farmMethodsArray[1]
 local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
 local targetMethod = targetMethodsArray[1]
@@ -250,24 +255,31 @@ local function checkWeaponExists(nameSearch)
     return false
 end
 
+-- 🔥 FIX ASTRO BLASTER MAX AMMO 🔥
 local function checkAmmo(weaponType)
     local function isMatch(t)
         local name = string.lower(t.Name)
         if weaponType == "Small Laser" then return string.find(name, "small") and string.find(name, "laser")
         elseif weaponType == "Big Laser" then return string.find(name, "large") and string.find(name, "laser")
         elseif weaponType == "Pulse Rifle" then return string.find(name, "pulse")
+        elseif weaponType == "Astro Blaster" then return string.find(name, "astro") and string.find(name, "blaster")
         end
         return false
     end
     local tool = nil
     if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and isMatch(t) then tool = t; break end end end
     if not tool and player.Backpack then for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and isMatch(t) then tool = t; break end end end
+    
     if tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo") then
         local maxAmmo = 30
-        if tool.Folder:FindFirstChild("MaxAmmo") then maxAmmo = tool.Folder.MaxAmmo.Value end
+        if tool.Folder:FindFirstChild("MaxAmmo") then 
+            maxAmmo = tool.Folder.MaxAmmo.Value 
+        else
+            if weaponType == "Astro Blaster" then maxAmmo = 20 end
+        end
         return tool.Folder.Ammo.Value, maxAmmo
     end
-    return 0, 30
+    return 0, (weaponType == "Astro Blaster" and 20 or 30)
 end
 
 local function equipWeapon(methodName)
@@ -276,6 +288,7 @@ local function equipWeapon(methodName)
         if methodName == "Small Laser" then return string.find(name, "small") and string.find(name, "laser")
         elseif methodName == "Big Laser" then return (string.find(name, "large") or string.find(name, "big")) and string.find(name, "laser")
         elseif methodName == "Pulse Rifle" then return string.find(name, "pulse")
+        elseif methodName == "Astro Blaster" then return string.find(name, "astro") and string.find(name, "blaster")
         end
         return false
     end
@@ -918,7 +931,7 @@ local function createPriorityRow(parent, rowIndex, onSwap)
     local frame = Instance.new("Frame", parent)
     frame.Size, frame.BackgroundColor3 = UDim2.new(1, 0, 0, 45), BG_SECONDARY
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
-    frame.LayoutOrder = getNextUIOrder() 
+    frame.LayoutOrder = getNextUIOrder()
 
     local numInput = Instance.new("TextBox", frame)
     numInput.Size, numInput.Position = UDim2.new(0, 30, 0, 30), UDim2.new(0, 10, 0.5, -15)
@@ -980,7 +993,7 @@ local function createPriorityRow(parent, rowIndex, onSwap)
 
     numInput.FocusLost:Connect(function()
         local n = tonumber(numInput.Text)
-        if n and n >= 1 and n <= 9 and n ~= rowIndex then
+        if n and n >= 1 and n <= 10 and n ~= rowIndex then
             onSwap(rowIndex, math.floor(n))
         else
             numInput.Text = tostring(rowIndex)
@@ -1137,12 +1150,16 @@ local autoBuyItems = {
 
     { id = "TitanTV", name = "Auto Buy Titan TV Upg", active = false, order = 9, verifiable = false,
       check = function() return false end,
-      buy = function() pcall(function() ReplicatedStorage:WaitForChild("ChangeToCinema"):FireServer() end) end }
+      buy = function() pcall(function() ReplicatedStorage:WaitForChild("ChangeToCinema"):FireServer() end) end },
+      
+    { id = "AstroBlaster", name = "Auto Buy Astro Blaster", tooltip = {color="yellow", text="Only activate if character has it in that store"}, active = false, order = 10, verifiable = true,
+      check = function() return checkWeaponExists("astro blaster") end,
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Astro Blaster") end) end }
 }
 
 local function RefreshAutoBuyUI()
     table.sort(autoBuyItems, function(a, b) return a.order < b.order end)
-    for i = 1, 9 do
+    for i = 1, 10 do
         local item = autoBuyItems[i]
         local row = autoBuyUIRows[i]
         
@@ -1175,12 +1192,11 @@ local function SwapItems(oldOrder, newOrder)
     end
 end
 
-for i = 1, 9 do
+for i = 1, 10 do
     createPriorityRow(tabs.AutoBuy, i, SwapItems)
 end
 RefreshAutoBuyUI()
 
--- LÓGICA DO AUTO BUY COM PRIORIDADE ABSOLUTA
 task.spawn(function()
     while true do
         task.wait(1) 
@@ -1193,11 +1209,10 @@ task.spawn(function()
             for _, item in ipairs(sortedItems) do
                 if item.active then
                     if not item.check() then
-                        item.buy() -- Manda a ordem de compra pro servidor
-                        task.wait(0.5) -- Aguarda pra ver se a compra foi validada pelo servidor
+                        item.buy() 
+                        task.wait(0.5) 
                         if item.verifiable and not item.check() then
-                            -- Se o item ainda não tá lá, provavelmente acabou o dinheiro
-                            if ultraPriorityActive then break end -- Pausa a fila se Ultra Priority tiver on
+                            if ultraPriorityActive then break end 
                         end
                     end
                 end
@@ -1436,7 +1451,6 @@ local function createShopToggle(parent, itemName)
     setting.ui = obj
 end
 
--- POPULANDO AUTO SHOP
 createCategoryLabel(tabs.AutoShop, "Boosters")
 createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 30Min")
 createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 1Hour")
@@ -1481,6 +1495,9 @@ createShopToggle(tabs.AutoShop, "Legendary Ticket")
 createShopToggle(tabs.AutoShop, "Scorching Ember")
 createShopToggle(tabs.AutoShop, "Toilet Token")
 
+-- LÓGICA DE COMPRA AUTO SHOP (HOURLY) COM SISTEMA DE "CAUTELA" E DESCONTO REAL
+local lastStockCache = {}
+
 task.spawn(function()
     local buyRemote = ReplicatedStorage:WaitForChild("BuyItemFromShopHourly", 10)
     
@@ -1505,26 +1522,35 @@ task.spawn(function()
                     local currentStock = stockMatch and tonumber(stockMatch) or 0
                     
                     local setting = autoShopSettings[rawName]
-                    if setting and setting.active and setting.quantity > 0 and currentStock > 0 then
-                        local amountToBuy = math.min(setting.quantity, currentStock)
+                    if setting then
+                        local lastStock = lastStockCache[rawName] or currentStock
                         
-                        local internalName = string.gsub(rawName, " ", "")
-                        internalName = string.gsub(internalName, "MasteryCard", "MasterCard")
-                        
-                        if buyRemote then
-                            pcall(function()
-                                buyRemote:FireServer(internalName, amountToBuy)
-                            end)
+                        -- Só desconta do nosso limite SE O ESTOQUE DA LOJA DESCEU!
+                        if currentStock < lastStock and setting.active then
+                            local comprados = lastStock - currentStock
+                            setting.quantity = setting.quantity - comprados
+                            if setting.quantity < 0 then setting.quantity = 0 end
                             
-                            setting.quantity = setting.quantity - amountToBuy
                             if setting.ui then
                                 setting.ui.UpdateQuantity(setting.quantity)
-                                if setting.quantity <= 0 then
+                                if setting.quantity == 0 then
                                     setting.ui.SetToggle(false)
+                                    setting.active = false
                                 end
                             end
+                        end
+                        lastStockCache[rawName] = currentStock
+                        
+                        -- Dispara a compra sempre enviando de 1 em 1
+                        if setting.active and setting.quantity > 0 and currentStock > 0 then
+                            local internalName = string.gsub(rawName, " ", "")
+                            internalName = string.gsub(internalName, "MasteryCard", "MasterCard")
                             
-                            task.wait(0.5) 
+                            if buyRemote then
+                                pcall(function()
+                                    buyRemote:FireServer(internalName, 1)
+                                end)
+                            end
                         end
                     end
                 end
@@ -1636,12 +1662,14 @@ task.spawn(function()
                     local currentWaveNum = tonumber(waveMatch)
                     if currentWaveNum >= suicideWaveTarget then
                         if not alreadySuicidedThisWave then
+                            -- Grita para as outras funções: PAREM TUDO, EU VOU MORRER!
                             _G.IsSuiciding = true
                             
                             local char = player.Character
                             local hum = char and char:FindFirstChild("Humanoid")
                             
                             if hum and hum.Health <= 0 then
+                                -- Morreu! Pode voltar ao normal.
                                 alreadySuicidedThisWave = true
                                 _G.IsSuiciding = false
                             end
@@ -1667,17 +1695,22 @@ task.spawn(function()
     end
 end)
 
--- AUTO CHOOSE WEAPON LÓGICA
+-- 🔥 AUTO CHOOSE WEAPON LÓGICA (AGORA COM ASTRO BLASTER) 🔥
 task.spawn(function()
     while true do
         task.wait(1)
         if autoChooseWeaponAtivo then
             local hasPR = checkWeaponExists("pulse")
             local hasSL = checkWeaponExists("small")
+            local hasAB = checkWeaponExists("astro blaster")
             local newMethod = "Auto Punch"
-            if hasPR and hasSL then newMethod = "Pulse Rifle + Small Laser"
+            
+            if hasPR and hasAB then newMethod = "Pulse Rifle + Astro Blaster"
+            elseif hasPR and hasSL then newMethod = "Pulse Rifle + Small Laser"
+            elseif hasAB then newMethod = "Astro Blaster"
             elseif hasPR then newMethod = "Pulse Rifle"
             elseif hasSL then newMethod = "Small Laser" end
+            
             if farmMethod ~= newMethod then
                 farmMethod = newMethod
                 if farmDropdownObj then farmDropdownObj:UpdateText(farmMethod) end
@@ -1765,8 +1798,9 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 AUTO VOTE LÓGICA
+-- 🔥 AUTO VOTE LÓGICA (COM FIX DE ARENA HUD)
 -- ============================================================
+local lastArenaVoteTime = 0
 task.spawn(function()
     local voteRemote = ReplicatedStorage:WaitForChild("Vote")
     while true do
@@ -1774,16 +1808,28 @@ task.spawn(function()
         if autoVoteAtivo then 
             local char = player.Character
             local hum = char and char:FindFirstChild("Humanoid")
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
             
-            if hum and hum.Health > 0 and _G.TimeInLobby > 2 then
-                pcall(function() voteRemote:FireServer(voteMode) end) 
+            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+            local isGuiActive = false
+            if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
+
+            if hum and hum.Health > 0 then
+                if _G.TimeInLobby > 2 then
+                    pcall(function() voteRemote:FireServer(voteMode) end) 
+                elseif hrp and hrp.Position.Y > -100 and isGuiActive then
+                    if tick() - lastArenaVoteTime >= 25 then
+                        lastArenaVoteTime = tick()
+                        pcall(function() voteRemote:FireServer(voteMode) end)
+                    end
+                end
             end
         end
     end
 end)
 
 -- ============================================================
--- 🔥 AUTO READY LÓGICA
+-- 🔥 AUTO READY LÓGICA (COM DELAY DE 6 SEGUNDOS)
 -- ============================================================
 task.spawn(function()
     local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
@@ -1794,7 +1840,7 @@ task.spawn(function()
             local char = player.Character
             local hum = char and char:FindFirstChild("Humanoid")
 
-            if hum and hum.Health > 0 and _G.TimeInLobby > 2 then
+            if hum and hum.Health > 0 and _G.TimeInLobby > 6 then
                 pcall(function() readyRemote:FireServer("1", true) end) 
             end
         end
@@ -1911,7 +1957,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 CORE AUTO FARM
+-- 🔥 CORE AUTO FARM (COM STATE MACHINE DUAL RELOAD) 🔥
 -- ============================================================
 local currentConnection = nil
 local isShootingRifle = false
@@ -1932,6 +1978,44 @@ task.spawn(function()
             local prAmmo, prMax = checkAmmo("Pulse Rifle")
             if prAmmo <= 0 then _G.PR_Reloading = true elseif prAmmo >= prMax then _G.PR_Reloading = false end
             activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+        elseif farmMethod == "Pulse Rifle + Astro Blaster" then
+            local prAmmo, prMax = checkAmmo("Pulse Rifle")
+            local abAmmo, abMax = checkAmmo("Astro Blaster")
+            if prMax == 0 then prMax = 30 end
+            if abMax == 0 or abMax == 30 then abMax = 20 end -- Forçando o limite correto
+
+            if not _G.DualState then _G.DualState = "Waiting_Pulse" end
+
+            -- Lógica State Machine aprimorada
+            if _G.DualState == "Shooting_Pulse" then
+                if prAmmo <= 0 then
+                    _G.DualState = "Waiting_Astro"
+                end
+            elseif _G.DualState == "Waiting_Pulse" then
+                if prAmmo >= prMax then
+                    _G.DualState = "Shooting_Pulse"
+                end
+            elseif _G.DualState == "Shooting_Astro" then
+                if abAmmo <= 0 then
+                    _G.DualState = "Waiting_Pulse"
+                end
+            elseif _G.DualState == "Waiting_Astro" then
+                if abAmmo >= abMax then
+                    _G.DualState = "Shooting_Astro"
+                end
+            end
+
+            if string.find(_G.DualState, "Pulse") then
+                activeCombatMethod = "Pulse Rifle"
+            else
+                activeCombatMethod = "Astro Blaster"
+            end
+            
+            if string.find(_G.DualState, "Waiting") then
+                isReloadingRifle = true
+            else
+                isReloadingRifle = false
+            end
         end
 
         if activeCombatMethod ~= lastCombatMethod then
@@ -2063,6 +2147,20 @@ task.spawn(function()
             elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
         end
 
+        -- 🔥 AMEAÇA TRANSMITTER TOILET: PRIORIDADE ABSOLUTA 🔥
+        local hasTransmitter = false
+        local transmitterData = nil
+        for _, t in ipairs(validTargets) do
+            if t.model.Name == "Transmitter toilet" then
+                transmitterData = t
+                hasTransmitter = true
+                break
+            end
+        end
+        if hasTransmitter then
+            validTargets = {transmitterData}
+        end
+
         for _, tData in ipairs(validTargets) do
             local model, torso, headSize = tData.model, tData.torso, tData.headSize
             if currentConnection then currentConnection:Disconnect() end
@@ -2112,7 +2210,7 @@ task.spawn(function()
                     combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitY, math.sin(_G.OrbitalAngle) * orbitRadius)
                     if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
-                elseif activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" then
+                elseif activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" then
                     _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
                     local orbitRadius = (35 + (headSize * 4.0)) * integrity
                     local rawPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitHeight + striderOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
@@ -2131,6 +2229,29 @@ task.spawn(function()
                     local prAmmo, prMax = checkAmmo("Pulse Rifle")
                     if prAmmo <= 0 then _G.PR_Reloading = true elseif prAmmo >= prMax then _G.PR_Reloading = false end
                     activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+                elseif farmMethod == "Pulse Rifle + Astro Blaster" then
+                    local prAmmo, prMax = checkAmmo("Pulse Rifle")
+                    local abAmmo, abMax = checkAmmo("Astro Blaster")
+                    if prMax == 0 then prMax = 30 end
+                    if abMax == 0 or abMax == 30 then abMax = 20 end 
+
+                    if not _G.DualState then _G.DualState = "Waiting_Pulse" end
+
+                    if _G.DualState == "Shooting_Pulse" then
+                        if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
+                    elseif _G.DualState == "Waiting_Pulse" then
+                        if prAmmo >= prMax then _G.DualState = "Shooting_Pulse" end
+                    elseif _G.DualState == "Shooting_Astro" then
+                        if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
+                    elseif _G.DualState == "Waiting_Astro" then
+                        if abAmmo >= abMax then _G.DualState = "Shooting_Astro" end
+                    end
+
+                    if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
+                    else activeCombatMethod = "Astro Blaster" end
+                    
+                    if string.find(_G.DualState, "Waiting") then isReloadingRifle = true
+                    else isReloadingRifle = false end
                 else
                     activeCombatMethod = farmMethod
                 end
@@ -2147,7 +2268,7 @@ task.spawn(function()
                     lastCombatMethod = activeCombatMethod
                 end
 
-                if activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" then
+                if activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" then
                     local tool = equipWeapon(activeCombatMethod)
                     local ammoNode = tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo")
                     local vp = Workspace.CurrentCamera.ViewportSize
@@ -2156,7 +2277,11 @@ task.spawn(function()
                     if tool and ammoNode then
                         local maxAmmo = 30
                         local maxAmmoNode = tool.Folder:FindFirstChild("MaxAmmo")
-                        if maxAmmoNode then maxAmmo = maxAmmoNode.Value end
+                        if maxAmmoNode then 
+                            maxAmmo = maxAmmoNode.Value 
+                        else
+                            if activeCombatMethod == "Astro Blaster" then maxAmmo = 20 end
+                        end
 
                         if ammoNode.Value <= 0 then
                             isReloadingRifle = true
@@ -2173,7 +2298,7 @@ task.spawn(function()
                         if not isReloadingRifle and ammoNode.Value > 0 then
                             VIM:SendMouseMoveEvent(aimX, aimY, game) 
                             
-                            if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" then
+                            if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" or (farmMethod == "Pulse Rifle + Astro Blaster" and activeCombatMethod == "Pulse Rifle") then
                                 if not isShootingRifle then 
                                     isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) 
                                 end
@@ -2220,11 +2345,21 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
                 
-            until not farmEnabled or not model.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding or not currentConnection or not currentConnection.Connected
+                -- 🔥 VERIFICA SE O TRANSMITTER TOILET SPAWNOU NO MEIO DA LUTA PARA INTERROMPER 🔥
+                local interruptedByTransmitter = false
+                if model.Name ~= "Transmitter toilet" then
+                    local curLiv = Workspace:FindFirstChild("Living")
+                    if curLiv and curLiv:FindFirstChild("Transmitter toilet") then
+                        local tHum = curLiv["Transmitter toilet"]:FindFirstChildWhichIsA("Humanoid")
+                        if tHum and tHum.Health > 0 then interruptedByTransmitter = true end
+                    end
+                end
+                
+            until not farmEnabled or not model.Parent or isDeadNow or interruptedByTransmitter or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding or not currentConnection or not currentConnection.Connected
 
             if currentConnection then currentConnection:Disconnect() end
             
-            if isShootingRifle and (activeCombatMethod == "Pulse Rifle") then
+            if isShootingRifle and (activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Astro Blaster") then
                 local vp = Workspace.CurrentCamera.ViewportSize
                 VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
                 isShootingRifle = false
@@ -2320,4 +2455,4 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V17.0 — O AUTO BUY VOLTOU! Dinheiro ignorado pelo client e remotes infalíveis.")
+print("✅ V18.3 — BUG DA MUNIÇÃO MORTO! O combo Astro + Pulse agora respeita a recarga de ambos com perfeição!")
