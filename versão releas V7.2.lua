@@ -1,4 +1,4 @@
--- 🔥 V18.3 - DROP SCRIPTS | THE ASTRO UPDATE (DUAL RELOAD PERFECT FIX) 🔥
+-- 🔥 V18.4 - DROP SCRIPTS | THE ASTRO UPDATE (WEIRD EVENT FIX) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -20,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V18.3"
+local VERSION      = "V18.4"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -70,7 +70,7 @@ if queue then
 end
 
 local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true, ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true, ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true, ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true, ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true, ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true, ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true, ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true, ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true, ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true, ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true, ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true, ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true, ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true, ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true, ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true, ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true, ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true, ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true, ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true, ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true, ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true, ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true, ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true, ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true, ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true, ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true, ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true, ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true, ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true, ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true, ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true, ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true, ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true, ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true, ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true, ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true, ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true, ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true, ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true, ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true, ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true, ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true, ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true, ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true, ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true, ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true }
-local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true }
+local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true }
 
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
     if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
@@ -1495,7 +1495,6 @@ createShopToggle(tabs.AutoShop, "Legendary Ticket")
 createShopToggle(tabs.AutoShop, "Scorching Ember")
 createShopToggle(tabs.AutoShop, "Toilet Token")
 
--- LÓGICA DE COMPRA AUTO SHOP (HOURLY) COM SISTEMA DE "CAUTELA" E DESCONTO REAL
 local lastStockCache = {}
 
 task.spawn(function()
@@ -1525,7 +1524,6 @@ task.spawn(function()
                     if setting then
                         local lastStock = lastStockCache[rawName] or currentStock
                         
-                        -- Só desconta do nosso limite SE O ESTOQUE DA LOJA DESCEU!
                         if currentStock < lastStock and setting.active then
                             local comprados = lastStock - currentStock
                             setting.quantity = setting.quantity - comprados
@@ -1541,14 +1539,13 @@ task.spawn(function()
                         end
                         lastStockCache[rawName] = currentStock
                         
-                        -- Dispara a compra sempre enviando de 1 em 1
                         if setting.active and setting.quantity > 0 and currentStock > 0 then
                             local internalName = string.gsub(rawName, " ", "")
                             internalName = string.gsub(internalName, "MasteryCard", "MasterCard")
                             
                             if buyRemote then
                                 pcall(function()
-                                    buyRemote:FireServer(internalName, 1)
+                                    buyRemote:FireServer(internalName, 1) 
                                 end)
                             end
                         end
@@ -1662,14 +1659,12 @@ task.spawn(function()
                     local currentWaveNum = tonumber(waveMatch)
                     if currentWaveNum >= suicideWaveTarget then
                         if not alreadySuicidedThisWave then
-                            -- Grita para as outras funções: PAREM TUDO, EU VOU MORRER!
                             _G.IsSuiciding = true
                             
                             local char = player.Character
                             local hum = char and char:FindFirstChild("Humanoid")
                             
                             if hum and hum.Health <= 0 then
-                                -- Morreu! Pode voltar ao normal.
                                 alreadySuicidedThisWave = true
                                 _G.IsSuiciding = false
                             end
@@ -1957,7 +1952,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 CORE AUTO FARM (COM STATE MACHINE DUAL RELOAD) 🔥
+-- 🔥 CORE AUTO FARM (COM STATE MACHINE DUAL RELOAD E PRIORIDADE ABSOLUTA) 🔥
 -- ============================================================
 local currentConnection = nil
 local isShootingRifle = false
@@ -1982,40 +1977,27 @@ task.spawn(function()
             local prAmmo, prMax = checkAmmo("Pulse Rifle")
             local abAmmo, abMax = checkAmmo("Astro Blaster")
             if prMax == 0 then prMax = 30 end
-            if abMax == 0 or abMax == 30 then abMax = 20 end -- Forçando o limite correto
+            if abMax == 0 or abMax == 30 then abMax = 20 end
 
             if not _G.DualState then _G.DualState = "Waiting_Pulse" end
 
-            -- Lógica State Machine aprimorada
             if _G.DualState == "Shooting_Pulse" then
-                if prAmmo <= 0 then
-                    _G.DualState = "Waiting_Astro"
-                end
+                if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
             elseif _G.DualState == "Waiting_Pulse" then
-                if prAmmo >= prMax then
-                    _G.DualState = "Shooting_Pulse"
-                end
+                if prAmmo >= prMax then _G.DualState = "Shooting_Pulse" end
             elseif _G.DualState == "Shooting_Astro" then
-                if abAmmo <= 0 then
-                    _G.DualState = "Waiting_Pulse"
-                end
+                if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
             elseif _G.DualState == "Waiting_Astro" then
-                if abAmmo >= abMax then
-                    _G.DualState = "Shooting_Astro"
-                end
+                if abAmmo >= abMax then _G.DualState = "Shooting_Astro" end
             end
 
-            if string.find(_G.DualState, "Pulse") then
-                activeCombatMethod = "Pulse Rifle"
-            else
-                activeCombatMethod = "Astro Blaster"
-            end
+            if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
+            else activeCombatMethod = "Astro Blaster" end
             
-            if string.find(_G.DualState, "Waiting") then
-                isReloadingRifle = true
-            else
-                isReloadingRifle = false
-            end
+            if string.find(_G.DualState, "Waiting") then isReloadingRifle = true
+            else isReloadingRifle = false end
+        else
+            activeCombatMethod = farmMethod
         end
 
         if activeCombatMethod ~= lastCombatMethod then
@@ -2456,3 +2438,33 @@ minBtn.InputEnded:Connect(function(input)
 end)
 
 print("✅ V18.3 — BUG DA MUNIÇÃO MORTO! O combo Astro + Pulse agora respeita a recarga de ambos com perfeição!")
+
+-- ============================================================
+-- 🔥 AUTO EQUIP E USE DO WEIRD TRANSMITTER LÓGICA 🔥
+-- ============================================================
+task.spawn(function()
+    while true do
+        task.wait(0.2)
+        local char = player.Character
+        local hum = char and char:FindFirstChild("Humanoid")
+        
+        if hum and hum.Health > 0 and not _G.IsUTTVSafeActive and not _G.IsSuiciding then
+            local wtTool = char:FindFirstChild("Weird Transmitter")
+            if not wtTool and player.Backpack then
+                wtTool = player.Backpack:FindFirstChild("Weird Transmitter")
+                if wtTool and wtTool:IsA("Tool") then
+                    hum:EquipTool(wtTool)
+                    task.wait(0.1)
+                end
+            end
+            
+            if wtTool and wtTool.Parent == char then
+                wtTool:Activate()
+                local vp = Workspace.CurrentCamera.ViewportSize
+                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, true, game, 1)
+                task.wait(0.05)
+                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+            end
+        end
+    end
+end)
