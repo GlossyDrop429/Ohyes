@@ -1,4 +1,4 @@
--- 🔥 V18.4 - DROP SCRIPTS | THE ASTRO UPDATE (WEIRD EVENT FIX) 🔥
+-- 🔥 V18.9 - DROP SCRIPTS | THE ASTRO UPDATE (DOUBLE PLUNGERS & SPIKES) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -20,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V18.4"
+local VERSION      = "V18.9"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -41,24 +41,34 @@ _G.IsItemFarming = false
 _G.TimeInLobby = 0
 _G.IsSuiciding = false
 
+-- 🔥 VARIÁVEIS DO NOVO SISTEMA DE READY E VOTE 🔥
+local selectCharTime = 0
+local lastForceFieldTime = 0
+
 RunService.Heartbeat:Connect(function(dt)
     local char = player.Character
+    
+    if char and char:FindFirstChildOfClass("ForceField") then
+        lastForceFieldTime = tick()
+    end
+    
+    local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
+    local isGuiActive = false
+    if selectGui then
+        pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end)
+    end
+    
+    if isGuiActive then
+        selectCharTime = selectCharTime + dt
+    else
+        selectCharTime = 0
+    end
+
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
     if hrp and hrp.Position.Y < -350 and hrp.Position.Y > -600 then
         _G.TimeInLobby = _G.TimeInLobby + dt
     else
         _G.TimeInLobby = 0
-    end
-end)
-
-local hasVotedThisRound = false
-task.spawn(function()
-    while task.wait(1) do
-        local char = player.Character
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        if hrp and hrp.Position.Y > -100 then
-            hasVotedThisRound = false
-        end
     end
 end)
 
@@ -70,7 +80,7 @@ if queue then
 end
 
 local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true, ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true, ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true, ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true, ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true, ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true, ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true, ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true, ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true, ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true, ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true, ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true, ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true, ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true, ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true, ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true, ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true, ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true, ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true, ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true, ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true, ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true, ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true, ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true, ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true, ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true, ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true, ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true, ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true, ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true, ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true, ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true, ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true, ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true, ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true, ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true, ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true, ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true, ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true, ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true, ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true, ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true, ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true, ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true, ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true, ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true, ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true }
-local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Booster X2 Points : 1Hour"] = true, ["Booster X2 Points : 30Min"] = true, ["Booster X2 Points : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Flash Drive #6"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true }
+local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true, ["Weird Prism"] = true, ["100MVisitPickOneOfThem"] = true }
 
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
     if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
@@ -232,6 +242,7 @@ local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = f
 local autoRollSkinAtivo, autoRollShardsAtivo, autoRollPresentsAtivo = false, false, false
 local suicideWaveTarget = 0
 local autoSkillsAtivo = false
+local autoEquipPlungersAtivo = false
 
 local skillOptions = {"E", "R", "T", "Y", "F", "G", "H"}
 local holdSkillOptions = {"Hold E", "Hold R", "Hold T", "Hold Y", "Hold F", "Hold G", "Hold H"}
@@ -243,7 +254,42 @@ local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Las
 local farmMethod = farmMethodsArray[1]
 local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
 local targetMethod = targetMethodsArray[1]
-local voteModesArray = {"Astro", "AstroV2", "BossRush", "Christmas", "DarkDimension", "Hard", "Hell", "Insane", "Nightmare", "NoLightInTheSky", "Normal", "ThunderStorm", "VeryHard", "Zombie"}
+
+-- 🔥 MODOS DE VOTO ATUALIZADOS E ORDENADOS 🔥
+local voteModesDisplay = {
+    "Normal",
+    "BossRush",
+    "Vague Memory",
+    "Christmas",
+    "Zombie",
+    "Invasion Holdout (Astro)",
+    "The Invasion (Astro)",
+    "In The Mist",
+    "Hard",
+    "Insane",
+    "Extreme",
+    "Nightmare",
+    "Hell Wave",
+    "Dark Dimension"
+}
+
+local voteModeInternal = {
+    ["Normal"] = "Normal",
+    ["BossRush"] = "BossRush",
+    ["Vague Memory"] = "100MVisit",
+    ["Christmas"] = "Christmas",
+    ["Zombie"] = "Zombie",
+    ["Invasion Holdout (Astro)"] = "Astro",
+    ["The Invasion (Astro)"] = "AstroV2",
+    ["In The Mist"] = "NoLightInTheSky",
+    ["Hard"] = "Hard",
+    ["Insane"] = "Insane",
+    ["Extreme"] = "VeryHard",
+    ["Nightmare"] = "Nightmare",
+    ["Hell Wave"] = "Hell",
+    ["Dark Dimension"] = "DarkDimension"
+}
+
 local voteMode = "Normal"
 
 local currentConnection = nil
@@ -255,7 +301,6 @@ local function checkWeaponExists(nameSearch)
     return false
 end
 
--- 🔥 FIX ASTRO BLASTER MAX AMMO 🔥
 local function checkAmmo(weaponType)
     local function isMatch(t)
         local name = string.lower(t.Name)
@@ -1110,10 +1155,11 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ABA 3: AUTO BUY (REFEITA COM PRIORIDADE E COMPRA REAL) 🔥
+-- 🔥 ABA 3: AUTO BUY (COM SPIKES PLUNGERS!) 🔥
 -- ============================================================
 local ultraPriorityActive = false
 local objUltra = createToggle(tabs.AutoBuy, "Ultra Priority", {color="gray", text="Give top priority to the order of purchase, foregoing the purchase of other items in order to always buy them in that order"}, function(s) ultraPriorityActive = s end)
+objUltra.frame.LayoutOrder = getNextUIOrder()
 
 local autoBuyItems = {
     { id = "Health", name = "Auto Buy Health", active = false, order = 1, verifiable = true,
@@ -1154,27 +1200,33 @@ local autoBuyItems = {
       
     { id = "AstroBlaster", name = "Auto Buy Astro Blaster", tooltip = {color="yellow", text="Only activate if character has it in that store"}, active = false, order = 10, verifiable = true,
       check = function() return checkWeaponExists("astro blaster") end,
-      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Astro Blaster") end) end }
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "Astro Blaster") end) end },
+      
+    { id = "SpikesPlungers", name = "Auto Buy Spikes Plungers", tooltip = {color="yellow", text="Only activate if character has it in that store"}, active = false, order = 11, verifiable = true,
+      check = function() return checkWeaponExists("spikes") or checkWeaponExists("plunger") end,
+      buy = function() pcall(function() ReplicatedStorage.ShopSystem:FireServer("Buy", "SpikesPlungers") end) end }
 }
 
 local function RefreshAutoBuyUI()
     table.sort(autoBuyItems, function(a, b) return a.order < b.order end)
-    for i = 1, 10 do
+    for i = 1, #autoBuyItems do
         local item = autoBuyItems[i]
         local row = autoBuyUIRows[i]
         
-        row.currentItem = item
-        row.nameLabel.Text = item.name
-        row.numInput.Text = tostring(i)
-        row.setToggle(item.active, true)
-        
-        if item.tooltip then
-            row.icon.Visible = true
-            if item.tooltip.color == "red" then row.icon.TextColor3 = Color3.fromRGB(255, 50, 50)
-            elseif item.tooltip.color == "yellow" then row.icon.TextColor3 = Color3.fromRGB(255, 200, 0)
-            else row.icon.TextColor3 = Color3.fromRGB(150, 150, 150) end
-        else
-            row.icon.Visible = false
+        if row then
+            row.currentItem = item
+            row.nameLabel.Text = item.name
+            row.numInput.Text = tostring(i)
+            row.setToggle(item.active, true)
+            
+            if item.tooltip then
+                row.icon.Visible = true
+                if item.tooltip.color == "red" then row.icon.TextColor3 = Color3.fromRGB(255, 50, 50)
+                elseif item.tooltip.color == "yellow" then row.icon.TextColor3 = Color3.fromRGB(255, 200, 0)
+                else row.icon.TextColor3 = Color3.fromRGB(150, 150, 150) end
+            else
+                row.icon.Visible = false
+            end
         end
     end
 end
@@ -1192,7 +1244,7 @@ local function SwapItems(oldOrder, newOrder)
     end
 end
 
-for i = 1, 10 do
+for i = 1, 11 do
     createPriorityRow(tabs.AutoBuy, i, SwapItems)
 end
 RefreshAutoBuyUI()
@@ -1349,7 +1401,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ABA 6: AUTO SHOP (NOVA LOJA HOURLY) 🔥
+-- 🔥 ABA 6: AUTO SHOP (SHOP LIMPO E EFICIENTE) 🔥
 -- ============================================================
 local autoShopSettings = {}
 
@@ -1451,13 +1503,7 @@ local function createShopToggle(parent, itemName)
     setting.ui = obj
 end
 
-createCategoryLabel(tabs.AutoShop, "Boosters")
-createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 30Min")
-createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 1Hour")
-createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 6Hour")
-createShopToggle(tabs.AutoShop, "Booster X2 Points : 30Min")
-createShopToggle(tabs.AutoShop, "Booster X2 Points : 1Hour")
-createShopToggle(tabs.AutoShop, "Booster X2 Points : 6Hour")
+createCategoryLabel(tabs.AutoShop, "Boosters & Potions")
 createShopToggle(tabs.AutoShop, "Potion")
 createShopToggle(tabs.AutoShop, "Potion II")
 createShopToggle(tabs.AutoShop, "Potion III")
@@ -1479,7 +1525,6 @@ createShopToggle(tabs.AutoShop, "Flash Drive #2")
 createShopToggle(tabs.AutoShop, "Flash Drive #3")
 createShopToggle(tabs.AutoShop, "Flash Drive #4")
 createShopToggle(tabs.AutoShop, "Flash Drive #5")
-createShopToggle(tabs.AutoShop, "Flash Drive #6")
 
 createCategoryLabel(tabs.AutoShop, "Drives")
 createShopToggle(tabs.AutoShop, "Drive #A")
@@ -1558,13 +1603,54 @@ end)
 
 
 -- ============================================================
--- ABA 7: MISC
+-- ABA 7: MISC (COM OS NOVOS NOMES E O AUTO EQUIP PLUNGERS!)
 -- ============================================================
 local objAutoJoin = createToggle(tabs.Misc, "Auto Ready", function(s) autoJoinAtivo = s end)
-local voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesArray, voteMode, function(val) voteMode = val end)
+
+local voteModesDisplay = {
+    "Normal",
+    "BossRush",
+    "Vague Memory",
+    "Christmas",
+    "Zombie",
+    "Invasion Holdout (Astro)",
+    "The Invasion (Astro)",
+    "In The Mist",
+    "Hard",
+    "Insane",
+    "Extreme",
+    "Nightmare",
+    "Hell Wave"
+}
+
+local voteModeInternal = {
+    ["Normal"] = "Normal",
+    ["BossRush"] = "BossRush",
+    ["Vague Memory"] = "100MVisit",
+    ["Christmas"] = "Christmas",
+    ["Zombie"] = "Zombie",
+    ["Invasion Holdout (Astro)"] = "Astro",
+    ["The Invasion (Astro)"] = "AstroV2",
+    ["In The Mist"] = "NoLightInTheSky",
+    ["Hard"] = "Hard",
+    ["Insane"] = "Insane",
+    ["Extreme"] = "VeryHard",
+    ["Nightmare"] = "Nightmare",
+    ["Hell Wave"] = "Hell"
+}
+
+local voteMode = "Normal"
+
+local voteDropdownObj = createInlineDropdown(tabs.Misc, "Vote Mode: ", voteModesDisplay, "Normal", function(val) 
+    voteMode = val 
+end)
+
 local objAutoVote = createToggle(tabs.Misc, "Auto Vote", function(s) autoVoteAtivo = s end)
 local objAutoChooseWeapon = createToggle(tabs.Misc, "Auto Choose Weapon", function(s) autoChooseWeaponAtivo = s end)
 createToggle(tabs.Misc, "Auto Cure Plunger", {color = "red", text = "Only use if you have the plunger equipped."}, function(s) autoCureAtivo = s end)
+
+local autoEquipPlungersAtivo = false
+createToggle(tabs.Misc, "Auto Equip Double Plungers", function(s) autoEquipPlungersAtivo = s end)
 
 createToggle(tabs.Misc, "Auto Use Normal Titan Request", function(s) autoUseNormalTitanAtivo = s end)
 createToggle(tabs.Misc, "Auto Use Special Titan Request", function(s) autoUseSpecialTitanAtivo = s end)
@@ -1635,7 +1721,7 @@ local objMugenJeffrey = createToggle(tabs.Misc, "No Jeffrey/insanity", {color = 
 createTpBtn(tabs.Teleport, "Spawn (Lobby)",   Vector3.new(611, -468, 529), false, {color = "yellow", text = "Be careful not to teleport during the match."})
 createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
 
--- 🔥 LÓGICA DO SUICIDE WAVE (100% BLINDADA COM INSTA-KILL DO LOBBY)
+-- 🔥 LÓGICA DO SUICIDE WAVE
 local alreadySuicidedThisWave = false
 
 RunService.Heartbeat:Connect(function()
@@ -1690,7 +1776,7 @@ task.spawn(function()
     end
 end)
 
--- 🔥 AUTO CHOOSE WEAPON LÓGICA (AGORA COM ASTRO BLASTER) 🔥
+-- 🔥 AUTO CHOOSE WEAPON LÓGICA
 task.spawn(function()
     while true do
         task.wait(1)
@@ -1793,54 +1879,104 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 AUTO VOTE LÓGICA (COM FIX DE ARENA HUD)
+-- 🔥 SISTEMA INTELIGENTE DE AUTO VOTE E AUTO READY 🔥
 -- ============================================================
-local lastArenaVoteTime = 0
+local voteConfirmed = false
+
 task.spawn(function()
     local voteRemote = ReplicatedStorage:WaitForChild("Vote")
-    while true do
-        task.wait(1.5) 
-        if autoVoteAtivo then 
-            local char = player.Character
-            local hum = char and char:FindFirstChild("Humanoid")
-            local hrp = char and char:FindFirstChild("HumanoidRootPart")
-            
-            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
-            local isGuiActive = false
-            if selectGui then pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end) end
+    local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
+    local lastVoteAttempt = 0
+    
+    while task.wait(0.5) do
+        local isVoteOpen = false
+        local openVoteUI = player.PlayerGui:FindFirstChild("OpenVoteUI")
+        if openVoteUI then
+            pcall(function()
+                if openVoteUI:IsA("BoolValue") or openVoteUI:IsA("ObjectValue") then
+                    isVoteOpen = (openVoteUI.Value == true)
+                else
+                    isVoteOpen = (openVoteUI.Enabled or openVoteUI.Visible)
+                end
+            end)
+        end
+        
+        local isTimeValid = false
+        local timerVal = 0
+        local playGui = player.PlayerGui:FindFirstChild("Play")
+        local mainFrame = playGui and playGui:FindFirstChild("Main")
+        local timeNode = mainFrame and mainFrame:FindFirstChild("Time")
+        
+        if timeNode then
+            pcall(function()
+                local textStr = ""
+                if timeNode:IsA("TextLabel") or timeNode:IsA("TextBox") then
+                    textStr = timeNode.Text
+                else
+                    textStr = tostring(timeNode.Value)
+                end
+                local tVal = tonumber(string.match(textStr, "%d+"))
+                if tVal then 
+                    timerVal = tVal
+                    isTimeValid = true 
+                end
+            end)
+        end
 
-            if hum and hum.Health > 0 then
-                if _G.TimeInLobby > 2 then
-                    pcall(function() voteRemote:FireServer(voteMode) end) 
-                elseif hrp and hrp.Position.Y > -100 and isGuiActive then
-                    if tick() - lastArenaVoteTime >= 25 then
-                        lastArenaVoteTime = tick()
-                        pcall(function() voteRemote:FireServer(voteMode) end)
+        local internalMode = voteModeInternal[voteMode] or "Normal"
+        local currentVoteCount = 0
+        voteConfirmed = false
+
+        if isVoteOpen and mainFrame then
+            pcall(function()
+                local modeNode = mainFrame:FindFirstChild(internalMode)
+                local lbl = modeNode and modeNode:FindFirstChild("TextLabel")
+                if lbl and lbl:IsA("TextLabel") then
+                    local num = string.match(lbl.Text, "%d+")
+                    if num then currentVoteCount = tonumber(num) end
+                end
+            end)
+            voteConfirmed = (currentVoteCount > 0)
+        end
+
+        -- LÓGICA DO AUTO VOTE
+        if autoVoteAtivo and isVoteOpen and isTimeValid then
+            if timerVal > 0 then
+                if not voteConfirmed then
+                    if tick() - lastVoteAttempt > 2 then
+                        lastVoteAttempt = tick()
+                        pcall(function() voteRemote:FireServer(internalMode) end)
                     end
+                end
+            elseif timerVal == 0 and not voteConfirmed then
+                -- 🔥 PLANO B DE FUGA: Temporizador zerou e ninguém votou!
+                pcall(function() readyRemote:FireServer("1", true) end)
+                task.wait(2)
+                local char = player.Character
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                if hrp then hrp.CFrame = CFrame.new(611, -468, 529) end
+                task.wait(2)
+            end
+        end
+
+        -- LÓGICA DO AUTO READY
+        if autoJoinAtivo then
+            local forceFieldRecently = (tick() - lastForceFieldTime < 15)
+            local isIntermissionSure = (selectCharTime > 5) or (forceFieldRecently and selectCharTime > 0.5)
+            
+            if autoVoteAtivo then
+                if voteConfirmed then
+                    pcall(function() readyRemote:FireServer("1", true) end)
+                end
+            else
+                if isIntermissionSure then
+                    pcall(function() readyRemote:FireServer("1", true) end)
                 end
             end
         end
     end
 end)
 
--- ============================================================
--- 🔥 AUTO READY LÓGICA (COM DELAY DE 6 SEGUNDOS)
--- ============================================================
-task.spawn(function()
-    local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
-    
-    while true do
-        task.wait(1.5) 
-        if autoJoinAtivo then 
-            local char = player.Character
-            local hum = char and char:FindFirstChild("Humanoid")
-
-            if hum and hum.Health > 0 and _G.TimeInLobby > 6 then
-                pcall(function() readyRemote:FireServer("1", true) end) 
-            end
-        end
-    end
-end)
 
 -- ============================================================
 -- 🔥 ANTI-LIMBO BÁSICO
@@ -1853,7 +1989,6 @@ task.spawn(function()
             local hrp = char:FindFirstChild("HumanoidRootPart")
             local hum = char:FindFirstChild("Humanoid")
             if hrp and hum and hum.Health > 0 then
-                -- Apenas teleporte seguro pro Lobby
                 if hrp.Position.Y < -1500 then 
                     hrp.Velocity = Vector3.new(0,0,0)
                     hrp.CFrame = CFrame.new(611, -468, 529) 
@@ -1893,7 +2028,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ANTI AFK ZONE E DETECTOR DE ARENA
+-- 🔥 ANTI AFK ZONE
 -- ============================================================
 task.spawn(function()
     while true do
@@ -1916,43 +2051,8 @@ task.spawn(function()
     end
 end)
 
-local timeAfkInArena = 0
-task.spawn(function()
-    while task.wait(1) do
-        if antiAfkAtivo then
-            local char = player.Character
-            local hrp = char and char:FindFirstChild("HumanoidRootPart")
-            local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
-            
-            local isGuiActive = false
-            if selectGui then
-                pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end)
-            end
-            
-            if hrp then
-                if hrp.Position.Y > -100 and isGuiActive then
-                    timeAfkInArena = timeAfkInArena + 1
-                    if timeAfkInArena >= 120 then
-                        pcall(function()
-                            hrp.Velocity = Vector3.new(0, 0, 0)
-                            hrp.CFrame = CFrame.new(611, -468, 529) 
-                        end)
-                        timeAfkInArena = 0 
-                    end
-                else
-                    timeAfkInArena = 0 
-                end
-            else
-                timeAfkInArena = 0
-            end
-        else
-            timeAfkInArena = 0
-        end
-    end
-end)
-
 -- ============================================================
--- 🔥 CORE AUTO FARM (COM STATE MACHINE DUAL RELOAD E PRIORIDADE ABSOLUTA) 🔥
+-- 🔥 CORE AUTO FARM
 -- ============================================================
 local currentConnection = nil
 local isShootingRifle = false
@@ -2129,7 +2229,6 @@ task.spawn(function()
             elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
         end
 
-        -- 🔥 AMEAÇA TRANSMITTER TOILET: PRIORIDADE ABSOLUTA 🔥
         local hasTransmitter = false
         local transmitterData = nil
         for _, t in ipairs(validTargets) do
@@ -2327,7 +2426,6 @@ task.spawn(function()
                 local hum = model:FindFirstChildWhichIsA("Humanoid")
                 if hum and hum.Health <= 0 then isDeadNow = true end
                 
-                -- 🔥 VERIFICA SE O TRANSMITTER TOILET SPAWNOU NO MEIO DA LUTA PARA INTERROMPER 🔥
                 local interruptedByTransmitter = false
                 if model.Name ~= "Transmitter toilet" then
                     local curLiv = Workspace:FindFirstChild("Living")
@@ -2437,8 +2535,6 @@ minBtn.InputEnded:Connect(function(input)
     end
 end)
 
-print("✅ V18.3 — BUG DA MUNIÇÃO MORTO! O combo Astro + Pulse agora respeita a recarga de ambos com perfeição!")
-
 -- ============================================================
 -- 🔥 AUTO EQUIP E USE DO WEIRD TRANSMITTER LÓGICA 🔥
 -- ============================================================
@@ -2468,3 +2564,27 @@ task.spawn(function()
         end
     end
 end)
+
+-- ============================================================
+-- 🔥 AUTO EQUIP DOUBLE PLUNGERS 🔥
+-- ============================================================
+task.spawn(function()
+    local changeModeRemote = ReplicatedStorage:WaitForChild("ChangeModePlunger", 5)
+    while true do
+        task.wait(1)
+        if autoEquipPlungersAtivo then
+            pcall(function()
+                local living = Workspace:FindFirstChild("Living")
+                local myChar = living and living:FindFirstChild(player.Name)
+                if myChar then
+                    local modePlunger = myChar:FindFirstChild("CooldownFolder") and myChar.CooldownFolder:FindFirstChild("ModePlunger")
+                    if modePlunger and modePlunger.Value == "Normal" then
+                        if changeModeRemote then changeModeRemote:FireServer() end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+print("✅ V18.9 — Auto Equip Double Plungers e Spikes Plungers adicionados com sucesso!")
