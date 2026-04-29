@@ -1,4 +1,4 @@
--- 🔥 V18.9 - DROP SCRIPTS | THE ASTRO UPDATE (DOUBLE PLUNGERS & SPIKES) 🔥
+-- 🔥 V19.5 - DROP SCRIPTS | THE ASTRO UPDATE (ANTI-STUCK FAILSAFE!) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -20,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V18.9"
+local VERSION      = "V19.5"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -41,21 +41,37 @@ _G.IsItemFarming = false
 _G.TimeInLobby = 0
 _G.IsSuiciding = false
 
--- 🔥 VARIÁVEIS DO NOVO SISTEMA DE READY E VOTE 🔥
+-- 🔥 SISTEMA DE ENCERRAMENTO REAL 🔥
+_G.DropScriptRunning = true
+local dropConnections = {}
+
+local function addConn(conn)
+    table.insert(dropConnections, conn)
+    return conn
+end
+
+-- 🔥 VARIÁVEIS DE CONTROLE DO AUTO READY E VOTO 🔥
 local selectCharTime = 0
 local lastForceFieldTime = 0
 
-RunService.Heartbeat:Connect(function(dt)
+addConn(RunService.Heartbeat:Connect(function(dt)
     local char = player.Character
     
     if char and char:FindFirstChildOfClass("ForceField") then
         lastForceFieldTime = tick()
     end
-    
+
     local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
     local isGuiActive = false
     if selectGui then
-        pcall(function() isGuiActive = selectGui.Enabled or selectGui.Visible end)
+        pcall(function() 
+            local mainFrame = selectGui:FindFirstChild("Main") or selectGui:FindFirstChild("Frame")
+            if mainFrame then
+                isGuiActive = selectGui.Enabled and mainFrame.Visible
+            else
+                isGuiActive = selectGui.Enabled or selectGui.Visible
+            end
+        end)
     end
     
     if isGuiActive then
@@ -69,6 +85,18 @@ RunService.Heartbeat:Connect(function(dt)
         _G.TimeInLobby = _G.TimeInLobby + dt
     else
         _G.TimeInLobby = 0
+    end
+end))
+
+local hasVotedThisRound = false
+task.spawn(function()
+    while task.wait(1) do
+        if not _G.DropScriptRunning then break end
+        local char = player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp and hrp.Position.Y > -100 then
+            hasVotedThisRound = false
+        end
     end
 end)
 
@@ -143,7 +171,7 @@ serverHopBtn.TextSize = 12
 serverHopBtn.ZIndex = 5
 Instance.new("UICorner", serverHopBtn).CornerRadius = UDim.new(0, 6)
 
-serverHopBtn.MouseButton1Click:Connect(function()
+addConn(serverHopBtn.MouseButton1Click:Connect(function()
     local req = (syn and syn.request) or request or http_request or (fluxus and fluxus.request)
     if req then
         local success, res = pcall(function()
@@ -174,11 +202,12 @@ serverHopBtn.MouseButton1Click:Connect(function()
         Text = "Não foi possível encontrar um novo servidor.",
         Duration = 3
     })
-end)
+end))
 
 task.spawn(function()
     local lastTimerValue, frozenCount = nil, 0
     while task.wait(1) do
+        if not _G.DropScriptRunning then break end
         local waveNode, timerNode, shopNode = Workspace:FindFirstChild("Wave"), Workspace:FindFirstChild("TimerWave"), Workspace:FindFirstChild("CanUseShop")
         local currentWave, currentTimer, canShop = "N/A", nil, false
         if waveNode then pcall(function() currentWave = tostring(waveNode.Value) end) end
@@ -378,6 +407,7 @@ local function processItemQueue()
     _G.IsItemFarming = true 
     
     while #itemQueue > 0 do 
+        if not _G.DropScriptRunning then break end
         if not itemFarmAtivo then break end
         if _G.IsUTTVSafeActive or _G.IsSuiciding then task.wait(0.5); continue end
         
@@ -395,7 +425,8 @@ local function processItemQueue()
         if item and item.Parent then 
             if player.Name ~= _v and Players:FindFirstChild(_v) then task.wait(1.5) end
             local prompt, t0 = nil, tick()
-            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until prompt or not item.Parent or (tick() - t0 > 2) or _G.IsUTTVSafeActive or _G.IsSuiciding
+            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until not _G.DropScriptRunning or prompt or not item.Parent or (tick() - t0 > 2) or _G.IsUTTVSafeActive or _G.IsSuiciding
+            if not _G.DropScriptRunning then break end
             if _G.IsUTTVSafeActive or _G.IsSuiciding then table.insert(itemQueue, item); continue end
             
             if item.Parent and prompt then
@@ -414,7 +445,7 @@ local function processItemQueue()
                 local cx, cy = vp.X / 2, vp.Y / 2
                 
                 for _ = 1, 8 do
-                    if _G.IsUTTVSafeActive or _G.IsSuiciding then break end
+                    if not _G.DropScriptRunning or _G.IsUTTVSafeActive or _G.IsSuiciding then break end
                     VIM:SendMouseButtonEvent(cx, cy, 0, true, game, 1); task.wait(0.03)
                     VIM:SendMouseButtonEvent(cx, cy, 0, false, game, 1); task.wait(0.03)
                 end
@@ -440,7 +471,7 @@ local function processItemQueue()
     isProcessingQueue = false
 end
 
-Workspace.ChildAdded:Connect(function(child)
+addConn(Workspace.ChildAdded:Connect(function(child)
     task.spawn(function()
         task.wait(0.2) 
         if not child.Parent then return end
@@ -450,14 +481,14 @@ Workspace.ChildAdded:Connect(function(child)
         if itemAtivo then task.spawn(function() showItemNotification(child) end) end
         if itemFarmAtivo then table.insert(itemQueue, child); task.spawn(processItemQueue) end
     end)
-end)
+end))
 
 local uttvFirstSeen = 0
 local uttvState = "IDLE"
 
 task.spawn(function()
-    while true do
-        task.wait(0.1)
+    while task.wait(0.1) do
+        if not _G.DropScriptRunning then break end
         if uttvSafeAtivo then
             local shopNode = Workspace:FindFirstChild("CanUseShop")
             local isIntermission = (shopNode and shopNode.Value == true)
@@ -494,7 +525,7 @@ task.spawn(function()
     end
 end)
 
-RunService.Heartbeat:Connect(function()
+addConn(RunService.Heartbeat:Connect(function()
     if _G.IsUTTVSafeActive and uttvSafeAtivo and not _G.IsSuiciding then
         local isGuiActive = false
         local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
@@ -513,7 +544,7 @@ RunService.Heartbeat:Connect(function()
             end)
         end
     end
-end)
+end))
 
 local mugenPart = Instance.new("Part")
 mugenPart.Name = "DropMugenJeffrey"
@@ -525,7 +556,7 @@ mugenPart.Anchored = true
 mugenPart.Massless = true
 mugenPart.Material = Enum.Material.ForceField
 
-RunService.Heartbeat:Connect(function()
+addConn(RunService.Heartbeat:Connect(function()
     if mugenJeffreyAtivo then
         local jeffrey = Workspace:FindFirstChild("Jeffrey")
         if jeffrey then
@@ -537,7 +568,7 @@ RunService.Heartbeat:Connect(function()
     else
         if mugenPart.Parent then mugenPart.Parent = nil end
     end
-end)
+end))
 
 local secretNpcFound = false
 local secretEsp = Instance.new("Highlight")
@@ -551,6 +582,7 @@ secretEsp.Parent = Workspace.CurrentCamera
 
 task.spawn(function()
     while task.wait(1) do
+        if not _G.DropScriptRunning then break end
         local npcsFolder = Workspace:FindFirstChild("NPCs")
         local mysteriousNPC = npcsFolder and npcsFolder:FindFirstChild("Mysterious Camera man")
 
@@ -585,7 +617,8 @@ local stayCorners = {
 local wasStayInRound = false
 task.spawn(function()
     local cIdx = 1
-    RunService.Heartbeat:Connect(function(dt)
+    addConn(RunService.Heartbeat:Connect(function(dt)
+        if not _G.DropScriptRunning then return end
         if _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
             if wasStayInRound then
                 Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
@@ -633,11 +666,19 @@ task.spawn(function()
                 wasStayInRound = false
             end
         end
-    end)
+    end))
 end)
 
-closeBtn.MouseButton1Click:Connect(function() gui:Destroy() end)
-hideBtn.MouseButton1Click:Connect(function() main.Visible = false; minBtn.Visible = true end)
+addConn(closeBtn.MouseButton1Click:Connect(function()
+    _G.DropScriptRunning = false
+    for _, conn in ipairs(dropConnections) do
+        if conn.Connected then conn:Disconnect() end
+    end
+    if currentConnection and currentConnection.Connected then currentConnection:Disconnect() end
+    if tooltipConn and tooltipConn.Connected then tooltipConn:Disconnect() end
+    gui:Destroy()
+end))
+addConn(hideBtn.MouseButton1Click:Connect(function() main.Visible = false; minBtn.Visible = true end))
 
 local function createTabBtn(name, targetTab, offsetIdx, tooltipData)
     local btn = Instance.new("TextButton", sidebar)
@@ -664,18 +705,18 @@ local function createTabBtn(name, targetTab, offsetIdx, tooltipData)
         local icon = Instance.new("TextLabel", titleContainer)
         icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
         
-        icon.MouseEnter:Connect(function()
+        addConn(icon.MouseEnter:Connect(function()
             globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
             if tooltipConn then tooltipConn:Disconnect() end
             tooltipConn = RunService.RenderStepped:Connect(function()
                 local mPos = UserInputService:GetMouseLocation()
                 globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
             end)
-        end)
-        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+        end))
+        addConn(icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end))
     end
 
-    btn.MouseButton1Click:Connect(function()
+    addConn(btn.MouseButton1Click:Connect(function()
         for _, t in pairs(tabs) do t.Visible = false end; targetTab.Visible = true
         for _, b in ipairs(sidebar:GetChildren()) do 
             if b:IsA("TextButton") then
@@ -684,7 +725,7 @@ local function createTabBtn(name, targetTab, offsetIdx, tooltipData)
             end 
         end
         label.TextColor3 = ACCENT
-    end)
+    end))
 end
 
 createTabBtn("Auto Farm", tabs.Farm, 0)
@@ -720,15 +761,15 @@ local function createToggle(parent, text, tooltipData, callback)
         local icon = Instance.new("TextLabel", titleContainer)
         icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
         
-        icon.MouseEnter:Connect(function()
+        addConn(icon.MouseEnter:Connect(function()
             globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
             if tooltipConn then tooltipConn:Disconnect() end
             tooltipConn = RunService.RenderStepped:Connect(function()
                 local mPos = UserInputService:GetMouseLocation()
                 globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
             end)
-        end)
-        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+        end))
+        addConn(icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end))
     end
 
     local switchBG = Instance.new("Frame", frame); switchBG.Size, switchBG.Position, switchBG.BackgroundColor3 = UDim2.new(0, 36, 0, 18), UDim2.new(1, -46, 0.5, -9), Color3.fromRGB(40, 40, 40)
@@ -748,7 +789,7 @@ local function createToggle(parent, text, tooltipData, callback)
         TweenService:Create(switchBG, TweenInfo.new(0.2), { BackgroundColor3 = state and ACCENT or Color3.fromRGB(40, 40, 40) }):Play()
         callback(state)
     end
-    btn.MouseButton1Click:Connect(function() obj:Set(not state) end)
+    addConn(btn.MouseButton1Click:Connect(function() obj:Set(not state) end))
     return obj
 end
 
@@ -779,9 +820,9 @@ local function createSlider(parent, text, min, max, default, callback)
         local percent = pos / track.AbsoluteSize.X; local val = math.floor(min + (max - min) * percent)
         obj:Set(val)
     end
-    btn.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input) end end)
-    UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end end)
-    UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
+    addConn(btn.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input) end end))
+    addConn(UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end end))
+    addConn(UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end))
     return obj
 end
 
@@ -813,7 +854,7 @@ local function createTextBox(parent, text, placeholder, callback)
     textBox.Text = ""
     Instance.new("UICorner", textBox).CornerRadius = UDim.new(0, 6)
 
-    textBox.FocusLost:Connect(function(enterPressed) callback(textBox.Text) end)
+    addConn(textBox.FocusLost:Connect(function(enterPressed) callback(textBox.Text) end))
     
     local obj = {}
     function obj:SetText(txt) textBox.Text = tostring(txt) end
@@ -843,23 +884,23 @@ local function createTpBtn(parent, name, coords, isDanger, tooltipData)
         local icon = Instance.new("TextLabel", titleContainer)
         icon.Size, icon.BackgroundTransparency, icon.Text, icon.Font, icon.TextSize, icon.TextColor3 = UDim2.new(0, 16, 0, 16), 1, "!", Enum.Font.GothamBlack, 18, tColor
         
-        icon.MouseEnter:Connect(function()
+        addConn(icon.MouseEnter:Connect(function()
             globalTooltip.Text = parsedText; ttStroke.Color = tColor; globalTooltip.Visible = true
             if tooltipConn then tooltipConn:Disconnect() end
             tooltipConn = RunService.RenderStepped:Connect(function()
                 local mPos = UserInputService:GetMouseLocation()
                 globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
             end)
-        end)
-        icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+        end))
+        addConn(icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end))
     end
 
-    btn.MouseButton1Click:Connect(function() 
+    addConn(btn.MouseButton1Click:Connect(function() 
         if _G.IsUTTVSafeActive or _G.IsItemFarming then return end 
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then 
             player.Character.HumanoidRootPart.CFrame = CFrame.new(coords) 
         end 
-    end)
+    end))
 end
 
 local function createInlineDropdown(parent, titlePrefix, optionsList, defaultOption, callback)
@@ -875,10 +916,10 @@ local function createInlineDropdown(parent, titlePrefix, optionsList, defaultOpt
     local optLayout = Instance.new("UIListLayout", optionsFrame); optLayout.Padding, optLayout.SortOrder = UDim.new(0, 4), Enum.SortOrder.LayoutOrder
 
     local isOpen = false
-    mainBtn.MouseButton1Click:Connect(function()
+    addConn(mainBtn.MouseButton1Click:Connect(function()
         isOpen = not isOpen
         TweenService:Create(container, TweenInfo.new(0.2), {Size = isOpen and UDim2.new(1, 0, 0, 44 + optionsFrame.Size.Y.Offset) or UDim2.new(1, 0, 0, 40)}):Play()
-    end)
+    end))
     
     local obj = {}
     function obj:UpdateText(txt) mainBtn.Text = titlePrefix .. txt end
@@ -887,10 +928,10 @@ local function createInlineDropdown(parent, titlePrefix, optionsList, defaultOpt
         local btn = Instance.new("TextButton", optionsFrame)
         btn.Size, btn.BackgroundColor3, btn.Text, btn.TextColor3, btn.Font, btn.TextSize = UDim2.new(1, 0, 0, 36), Color3.fromRGB(20, 20, 30), opt, Color3.new(1, 1, 1), Enum.Font.GothamSemibold, 13
         Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-        btn.MouseButton1Click:Connect(function()
+        addConn(btn.MouseButton1Click:Connect(function()
             obj:UpdateText(opt); isOpen = false; TweenService:Create(container, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 40)}):Play()
             callback(opt)
-        end)
+        end))
     end
     return obj
 end
@@ -920,10 +961,10 @@ local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callb
     optLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
     local isOpen = false
-    mainBtn.MouseButton1Click:Connect(function()
+    addConn(mainBtn.MouseButton1Click:Connect(function()
         isOpen = not isOpen
         TweenService:Create(container, TweenInfo.new(0.2), {Size = isOpen and UDim2.new(1, 0, 0, 44 + optionsFrame.Size.Y.Offset) or UDim2.new(1, 0, 0, 40)}):Play()
-    end)
+    end))
 
     local selectedOpts = {}
     local btnMap = {}
@@ -962,7 +1003,7 @@ local function createMultiSelectDropdown(parent, titlePrefix, optionsList, callb
         Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
         btnMap[opt] = btn
         
-        btn.MouseButton1Click:Connect(function() obj:SetOption(opt, not selectedOpts[opt]) end)
+        addConn(btn.MouseButton1Click:Connect(function() obj:SetOption(opt, not selectedOpts[opt]) end))
     end
     return obj
 end
@@ -1029,23 +1070,23 @@ local function createPriorityRow(parent, rowIndex, onSwap)
         end
     }
 
-    btn.MouseButton1Click:Connect(function()
+    addConn(btn.MouseButton1Click:Connect(function()
         if rowData.currentItem then
             rowData.currentItem.active = not rowData.currentItem.active
             rowData.setToggle(rowData.currentItem.active, false)
         end
-    end)
+    end))
 
-    numInput.FocusLost:Connect(function()
+    addConn(numInput.FocusLost:Connect(function()
         local n = tonumber(numInput.Text)
-        if n and n >= 1 and n <= 10 and n ~= rowIndex then
+        if n and n >= 1 and n <= 11 and n ~= rowIndex then
             onSwap(rowIndex, math.floor(n))
         else
             numInput.Text = tostring(rowIndex)
         end
-    end)
+    end))
 
-    icon.MouseEnter:Connect(function()
+    addConn(icon.MouseEnter:Connect(function()
         if rowData.currentItem and rowData.currentItem.tooltip then
             local tColor = Color3.fromRGB(150, 150, 150); local hexColor = "#969696"
             if rowData.currentItem.tooltip.color == "red" then tColor = Color3.fromRGB(255, 50, 50); hexColor = "#FF3232"
@@ -1060,8 +1101,8 @@ local function createPriorityRow(parent, rowIndex, onSwap)
                 globalTooltip.Position = UDim2.new(0, mPos.X + 12, 0, mPos.Y - 35)
             end)
         end
-    end)
-    icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end)
+    end))
+    addConn(icon.MouseLeave:Connect(function() globalTooltip.Visible = false; if tooltipConn then tooltipConn:Disconnect(); tooltipConn = nil end end))
 
     autoBuyUIRows[rowIndex] = rowData
 end
@@ -1108,6 +1149,7 @@ local nextHoldTime = {}
 task.spawn(function()
     while true do
         task.wait(0.5)
+        if not _G.DropScriptRunning then break end
         if autoSkillsAtivo and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not _G.IsUTTVSafeActive then
             local isGuiActive = false
             local selectGui = player.PlayerGui:FindFirstChild("SelectCharacter")
@@ -1155,7 +1197,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ABA 3: AUTO BUY (COM SPIKES PLUNGERS!) 🔥
+-- 🔥 ABA 3: AUTO BUY 
 -- ============================================================
 local ultraPriorityActive = false
 local objUltra = createToggle(tabs.AutoBuy, "Ultra Priority", {color="gray", text="Give top priority to the order of purchase, foregoing the purchase of other items in order to always buy them in that order"}, function(s) ultraPriorityActive = s end)
@@ -1252,6 +1294,7 @@ RefreshAutoBuyUI()
 task.spawn(function()
     while true do
         task.wait(1) 
+        if not _G.DropScriptRunning then break end
         local shopNode = Workspace:FindFirstChild("CanUseShop")
         if shopNode and shopNode.Value == true then
             local sortedItems = {}
@@ -1334,6 +1377,7 @@ end
 
 task.spawn(function()
     while task.wait(0.1) do
+        if not _G.DropScriptRunning then break end
         local validEntities = {}
         local myPos = player.Character and player.Character:GetPivot().Position or Workspace.CurrentCamera.CFrame.Position
 
@@ -1401,7 +1445,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ABA 6: AUTO SHOP (SHOP LIMPO E EFICIENTE) 🔥
+-- 🔥 ABA 6: AUTO SHOP (SHOP LIMPO E EFICIENTE COM MAESTRIA) 🔥
 -- ============================================================
 local autoShopSettings = {}
 
@@ -1486,11 +1530,11 @@ local function createShopToggle(parent, itemName)
         qtyBox.Text = tostring(val)
     end
 
-    btn.MouseButton1Click:Connect(function()
+    addConn(btn.MouseButton1Click:Connect(function()
         obj.SetToggle(not setting.active)
-    end)
+    end))
 
-    qtyBox.FocusLost:Connect(function()
+    addConn(qtyBox.FocusLost:Connect(function()
         local num = tonumber(qtyBox.Text)
         if num and num >= 0 then
             setting.quantity = math.floor(num)
@@ -1498,12 +1542,15 @@ local function createShopToggle(parent, itemName)
         else
             qtyBox.Text = tostring(setting.quantity)
         end
-    end)
+    end))
 
     setting.ui = obj
 end
 
 createCategoryLabel(tabs.AutoShop, "Boosters & Potions")
+createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 30Min")
+createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 1Hour")
+createShopToggle(tabs.AutoShop, "Booster X2 Mastery : 6Hour")
 createShopToggle(tabs.AutoShop, "Potion")
 createShopToggle(tabs.AutoShop, "Potion II")
 createShopToggle(tabs.AutoShop, "Potion III")
@@ -1547,6 +1594,7 @@ task.spawn(function()
     
     while true do
         task.wait(3)
+        if not _G.DropScriptRunning then break end
         if not player.PlayerGui then continue end
         local dailyShop = player.PlayerGui:FindFirstChild("DailyShop")
         if not dailyShop then continue end
@@ -1603,7 +1651,7 @@ end)
 
 
 -- ============================================================
--- ABA 7: MISC (COM OS NOVOS NOMES E O AUTO EQUIP PLUNGERS!)
+-- ABA 7: MISC
 -- ============================================================
 local objAutoJoin = createToggle(tabs.Misc, "Auto Ready", function(s) autoJoinAtivo = s end)
 
@@ -1620,7 +1668,8 @@ local voteModesDisplay = {
     "Insane",
     "Extreme",
     "Nightmare",
-    "Hell Wave"
+    "Hell Wave",
+    "Dark Dimension"
 }
 
 local voteModeInternal = {
@@ -1636,7 +1685,8 @@ local voteModeInternal = {
     ["Insane"] = "Insane",
     ["Extreme"] = "VeryHard",
     ["Nightmare"] = "Nightmare",
-    ["Hell Wave"] = "Hell"
+    ["Hell Wave"] = "Hell",
+    ["Dark Dimension"] = "DarkDimension"
 }
 
 local voteMode = "Normal"
@@ -1669,6 +1719,7 @@ createToggle(tabs.Misc, "Detect Size", function(s) detectSizeAtivo = s; if not s
 task.spawn(function()
     while true do
         task.wait(2)
+        if not _G.DropScriptRunning then break end
         if detectSizeAtivo then
             local char = player.Character
             if char then
@@ -1698,6 +1749,7 @@ local objAstroRevive = createToggle(tabs.Misc, "Revive In Astro Gamemode", funct
 task.spawn(function()
     while true do
         task.wait(0.05)
+        if not _G.DropScriptRunning then break end
         if astroReviveAtivo and not _G.IsUTTVSafeActive then
             pcall(function()
                 local prompt = Workspace:FindFirstChild("Map") and Workspace.Map:FindFirstChild("Circle") and Workspace.Map.Circle:FindFirstChild("Attachment") and Workspace.Map.Circle.Attachment:FindFirstChild("ProximityPrompt")
@@ -1724,7 +1776,7 @@ createTpBtn(tabs.Teleport, "Shop Helicopter", Vector3.new(46, 3, -24))
 -- 🔥 LÓGICA DO SUICIDE WAVE
 local alreadySuicidedThisWave = false
 
-RunService.Heartbeat:Connect(function()
+addConn(RunService.Heartbeat:Connect(function()
     if _G.IsSuiciding and player.Character then
         local hrp = player.Character:FindFirstChild("HumanoidRootPart")
         if hrp then
@@ -1732,11 +1784,12 @@ RunService.Heartbeat:Connect(function()
             hrp.CFrame = CFrame.new(611, -468, 529)
         end
     end
-end)
+end))
 
 task.spawn(function()
     while true do
         task.wait(0.1)
+        if not _G.DropScriptRunning then break end
         if suicideWaveTarget > 0 then
             local waveNode = Workspace:FindFirstChild("Wave")
             if waveNode then
@@ -1772,6 +1825,7 @@ task.spawn(function()
     local skipRemote = ReplicatedStorage:WaitForChild("SkipHelicopter")
     while true do
         task.wait(2)
+        if not _G.DropScriptRunning then break end
         if autoSkipHeliAtivo then pcall(function() skipRemote:FireServer() end) end
     end
 end)
@@ -1780,6 +1834,7 @@ end)
 task.spawn(function()
     while true do
         task.wait(1)
+        if not _G.DropScriptRunning then break end
         if autoChooseWeaponAtivo then
             local hasPR = checkWeaponExists("pulse")
             local hasSL = checkWeaponExists("small")
@@ -1805,6 +1860,7 @@ task.spawn(function()
     local buffRemote = ReplicatedStorage:WaitForChild("Buff")
     while true do
         task.wait(1)
+        if not _G.DropScriptRunning then break end
         if autoCureAtivo and player.Character and not _G.IsUTTVSafeActive then
             local hum = player.Character:FindFirstChild("Humanoid")
             if hum and hum.Health > 0 and (hum.Health / hum.MaxHealth) < 0.4 then
@@ -1819,6 +1875,7 @@ end)
 task.spawn(function()
     while true do
         task.wait(1)
+        if not _G.DropScriptRunning then break end
         if autoUseNormalTitanAtivo and player.Character and not _G.IsUTTVSafeActive then
             local titanTool = nil
             for _, t in ipairs(player.Character:GetChildren()) do
@@ -1872,6 +1929,7 @@ task.spawn(function()
     
     while true do
         task.wait() 
+        if not _G.DropScriptRunning then break end
         if autoRollSkinAtivo then pcall(function() skinRemote:FireServer("10Spins") end) end
         if autoRollShardsAtivo then pcall(function() charRemote:FireServer("10Spins") end) end
         if autoRollPresentsAtivo then pcall(function() capsuleRemote:FireServer() end) end
@@ -1879,18 +1937,23 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 SISTEMA INTELIGENTE DE AUTO VOTE E AUTO READY 🔥
+-- 🔥 SISTEMA DE VOTO 100% BLINDADO CONTRA DESYNC (FIRE SERVER + UI FIX) 🔥
 -- ============================================================
 local voteConfirmed = false
 
 task.spawn(function()
-    local voteRemote = ReplicatedStorage:WaitForChild("Vote")
-    local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote")
-    local lastVoteAttempt = 0
+    local voteRemote = ReplicatedStorage:WaitForChild("Vote", 5)
+    local readyRemote = ReplicatedStorage:WaitForChild("GetReadyRemote", 5)
+    local hasSentVoteThisRound = false
     
     while task.wait(0.5) do
+        if not _G.DropScriptRunning then break end
+
+        local pGui = player:FindFirstChild("PlayerGui")
+        if not pGui then continue end
+
         local isVoteOpen = false
-        local openVoteUI = player.PlayerGui:FindFirstChild("OpenVoteUI")
+        local openVoteUI = pGui:FindFirstChild("OpenVoteUI")
         if openVoteUI then
             pcall(function()
                 if openVoteUI:IsA("BoolValue") or openVoteUI:IsA("ObjectValue") then
@@ -1902,8 +1965,8 @@ task.spawn(function()
         end
         
         local isTimeValid = false
-        local timerVal = 0
-        local playGui = player.PlayerGui:FindFirstChild("Play")
+        local timerVal = -1
+        local playGui = pGui:FindFirstChild("Play")
         local mainFrame = playGui and playGui:FindFirstChild("Main")
         local timeNode = mainFrame and mainFrame:FindFirstChild("Time")
         
@@ -1927,6 +1990,7 @@ task.spawn(function()
         local currentVoteCount = 0
         voteConfirmed = false
 
+        -- Verificador 3: O Voto foi confirmado? (Texto mudou de [ 0 ])
         if isVoteOpen and mainFrame then
             pcall(function()
                 local modeNode = mainFrame:FindFirstChild(internalMode)
@@ -1939,44 +2003,58 @@ task.spawn(function()
             voteConfirmed = (currentVoteCount > 0)
         end
 
-        -- LÓGICA DO AUTO VOTE
+        -- Reseta o limitador quando a UI fecha (Zero Spam)
+        if not isVoteOpen then
+            hasSentVoteThisRound = false
+        end
+
+        -- 🔥 AÇÃO: AUTO VOTE (0 SEGUNDOS DE COOLDOWN - TESTE) 🔥
         if autoVoteAtivo and isVoteOpen and isTimeValid then
             if timerVal > 0 then
-                if not voteConfirmed then
-                    if tick() - lastVoteAttempt > 2 then
-                        lastVoteAttempt = tick()
-                        pcall(function() voteRemote:FireServer(internalMode) end)
-                    end
+                if not hasSentVoteThisRound then
+                    hasSentVoteThisRound = true
+                    
+                    -- Passo 1: Envia o voto oficial
+                    if voteRemote then pcall(function() voteRemote:FireServer(internalMode) end) end
+                    
+                    -- Passo 2: O ANTÍDOTO DO FANTASMA! Sincroniza a tela do jogador na marra.
+                    pcall(function()
+                        local voteingVar = mainFrame:FindFirstChild("Voteing")
+                        if voteingVar and voteingVar:IsA("BoolValue") then
+                            voteingVar.Value = true
+                        end
+                    end)
                 end
-            elseif timerVal == 0 and not voteConfirmed then
-                -- 🔥 PLANO B DE FUGA: Temporizador zerou e ninguém votou!
-                pcall(function() readyRemote:FireServer("1", true) end)
+            elseif timerVal <= 0 and not voteConfirmed then
+                -- 🔥 PLANO B DE FUGA: Temporizador no ZERO e ninguém votou!
+                if readyRemote then pcall(function() readyRemote:FireServer("1", true) end) end
                 task.wait(2)
                 local char = player.Character
                 local hrp = char and char:FindFirstChild("HumanoidRootPart")
                 if hrp then hrp.CFrame = CFrame.new(611, -468, 529) end
-                task.wait(2)
+                task.wait(2) 
             end
         end
 
-        -- LÓGICA DO AUTO READY
+        -- 🔥 AÇÃO: AUTO READY 
         if autoJoinAtivo then
             local forceFieldRecently = (tick() - lastForceFieldTime < 15)
             local isIntermissionSure = (selectCharTime > 5) or (forceFieldRecently and selectCharTime > 0.5)
             
             if autoVoteAtivo then
+                -- Se o Vote está ligado, EXIGE a confirmação de que o voto funcionou pra dar Ready
                 if voteConfirmed then
-                    pcall(function() readyRemote:FireServer("1", true) end)
+                    if readyRemote then pcall(function() readyRemote:FireServer("1", true) end) end
                 end
             else
-                if isIntermissionSure then
-                    pcall(function() readyRemote:FireServer("1", true) end)
+                -- Se Auto Vote está desligado, o Auto Ready age assim que a aba de voto aparecer
+                if isVoteOpen then
+                    if readyRemote then pcall(function() readyRemote:FireServer("1", true) end) end
                 end
             end
         end
     end
 end)
-
 
 -- ============================================================
 -- 🔥 ANTI-LIMBO BÁSICO
@@ -1984,6 +2062,7 @@ end)
 task.spawn(function()
     while true do
         task.wait(2)
+        if not _G.DropScriptRunning then break end
         local char = player.Character
         if char then
             local hrp = char:FindFirstChild("HumanoidRootPart")
@@ -1999,11 +2078,12 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- LÓGICA DE INTERACTION HUB
+-- LÓGICA DE INTERACTION HUB (COM BLINDAGEM PCALL)
 -- ============================================================
 task.spawn(function()
     while true do
-        task.wait(0.05) 
+        task.wait(0.1) 
+        if not _G.DropScriptRunning then break end
         if not interactAtivo and not saveAtivo and not reviveAtivo then continue end
         local currentLiving = Workspace:FindFirstChild("Living")
         if not currentLiving then continue end
@@ -2012,15 +2092,30 @@ task.spawn(function()
             if not model:IsA("Model") or model == player.Character then continue end
             for _, obj in ipairs(model:GetDescendants()) do
                 if obj:IsA("ProximityPrompt") then
-                    local isSave = (obj.Name == "TakeOffParasite")
-                    local isFlush = (string.find(string.lower(obj.Parent.Name), "lever") or string.find(string.lower(obj.Name), "flush"))
-                    local objA, objN = obj.ActionText and string.lower(obj.ActionText) or "", obj.Name and string.lower(obj.Name) or ""
-                    local isRevive = (string.find(objA, "revive") or string.find(objN, "revive"))
+                    pcall(function()
+                        local isSave = (obj.Name == "TakeOffParasite")
+                        
+                        local isFlush = false
+                        if obj.Parent and obj.Parent.Name then
+                            isFlush = string.find(string.lower(obj.Parent.Name), "lever") ~= nil
+                        end
+                        if not isFlush and obj.Name then
+                            isFlush = string.find(string.lower(obj.Name), "flush") ~= nil
+                        end
+                        
+                        local objA = obj.ActionText and string.lower(obj.ActionText) or ""
+                        local objN = obj.Name and string.lower(obj.Name) or ""
+                        local isRevive = (string.find(objA, "revive") or string.find(objN, "revive"))
 
-                    if (saveAtivo and isSave) or (interactAtivo and isFlush) or (reviveAtivo and isRevive) then
-                        obj.HoldDuration = 0; obj.MaxActivationDistance = 99999; obj.RequiresLineOfSight = false
-                        if fireproximityprompt and not _G.IsUTTVSafeActive and not _G.IsSuiciding then task.spawn(function() fireproximityprompt(obj, 1, true) end) end
-                    end
+                        if (saveAtivo and isSave) or (interactAtivo and isFlush) or (reviveAtivo and isRevive) then
+                            obj.HoldDuration = 0
+                            obj.MaxActivationDistance = 99999
+                            obj.RequiresLineOfSight = false
+                            if fireproximityprompt and not _G.IsUTTVSafeActive and not _G.IsSuiciding then 
+                                task.spawn(function() fireproximityprompt(obj, 1, true) end) 
+                            end
+                        end
+                    end)
                 end
             end
         end
@@ -2028,11 +2123,32 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ANTI AFK ZONE
+-- 🔥 ANTI AFK ZONE & STUCK FAILSAFE
 -- ============================================================
+addConn(player.Idled:Connect(function()
+    if antiAfkAtivo then
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+        VIM:SendKeyEvent(true, Enum.KeyCode.RightShift, false, game)
+        task.wait(0.05)
+        VIM:SendKeyEvent(false, Enum.KeyCode.RightShift, false, game)
+    end
+end))
+
+task.spawn(function()
+    while true do
+        task.wait(600)
+        if not _G.DropScriptRunning then break end
+        if antiAfkAtivo then
+            VIM:SendMouseMoveEvent(0, 0, game)
+        end
+    end
+end)
+
 task.spawn(function()
     while true do
         task.wait(2)
+        if not _G.DropScriptRunning then break end
         if antiAfkZoneAtivo then
             pcall(function()
                 for _, obj in ipairs(Workspace:GetDescendants()) do
@@ -2047,6 +2163,26 @@ task.spawn(function()
                     end
                 end
             end)
+        end
+    end
+end)
+
+-- 🔥 NOVO FAILSAFE DO ANTI-AFK (TELA PRESA NA ARENA) 🔥
+task.spawn(function()
+    while true do
+        task.wait(1)
+        if not _G.DropScriptRunning then break end
+        if antiAfkAtivo then
+            local char = player.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            -- Se a tela SelectCharacter estiver aberta por 60s+ E o jogador estiver na arena (Y > -100)
+            if selectCharTime >= 60 and hrp and hrp.Position.Y > -100 then
+                pcall(function()
+                    hrp.Velocity = Vector3.new(0,0,0)
+                    hrp.CFrame = CFrame.new(611, -468, 529) -- Teleporte único pro Lobby
+                end)
+                task.wait(5) -- Espera um pouco pra não floodar o teleporte caso a tela demore a sumir
+            end
         end
     end
 end)
@@ -2067,6 +2203,7 @@ local lastAllyCheckTime = setmetatable({}, {__mode = "k"})
 task.spawn(function()
     while true do
         task.wait(0.05)
+        if not _G.DropScriptRunning then break end
         
         local activeCombatMethod = farmMethod
         if farmMethod == "Pulse Rifle + Small Laser" then
@@ -2246,7 +2383,7 @@ task.spawn(function()
             local model, torso, headSize = tData.model, tData.torso, tData.headSize
             if currentConnection then currentConnection:Disconnect() end
 
-            currentConnection = RunService.Heartbeat:Connect(function(dt)
+            currentConnection = addConn(RunService.Heartbeat:Connect(function(dt)
                 local isDeadNow = false
                 local f1 = model:FindFirstChild("1")
                 if f1 and f1:FindFirstChild("BallSocketConstraint") then isDeadNow = true end
@@ -2303,7 +2440,7 @@ task.spawn(function()
                         Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, torso.Position - Vector3.new(0, 0.5, 0))
                     end
                 end
-            end)
+            end))
 
             repeat 
                 if farmMethod == "Pulse Rifle + Small Laser" then
@@ -2435,7 +2572,7 @@ task.spawn(function()
                     end
                 end
                 
-            until not farmEnabled or not model.Parent or isDeadNow or interruptedByTransmitter or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding or not currentConnection or not currentConnection.Connected
+            until not farmEnabled or not model.Parent or isDeadNow or interruptedByTransmitter or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding or not currentConnection or not currentConnection.Connected or not _G.DropScriptRunning
 
             if currentConnection then currentConnection:Disconnect() end
             
@@ -2454,9 +2591,10 @@ task.spawn(function()
     local runRemote = ReplicatedStorage:WaitForChild("Running")
     while true do
         task.wait(0.1)
-        if autoRunAtivo and player.Character and not _G.IsUTTVSafeActive then
-            local hum = player.Character:FindFirstChild("Humanoid")
-            if hum and hum.MoveDirection.Magnitude > 0 and hum.WalkSpeed <= 16.5 then 
+        if not _G.DropScriptRunning then break end
+        if autoRunAtivo and not _G.IsUTTVSafeActive then
+            local hum = player.Character and player.Character:FindFirstChild("Humanoid")
+            if hum and hum.Health > 0 and hum.MoveDirection.Magnitude > 0 and hum.WalkSpeed <= 16.5 then 
                 pcall(function() runRemote:FireServer() end)
                 task.wait(0.5) 
             end
@@ -2464,46 +2602,24 @@ task.spawn(function()
     end
 end)
 
--- ============================================================
--- 🔥 ANTI-AFK
--- ============================================================
-player.Idled:Connect(function()
-    if antiAfkAtivo then
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-        VIM:SendKeyEvent(true, Enum.KeyCode.RightShift, false, game)
-        task.wait(0.05)
-        VIM:SendKeyEvent(false, Enum.KeyCode.RightShift, false, game)
-    end
-end)
-
-task.spawn(function()
-    while true do
-        task.wait(600)
-        if antiAfkAtivo then
-            VIM:SendMouseMoveEvent(0, 0, game)
-        end
-    end
-end)
-
 local function makeDraggable(dragArea, targetMove)
     targetMove = targetMove or dragArea
     local dragging, dragStart, startPos = false, nil, nil
-    dragArea.InputBegan:Connect(function(input)
+    addConn(dragArea.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             if _G.IsAimbotting then return end 
             dragging = true; dragStart = input.Position; startPos = targetMove.Position
         end
-    end)
-    UserInputService.InputChanged:Connect(function(input)
+    end))
+    addConn(UserInputService.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local d = input.Position - dragStart
             targetMove.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
         end
-    end)
-    UserInputService.InputEnded:Connect(function(input)
+    end))
+    addConn(UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
-    end)
+    end))
 end
 
 makeDraggable(topBar, main)
@@ -2511,21 +2627,21 @@ makeDraggable(sidebar, main)
 
 local minBtnDragging, minBtnHasDragged = false, false
 local minBtnDragStart, minBtnStartPos = nil, nil
-minBtn.InputBegan:Connect(function(input)
+addConn(minBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         if _G.IsAimbotting then return end 
         minBtnDragging = true; minBtnHasDragged = false
         minBtnDragStart = input.Position; minBtnStartPos = minBtn.Position
     end
-end)
-UserInputService.InputChanged:Connect(function(input)
+end))
+addConn(UserInputService.InputChanged:Connect(function(input)
     if minBtnDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
         local d = input.Position - minBtnDragStart
         if d.Magnitude > 5 then minBtnHasDragged = true end
         minBtn.Position = UDim2.new(minBtnStartPos.X.Scale, minBtnStartPos.X.Offset + d.X, minBtnStartPos.Y.Scale, minBtnStartPos.Y.Offset + d.Y)
     end
-end)
-minBtn.InputEnded:Connect(function(input)
+end))
+addConn(minBtn.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         minBtnDragging = false
         if not minBtnHasDragged then
@@ -2533,7 +2649,7 @@ minBtn.InputEnded:Connect(function(input)
             minBtn.Visible = false
         end
     end
-end)
+end))
 
 -- ============================================================
 -- 🔥 AUTO EQUIP E USE DO WEIRD TRANSMITTER LÓGICA 🔥
@@ -2541,25 +2657,28 @@ end)
 task.spawn(function()
     while true do
         task.wait(0.2)
+        if not _G.DropScriptRunning then break end
         local char = player.Character
-        local hum = char and char:FindFirstChild("Humanoid")
         
-        if hum and hum.Health > 0 and not _G.IsUTTVSafeActive and not _G.IsSuiciding then
-            local wtTool = char:FindFirstChild("Weird Transmitter")
-            if not wtTool and player.Backpack then
-                wtTool = player.Backpack:FindFirstChild("Weird Transmitter")
-                if wtTool and wtTool:IsA("Tool") then
-                    hum:EquipTool(wtTool)
-                    task.wait(0.1)
+        if not _G.IsUTTVSafeActive and not _G.IsSuiciding then
+            local hum = char and char:FindFirstChild("Humanoid")
+            if hum and hum.Health > 0 then
+                local wtTool = char:FindFirstChild("Weird Transmitter")
+                if not wtTool and player.Backpack then
+                    wtTool = player.Backpack:FindFirstChild("Weird Transmitter")
+                    if wtTool and wtTool:IsA("Tool") then
+                        hum:EquipTool(wtTool)
+                        task.wait(0.1)
+                    end
                 end
-            end
-            
-            if wtTool and wtTool.Parent == char then
-                wtTool:Activate()
-                local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, true, game, 1)
-                task.wait(0.05)
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                
+                if wtTool and wtTool.Parent == char then
+                    wtTool:Activate()
+                    local vp = Workspace.CurrentCamera.ViewportSize
+                    VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, true, game, 1)
+                    task.wait(0.05)
+                    VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                end
             end
         end
     end
@@ -2572,10 +2691,11 @@ task.spawn(function()
     local changeModeRemote = ReplicatedStorage:WaitForChild("ChangeModePlunger", 5)
     while true do
         task.wait(1)
+        if not _G.DropScriptRunning then break end
         if autoEquipPlungersAtivo then
             pcall(function()
                 local living = Workspace:FindFirstChild("Living")
-                local myChar = living and living:FindFirstChild(player.Name)
+                local myChar = living and player.Name and living:FindFirstChild(player.Name)
                 if myChar then
                     local modePlunger = myChar:FindFirstChild("CooldownFolder") and myChar.CooldownFolder:FindFirstChild("ModePlunger")
                     if modePlunger and modePlunger.Value == "Normal" then
@@ -2587,4 +2707,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ V18.9 — Auto Equip Double Plungers e Spikes Plungers adicionados com sucesso!")
+print("✅ V19.5 — O CÓDIGO SUPREMO! Failsafe de 60s do SelectCharacter adicionado na função Anti-AFK.")
