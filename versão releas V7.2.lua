@@ -1,4 +1,4 @@
--- 🔥 V19.5 - DROP SCRIPTS | THE ASTRO UPDATE (ANTI-STUCK FAILSAFE!) 🔥
+-- 🔥 V20.0 - DROP SCRIPTS | THE ASTRO UPDATE (THE ULTIMATE FARM FIX!) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -20,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V19.5"
+local VERSION      = "V20.0"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -108,7 +108,7 @@ if queue then
 end
 
 local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true, ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true, ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true, ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true, ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true, ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true, ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true, ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true, ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true, ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true, ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true, ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true, ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true, ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true, ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true, ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true, ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true, ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true, ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true, ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true, ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true, ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true, ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true, ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true, ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true, ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true, ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true, ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true, ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true, ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true, ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true, ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true, ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true, ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true, ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true, ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true, ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true, ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true, ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true, ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true, ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true, ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true, ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true, ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true, ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true, ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true, ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true }
-local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true, ["Weird Prism"] = true, ["100MVisitPickOneOfThem"] = true }
+local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true, ["Weird Prism"] = true, ["100MVisitPickOneOfThem"] = true }
 
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
     if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
@@ -172,36 +172,52 @@ serverHopBtn.ZIndex = 5
 Instance.new("UICorner", serverHopBtn).CornerRadius = UDim.new(0, 6)
 
 addConn(serverHopBtn.MouseButton1Click:Connect(function()
-    local req = (syn and syn.request) or request or http_request or (fluxus and fluxus.request)
-    if req then
-        local success, res = pcall(function()
-            return req({Url = "https://games.roproxy.com/v1/games/" .. tostring(game.PlaceId) .. "/servers/Public?sortOrder=Desc&limit=100", Method = "GET"})
-        end)
+    local success, err = pcall(function()
+        local url = "https://games.roblox.com/v1/games/" .. tostring(game.PlaceId) .. "/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true"
+        local rawData = game:HttpGet(url)
+        local data = HttpService:JSONDecode(rawData)
         
-        if success and res and res.StatusCode == 200 then
-            local data = HttpService:JSONDecode(res.Body)
-            if data and data.data then
-                local validServers = {}
-                for _, server in ipairs(data.data) do
-                    if type(server) == "table" and server.playing < server.maxPlayers - 1 and server.id ~= game.JobId then
-                        table.insert(validServers, server.id)
-                    end
-                end
-                if #validServers > 0 then
-                    local range = math.min(#validServers, 30)
-                    local randomId = validServers[math.random(1, range)]
-                    TeleportService:TeleportToPlaceInstance(game.PlaceId, randomId, player)
-                    return
+        local validServers = {}
+        if data and data.data then
+            for _, server in ipairs(data.data) do
+                if server.id ~= game.JobId and server.playing < server.maxPlayers then
+                    table.insert(validServers, server.id)
                 end
             end
         end
+        
+        if #validServers > 0 then
+            local randomId = validServers[math.random(1, #validServers)]
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, randomId, player)
+        else
+            local proxyUrl = "https://games.roproxy.com/v1/games/" .. tostring(game.PlaceId) .. "/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true"
+            local proxyRaw = game:HttpGet(proxyUrl)
+            local proxyData = HttpService:JSONDecode(proxyRaw)
+            
+            local pValidServers = {}
+            if proxyData and proxyData.data then
+                for _, server in ipairs(proxyData.data) do
+                    if server.id ~= game.JobId and server.playing < server.maxPlayers then
+                        table.insert(pValidServers, server.id)
+                    end
+                end
+            end
+            if #pValidServers > 0 then
+                local randomId = pValidServers[math.random(1, #pValidServers)]
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, randomId, player)
+            else
+                error("No servers found")
+            end
+        end
+    end)
+
+    if not success then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Server Hop",
+            Text = "Erro ao buscar servidor. Tente novamente.",
+            Duration = 3
+        })
     end
-    
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Server Hop",
-        Text = "Não foi possível encontrar um novo servidor.",
-        Duration = 3
-    })
 end))
 
 task.spawn(function()
@@ -284,7 +300,6 @@ local farmMethod = farmMethodsArray[1]
 local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
 local targetMethod = targetMethodsArray[1]
 
--- 🔥 MODOS DE VOTO ATUALIZADOS E ORDENADOS 🔥
 local voteModesDisplay = {
     "Normal",
     "BossRush",
@@ -321,42 +336,8 @@ local voteModeInternal = {
 
 local voteMode = "Normal"
 
-local currentConnection = nil
-local farmDropdownObj, voteDropdownObj = nil, nil
-
-local function checkWeaponExists(nameSearch)
-    if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
-    if player.Backpack then for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
-    return false
-end
-
-local function checkAmmo(weaponType)
-    local function isMatch(t)
-        local name = string.lower(t.Name)
-        if weaponType == "Small Laser" then return string.find(name, "small") and string.find(name, "laser")
-        elseif weaponType == "Big Laser" then return string.find(name, "large") and string.find(name, "laser")
-        elseif weaponType == "Pulse Rifle" then return string.find(name, "pulse")
-        elseif weaponType == "Astro Blaster" then return string.find(name, "astro") and string.find(name, "blaster")
-        end
-        return false
-    end
-    local tool = nil
-    if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and isMatch(t) then tool = t; break end end end
-    if not tool and player.Backpack then for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and isMatch(t) then tool = t; break end end end
-    
-    if tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo") then
-        local maxAmmo = 30
-        if tool.Folder:FindFirstChild("MaxAmmo") then 
-            maxAmmo = tool.Folder.MaxAmmo.Value 
-        else
-            if weaponType == "Astro Blaster" then maxAmmo = 20 end
-        end
-        return tool.Folder.Ammo.Value, maxAmmo
-    end
-    return 0, (weaponType == "Astro Blaster" and 20 or 30)
-end
-
-local function equipWeapon(methodName)
+-- 🔥 FUNÇÃO MESTRA PARA LOCALIZAR ARMAS ESCONDIDAS 🔥
+local function getWeapon(methodName)
     local function isMatch(t)
         local name = string.lower(t.Name)
         if methodName == "Small Laser" then return string.find(name, "small") and string.find(name, "laser")
@@ -367,21 +348,43 @@ local function equipWeapon(methodName)
         return false
     end
     if player.Character then
-        local equipped = player.Character:FindFirstChildWhichIsA("Tool")
-        if equipped and isMatch(equipped) then return equipped end
-        if equipped then equipped.Parent = player.Backpack end
+        for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and isMatch(t) then return t end end
     end
     if player.Backpack then
-        for _, t in ipairs(player.Backpack:GetChildren()) do
-            if t:IsA("Tool") and t:FindFirstChild("Folder") and isMatch(t) then
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    player.Character.Humanoid:EquipTool(t)
-                    return t
-                end
-            end
-        end
+        for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and isMatch(t) then return t end end
     end
     return nil
+end
+
+local function checkWeaponExists(nameSearch)
+    if player.Character then for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
+    if player.Backpack then for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and string.find(string.lower(t.Name), string.lower(nameSearch)) then return true end end end
+    return false
+end
+
+local function checkAmmo(weaponType)
+    local tool = getWeapon(weaponType)
+    if tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo") then
+        local maxAmmo = 30
+        if tool.Folder:FindFirstChild("MaxAmmo") then 
+            maxAmmo = tool.Folder.MaxAmmo.Value 
+        else
+            if weaponType == "Astro Blaster" then maxAmmo = 20 end
+            if weaponType == "Pulse Rifle" then maxAmmo = 30 end
+        end
+        return tool.Folder.Ammo.Value, maxAmmo
+    end
+    return 0, (weaponType == "Astro Blaster" and 20 or 30)
+end
+
+local function equipWeapon(methodName)
+    local t = getWeapon(methodName)
+    if t and t.Parent == player.Backpack then
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid:EquipTool(t)
+        end
+    end
+    return t
 end
 
 local itemQueue, isProcessingQueue = {}, false
@@ -1445,7 +1448,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ABA 6: AUTO SHOP (SHOP LIMPO E EFICIENTE COM MAESTRIA) 🔥
+-- 🔥 ABA 6: AUTO SHOP 
 -- ============================================================
 local autoShopSettings = {}
 
@@ -1586,6 +1589,8 @@ createShopToggle(tabs.AutoShop, "Keycard")
 createShopToggle(tabs.AutoShop, "Legendary Ticket")
 createShopToggle(tabs.AutoShop, "Scorching Ember")
 createShopToggle(tabs.AutoShop, "Toilet Token")
+createShopToggle(tabs.AutoShop, "Titan Speaker Toilet")
+createShopToggle(tabs.AutoShop, "Titan Camera Toilet")
 
 local lastStockCache = {}
 
@@ -1613,7 +1618,11 @@ task.spawn(function()
                     local stockMatch = string.match(stockLbl.Text, "%d+")
                     local currentStock = stockMatch and tonumber(stockMatch) or 0
                     
-                    local setting = autoShopSettings[rawName]
+                    local lookupName = rawName
+                    if rawName == "Titan Speaker toilet" then lookupName = "Titan Speaker Toilet" end
+                    if rawName == "Titan Camera toilet" then lookupName = "Titan Camera Toilet" end
+                    
+                    local setting = autoShopSettings[lookupName]
                     if setting then
                         local lastStock = lastStockCache[rawName] or currentStock
                         
@@ -1937,7 +1946,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 SISTEMA DE VOTO 100% BLINDADO CONTRA DESYNC (FIRE SERVER + UI FIX) 🔥
+-- 🔥 SISTEMA DE VOTO 100% BLINDADO CONTRA DESYNC 🔥
 -- ============================================================
 local voteConfirmed = false
 
@@ -2078,7 +2087,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- LÓGICA DE INTERACTION HUB (COM BLINDAGEM PCALL)
+-- LÓGICA DE INTERACTION HUB
 -- ============================================================
 task.spawn(function()
     while true do
@@ -2123,7 +2132,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 ANTI AFK ZONE & STUCK FAILSAFE
+-- 🔥 ANTI AFK ZONE & FAILSAFE
 -- ============================================================
 addConn(player.Idled:Connect(function()
     if antiAfkAtivo then
@@ -2167,7 +2176,6 @@ task.spawn(function()
     end
 end)
 
--- 🔥 NOVO FAILSAFE DO ANTI-AFK (TELA PRESA NA ARENA) 🔥
 task.spawn(function()
     while true do
         task.wait(1)
@@ -2175,24 +2183,24 @@ task.spawn(function()
         if antiAfkAtivo then
             local char = player.Character
             local hrp = char and char:FindFirstChild("HumanoidRootPart")
-            -- Se a tela SelectCharacter estiver aberta por 60s+ E o jogador estiver na arena (Y > -100)
             if selectCharTime >= 60 and hrp and hrp.Position.Y > -100 then
                 pcall(function()
                     hrp.Velocity = Vector3.new(0,0,0)
-                    hrp.CFrame = CFrame.new(611, -468, 529) -- Teleporte único pro Lobby
+                    hrp.CFrame = CFrame.new(611, -468, 529) 
                 end)
-                task.wait(5) -- Espera um pouco pra não floodar o teleporte caso a tela demore a sumir
+                task.wait(5) 
             end
         end
     end
 end)
 
 -- ============================================================
--- 🔥 CORE AUTO FARM
+-- 🔥 CORE AUTO FARM (O CÓDIGO SUPREMO V20.0!)
 -- ============================================================
 local currentConnection = nil
 local isShootingRifle = false
 local isReloadingRifle = false
+local singleReloadStartTime = 0 
 local lastTapTime = 0
 local lastCombatMethod = ""
 
@@ -2200,32 +2208,95 @@ local knownEnemiesCache = setmetatable({}, {__mode = "k"})
 local knownAlliesCache = setmetatable({}, {__mode = "k"})
 local lastAllyCheckTime = setmetatable({}, {__mode = "k"})
 
+_G.LastPRAmmo = _G.LastPRAmmo or -1
+_G.LastABAmmo = _G.LastABAmmo or -1
+_G.LastPRChange = _G.LastPRChange or tick()
+_G.LastABChange = _G.LastABChange or tick()
+_G.LastSingleAmmo = _G.LastSingleAmmo or -1
+_G.LastSingleChange = _G.LastSingleChange or tick()
+
+local function getWeapon(methodName)
+    local function isMatch(t)
+        local name = string.lower(t.Name)
+        if methodName == "Small Laser" then return string.find(name, "small") and string.find(name, "laser")
+        elseif methodName == "Big Laser" then return (string.find(name, "large") or string.find(name, "big")) and string.find(name, "laser")
+        elseif methodName == "Pulse Rifle" then return string.find(name, "pulse")
+        elseif methodName == "Astro Blaster" then return string.find(name, "astro") and string.find(name, "blaster")
+        end
+        return false
+    end
+    if player.Character then
+        for _, t in ipairs(player.Character:GetChildren()) do if t:IsA("Tool") and isMatch(t) then return t end end
+    end
+    if player.Backpack then
+        for _, t in ipairs(player.Backpack:GetChildren()) do if t:IsA("Tool") and isMatch(t) then return t end end
+    end
+    return nil
+end
+
+local function checkAmmo(weaponType)
+    local tool = getWeapon(weaponType)
+    if tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo") then
+        local maxAmmo = 30
+        if tool.Folder:FindFirstChild("MaxAmmo") then 
+            maxAmmo = tool.Folder.MaxAmmo.Value 
+        else
+            if weaponType == "Astro Blaster" then maxAmmo = 20 end
+            if weaponType == "Pulse Rifle" then maxAmmo = 30 end
+        end
+        return tool.Folder.Ammo.Value, maxAmmo
+    end
+    return 0, (weaponType == "Astro Blaster" and 20 or 30)
+end
+
+local function equipWeapon(methodName)
+    local t = getWeapon(methodName)
+    if t and t.Parent == player.Backpack then
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid:EquipTool(t)
+        end
+    end
+    return t
+end
+
 task.spawn(function()
     while true do
         task.wait(0.05)
         if not _G.DropScriptRunning then break end
         
+        local prAmmo, prMax = checkAmmo("Pulse Rifle")
+        local abAmmo, abMax = checkAmmo("Astro Blaster")
+        if prMax == 0 then prMax = 30 end
+        if abMax == 0 or abMax == 30 then abMax = 20 end
+        
+        if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
+        if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
+        
+        local prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
+        local abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
+
         local activeCombatMethod = farmMethod
         if farmMethod == "Pulse Rifle + Small Laser" then
-            local prAmmo, prMax = checkAmmo("Pulse Rifle")
-            if prAmmo <= 0 then _G.PR_Reloading = true elseif prAmmo >= prMax then _G.PR_Reloading = false end
+            if prAmmo <= 0 then 
+                _G.PR_Reloading = true 
+            elseif _G.PR_Reloading then
+                if prAmmo >= prMax or prStuck then
+                    _G.PR_Reloading = false
+                end
+            end
             activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+            
         elseif farmMethod == "Pulse Rifle + Astro Blaster" then
-            local prAmmo, prMax = checkAmmo("Pulse Rifle")
-            local abAmmo, abMax = checkAmmo("Astro Blaster")
-            if prMax == 0 then prMax = 30 end
-            if abMax == 0 or abMax == 30 then abMax = 20 end
-
             if not _G.DualState then _G.DualState = "Waiting_Pulse" end
 
             if _G.DualState == "Shooting_Pulse" then
                 if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
             elseif _G.DualState == "Waiting_Pulse" then
-                if prAmmo >= prMax then _G.DualState = "Shooting_Pulse" end
+                if prAmmo >= prMax or prStuck then _G.DualState = "Shooting_Pulse" end
             elseif _G.DualState == "Shooting_Astro" then
                 if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
             elseif _G.DualState == "Waiting_Astro" then
-                if abAmmo >= abMax then _G.DualState = "Shooting_Astro" end
+                if abAmmo >= abMax or abStuck then _G.DualState = "Shooting_Astro" end
             end
 
             if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
@@ -2435,7 +2506,6 @@ task.spawn(function()
                     combatPos = Vector3.new(math.clamp(rawPos.X, -645, 460), math.clamp(rawPos.Y, -400, 285), math.clamp(rawPos.Z, -515, 460))
                     
                     if player.Character then
-                        local tool = equipWeapon(activeCombatMethod)
                         player.Character:PivotTo(CFrame.new(combatPos))
                         Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, torso.Position - Vector3.new(0, 0.5, 0))
                     end
@@ -2443,26 +2513,38 @@ task.spawn(function()
             end))
 
             repeat 
-                if farmMethod == "Pulse Rifle + Small Laser" then
-                    local prAmmo, prMax = checkAmmo("Pulse Rifle")
-                    if prAmmo <= 0 then _G.PR_Reloading = true elseif prAmmo >= prMax then _G.PR_Reloading = false end
-                    activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
-                elseif farmMethod == "Pulse Rifle + Astro Blaster" then
-                    local prAmmo, prMax = checkAmmo("Pulse Rifle")
-                    local abAmmo, abMax = checkAmmo("Astro Blaster")
-                    if prMax == 0 then prMax = 30 end
-                    if abMax == 0 or abMax == 30 then abMax = 20 end 
+                prAmmo, prMax = checkAmmo("Pulse Rifle")
+                abAmmo, abMax = checkAmmo("Astro Blaster")
+                if prMax == 0 then prMax = 30 end
+                if abMax == 0 or abMax == 30 then abMax = 20 end
 
+                if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
+                if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
+                
+                prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
+                abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
+
+                if farmMethod == "Pulse Rifle + Small Laser" then
+                    if prAmmo <= 0 then 
+                        _G.PR_Reloading = true 
+                    elseif _G.PR_Reloading then
+                        if prAmmo >= prMax or prStuck then
+                            _G.PR_Reloading = false
+                        end
+                    end
+                    activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+                    
+                elseif farmMethod == "Pulse Rifle + Astro Blaster" then
                     if not _G.DualState then _G.DualState = "Waiting_Pulse" end
 
                     if _G.DualState == "Shooting_Pulse" then
                         if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
                     elseif _G.DualState == "Waiting_Pulse" then
-                        if prAmmo >= prMax then _G.DualState = "Shooting_Pulse" end
+                        if prAmmo >= prMax or prStuck then _G.DualState = "Shooting_Pulse" end
                     elseif _G.DualState == "Shooting_Astro" then
                         if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
                     elseif _G.DualState == "Waiting_Astro" then
-                        if abAmmo >= abMax then _G.DualState = "Shooting_Astro" end
+                        if abAmmo >= abMax or abStuck then _G.DualState = "Shooting_Astro" end
                     end
 
                     if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
@@ -2487,6 +2569,8 @@ task.spawn(function()
                 end
 
                 if activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" then
+                    
+                    -- 🔥 SEMPRE EQUIPA A ARMA PARA FORÇAR O SERVIDOR A RECARREGAR 🔥
                     local tool = equipWeapon(activeCombatMethod)
                     local ammoNode = tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo")
                     local vp = Workspace.CurrentCamera.ViewportSize
@@ -2499,21 +2583,30 @@ task.spawn(function()
                             maxAmmo = maxAmmoNode.Value 
                         else
                             if activeCombatMethod == "Astro Blaster" then maxAmmo = 20 end
+                            if activeCombatMethod == "Pulse Rifle" then maxAmmo = 30 end
                         end
 
-                        if ammoNode.Value <= 0 then
-                            isReloadingRifle = true
-                            if isShootingRifle then 
-                                isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
-                                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                                    player.Character.Humanoid:UnequipTools()
+                        local currentAmmoVal = ammoNode.Value
+                        if _G.LastSingleAmmo ~= currentAmmoVal then 
+                            _G.LastSingleAmmo = currentAmmoVal 
+                            _G.LastSingleChange = tick() 
+                        end
+                        local singleStuck = (currentAmmoVal > 0) and (tick() - (_G.LastSingleChange or 0) > 1.5)
+
+                        if currentAmmoVal <= 0 then
+                            if not isReloadingRifle then
+                                isReloadingRifle = true
+                                if isShootingRifle then 
+                                    isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
                                 end
                             end
-                        elseif isReloadingRifle and ammoNode.Value >= maxAmmo then
-                            isReloadingRifle = false
+                        elseif isReloadingRifle then
+                            if currentAmmoVal >= maxAmmo or singleStuck then
+                                isReloadingRifle = false
+                            end
                         end
 
-                        if not isReloadingRifle and ammoNode.Value > 0 then
+                        if not isReloadingRifle and currentAmmoVal > 0 then
                             VIM:SendMouseMoveEvent(aimX, aimY, game) 
                             
                             if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" or (farmMethod == "Pulse Rifle + Astro Blaster" and activeCombatMethod == "Pulse Rifle") then
@@ -2536,17 +2629,11 @@ task.spawn(function()
                         else
                             if isShootingRifle then 
                                 isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
-                                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                                    player.Character.Humanoid:UnequipTools()
-                                end
                             end
                         end
                     else
                         if isShootingRifle then 
                             isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
-                            if player.Character and player.Character:FindFirstChild("Humanoid") then
-                                player.Character.Humanoid:UnequipTools()
-                            end
                         end
                     end
                 else
@@ -2707,4 +2794,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ V19.5 — O CÓDIGO SUPREMO! Failsafe de 60s do SelectCharacter adicionado na função Anti-AFK.")
+print("✅ V20.0 — AUTO FARM INTOCÁVEL! Recarga perfeitamente sincronizada e máquina mortífera online!")
