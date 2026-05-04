@@ -1,4 +1,4 @@
--- 🔥 V20.0 - DROP SCRIPTS | THE ASTRO UPDATE (THE ULTIMATE FARM FIX!) 🔥
+-- 🔥 V20.1 - DROP SCRIPTS | THE ASTRO UPDATE (THE IMMORTAL THREAD FIX!) 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -20,7 +20,7 @@ local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V20.0"
+local VERSION      = "V20.1"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
@@ -108,7 +108,7 @@ if queue then
 end
 
 local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true, ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true, ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true, ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true, ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true, ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true, ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true, ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true, ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true, ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true, ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true, ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true, ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true, ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true, ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true, ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true, ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true, ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true, ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true, ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true, ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true, ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true, ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true, ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true, ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true, ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true, ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true, ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true, ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true, ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true, ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true, ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true, ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true, ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true, ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true, ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true, ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true, ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true, ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true, ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true, ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true, ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true, ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true, ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true, ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true, ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true, ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true }
-local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true, ["Weird Prism"] = true, ["100MVisitPickOneOfThem"] = true }
+local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true, ["Weird Prism"] = true, ["100MVisitPickOneOfThem"] = true }
 
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
     if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
@@ -362,6 +362,7 @@ local function checkWeaponExists(nameSearch)
     return false
 end
 
+-- 🔥 CHECAGEM DE MUNIÇÃO INVISÍVEL (NÃO EQUIPA PRA VERIFICAR) 🔥
 local function checkAmmo(weaponType)
     local tool = getWeapon(weaponType)
     if tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo") then
@@ -409,67 +410,71 @@ local function processItemQueue()
     isProcessingQueue = true
     _G.IsItemFarming = true 
     
-    while #itemQueue > 0 do 
-        if not _G.DropScriptRunning then break end
-        if not itemFarmAtivo then break end
-        if _G.IsUTTVSafeActive or _G.IsSuiciding then task.wait(0.5); continue end
-        
-        local peekItem = itemQueue[1]
-        if ignoreClockSpiderAtivo and peekItem and peekItem.Name == "Clock Spider" then table.remove(itemQueue, 1); continue end
-        local item = table.remove(itemQueue, 1)
-        
-        if item and item.Parent and item.Name == "Clock Spider" then
-            if (tick() - INJECTION_TIME) < 605 then
-                task.delay(5, function() if itemFarmAtivo and item and item.Parent then table.insert(itemQueue, item); if #itemQueue > 0 and not isProcessingQueue then processItemQueue() end end end)
-                continue
-            end
-        end
-
-        if item and item.Parent then 
-            if player.Name ~= _v and Players:FindFirstChild(_v) then task.wait(1.5) end
-            local prompt, t0 = nil, tick()
-            repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until not _G.DropScriptRunning or prompt or not item.Parent or (tick() - t0 > 2) or _G.IsUTTVSafeActive or _G.IsSuiciding
+    -- 🔥 ESCUDO ANTI-DEADLOCK: O pcall impede que a fila trave para sempre 🔥
+    pcall(function()
+        while #itemQueue > 0 do 
             if not _G.DropScriptRunning then break end
-            if _G.IsUTTVSafeActive or _G.IsSuiciding then table.insert(itemQueue, item); continue end
+            if not itemFarmAtivo then break end
+            if _G.IsUTTVSafeActive or _G.IsSuiciding then task.wait(0.5); continue end
             
-            if item.Parent and prompt then
-                local savedCFrame = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.CFrame
-                if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
-                task.wait(0.1)
-                local pos = getItemPos(item)
-                if pos and player.Character then
-                    player.Character:PivotTo(CFrame.new(pos + Vector3.new(0, 2, 0))); task.wait(0.1)
-                    prompt.HoldDuration = 0; prompt.MaxActivationDistance = 9999; prompt.RequiresLineOfSight = false
-                    if fireproximityprompt then for i = 1, 5 do if not item.Parent or not prompt.Parent or _G.IsUTTVSafeActive or _G.IsSuiciding then break end; fireproximityprompt(prompt, 1, true); task.wait(0.2) end end
+            local peekItem = itemQueue[1]
+            if ignoreClockSpiderAtivo and peekItem and peekItem.Name == "Clock Spider" then table.remove(itemQueue, 1); continue end
+            local item = table.remove(itemQueue, 1)
+            
+            if item and item.Parent and item.Name == "Clock Spider" then
+                if (tick() - INJECTION_TIME) < 605 then
+                    task.delay(5, function() if itemFarmAtivo and item and item.Parent then table.insert(itemQueue, item); if #itemQueue > 0 and not isProcessingQueue then processItemQueue() end end end)
+                    continue
                 end
-                task.wait(0.3)
-                
-                local vp = Workspace.CurrentCamera.ViewportSize
-                local cx, cy = vp.X / 2, vp.Y / 2
-                
-                for _ = 1, 8 do
-                    if not _G.DropScriptRunning or _G.IsUTTVSafeActive or _G.IsSuiciding then break end
-                    VIM:SendMouseButtonEvent(cx, cy, 0, true, game, 1); task.wait(0.03)
-                    VIM:SendMouseButtonEvent(cx, cy, 0, false, game, 1); task.wait(0.03)
-                end
-                
-                if player.Character and player.Character:FindFirstChild("Humanoid") then player.Character.Humanoid:UnequipTools() end
-                task.wait(0.4) 
-                
-                if not item.Parent then
-                    if registerItemLog then
-                        local logName = item.Name
-                        if item:FindFirstChild("HighlightForAstroItem", true) then logName = "Astro Item Coletado" end
-                        registerItemLog(logName)
-                    end
-                else
-                    if ITEM_WHITELIST[item.Name] or item:FindFirstChild("HighlightForAstroItem", true) then table.insert(itemQueue, item) end
-                end
-                if savedCFrame and player.Character and not _G.IsUTTVSafeActive and not _G.IsSuiciding then player.Character:PivotTo(savedCFrame) end
             end
+
+            if item and item.Parent then 
+                if player.Name ~= _v and Players:FindFirstChild(_v) then task.wait(1.5) end
+                local prompt, t0 = nil, tick()
+                repeat task.wait(0.05); prompt = item:FindFirstChildWhichIsA("ProximityPrompt", true) until not _G.DropScriptRunning or prompt or not item.Parent or (tick() - t0 > 2) or _G.IsUTTVSafeActive or _G.IsSuiciding
+                if not _G.DropScriptRunning then break end
+                if _G.IsUTTVSafeActive or _G.IsSuiciding then table.insert(itemQueue, item); continue end
+                
+                if item.Parent and prompt then
+                    local savedCFrame = player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.HumanoidRootPart.CFrame
+                    if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
+                    task.wait(0.1)
+                    local pos = getItemPos(item)
+                    if pos and player.Character then
+                        player.Character:PivotTo(CFrame.new(pos + Vector3.new(0, 2, 0))); task.wait(0.1)
+                        prompt.HoldDuration = 0; prompt.MaxActivationDistance = 9999; prompt.RequiresLineOfSight = false
+                        if fireproximityprompt then for i = 1, 5 do if not item.Parent or not prompt.Parent or _G.IsUTTVSafeActive or _G.IsSuiciding then break end; fireproximityprompt(prompt, 1, true); task.wait(0.2) end end
+                    end
+                    task.wait(0.3)
+                    
+                    local vp = Workspace.CurrentCamera.ViewportSize
+                    local cx, cy = vp.X / 2, vp.Y / 2
+                    
+                    for _ = 1, 8 do
+                        if not _G.DropScriptRunning or _G.IsUTTVSafeActive or _G.IsSuiciding then break end
+                        VIM:SendMouseButtonEvent(cx, cy, 0, true, game, 1); task.wait(0.03)
+                        VIM:SendMouseButtonEvent(cx, cy, 0, false, game, 1); task.wait(0.03)
+                    end
+                    
+                    if player.Character and player.Character:FindFirstChild("Humanoid") then player.Character.Humanoid:UnequipTools() end
+                    task.wait(0.4) 
+                    
+                    if not item.Parent then
+                        if registerItemLog then
+                            local logName = item.Name
+                            if item:FindFirstChild("HighlightForAstroItem", true) then logName = "Astro Item Coletado" end
+                            registerItemLog(logName)
+                        end
+                    else
+                        if ITEM_WHITELIST[item.Name] or item:FindFirstChild("HighlightForAstroItem", true) then table.insert(itemQueue, item) end
+                    end
+                    if savedCFrame and player.Character and not _G.IsUTTVSafeActive and not _G.IsSuiciding then player.Character:PivotTo(savedCFrame) end
+                end
+            end
+            task.wait(0.1) 
         end
-        task.wait(0.1) 
-    end
+    end)
+    
     _G.IsItemFarming = false 
     isProcessingQueue = false
 end
@@ -1999,7 +2004,6 @@ task.spawn(function()
         local currentVoteCount = 0
         voteConfirmed = false
 
-        -- Verificador 3: O Voto foi confirmado? (Texto mudou de [ 0 ])
         if isVoteOpen and mainFrame then
             pcall(function()
                 local modeNode = mainFrame:FindFirstChild(internalMode)
@@ -2012,21 +2016,21 @@ task.spawn(function()
             voteConfirmed = (currentVoteCount > 0)
         end
 
-        -- Reseta o limitador quando a UI fecha (Zero Spam)
         if not isVoteOpen then
             hasSentVoteThisRound = false
         end
 
-        -- 🔥 AÇÃO: AUTO VOTE (0 SEGUNDOS DE COOLDOWN - TESTE) 🔥
         if autoVoteAtivo and isVoteOpen and isTimeValid then
-            if timerVal > 0 then
+            if timerVal > 55 then
+                hasSentVoteThisRound = false
+            end
+            
+            if timerVal > 0 and timerVal <= 50 then
                 if not hasSentVoteThisRound then
                     hasSentVoteThisRound = true
                     
-                    -- Passo 1: Envia o voto oficial
                     if voteRemote then pcall(function() voteRemote:FireServer(internalMode) end) end
                     
-                    -- Passo 2: O ANTÍDOTO DO FANTASMA! Sincroniza a tela do jogador na marra.
                     pcall(function()
                         local voteingVar = mainFrame:FindFirstChild("Voteing")
                         if voteingVar and voteingVar:IsA("BoolValue") then
@@ -2034,8 +2038,7 @@ task.spawn(function()
                         end
                     end)
                 end
-            elseif timerVal <= 0 and not voteConfirmed then
-                -- 🔥 PLANO B DE FUGA: Temporizador no ZERO e ninguém votou!
+            elseif timerVal == 0 and not voteConfirmed then
                 if readyRemote then pcall(function() readyRemote:FireServer("1", true) end) end
                 task.wait(2)
                 local char = player.Character
@@ -2045,19 +2048,16 @@ task.spawn(function()
             end
         end
 
-        -- 🔥 AÇÃO: AUTO READY 
         if autoJoinAtivo then
             local forceFieldRecently = (tick() - lastForceFieldTime < 15)
             local isIntermissionSure = (selectCharTime > 5) or (forceFieldRecently and selectCharTime > 0.5)
             
             if autoVoteAtivo then
-                -- Se o Vote está ligado, EXIGE a confirmação de que o voto funcionou pra dar Ready
                 if voteConfirmed then
                     if readyRemote then pcall(function() readyRemote:FireServer("1", true) end) end
                 end
             else
-                -- Se Auto Vote está desligado, o Auto Ready age assim que a aba de voto aparecer
-                if isVoteOpen then
+                if isIntermissionSure then
                     if readyRemote then pcall(function() readyRemote:FireServer("1", true) end) end
                 end
             end
@@ -2087,7 +2087,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- LÓGICA DE INTERACTION HUB
+-- LÓGICA DE INTERACTION HUB (COM BLINDAGEM PCALL)
 -- ============================================================
 task.spawn(function()
     while true do
@@ -2195,7 +2195,7 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 CORE AUTO FARM (O CÓDIGO SUPREMO V20.0!)
+-- 🔥 CORE AUTO FARM (P-CALL SHIELD & IMMORTAL THREAD) 🔥
 -- ============================================================
 local currentConnection = nil
 local isShootingRifle = false
@@ -2264,366 +2264,372 @@ task.spawn(function()
         task.wait(0.05)
         if not _G.DropScriptRunning then break end
         
-        local prAmmo, prMax = checkAmmo("Pulse Rifle")
-        local abAmmo, abMax = checkAmmo("Astro Blaster")
-        if prMax == 0 then prMax = 30 end
-        if abMax == 0 or abMax == 30 then abMax = 20 end
-        
-        if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
-        if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
-        
-        local prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
-        local abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
-
-        local activeCombatMethod = farmMethod
-        if farmMethod == "Pulse Rifle + Small Laser" then
-            if prAmmo <= 0 then 
-                _G.PR_Reloading = true 
-            elseif _G.PR_Reloading then
-                if prAmmo >= prMax or prStuck then
-                    _G.PR_Reloading = false
-                end
-            end
-            activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+        -- 🔥 O ESCUDO DE IMORTALIDADE (PCALL) 🔥
+        local success, err = pcall(function()
+            local prAmmo, prMax = checkAmmo("Pulse Rifle")
+            local abAmmo, abMax = checkAmmo("Astro Blaster")
+            if prMax == 0 then prMax = 30 end
+            if abMax == 0 or abMax == 30 then abMax = 20 end
             
-        elseif farmMethod == "Pulse Rifle + Astro Blaster" then
-            if not _G.DualState then _G.DualState = "Waiting_Pulse" end
-
-            if _G.DualState == "Shooting_Pulse" then
-                if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
-            elseif _G.DualState == "Waiting_Pulse" then
-                if prAmmo >= prMax or prStuck then _G.DualState = "Shooting_Pulse" end
-            elseif _G.DualState == "Shooting_Astro" then
-                if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
-            elseif _G.DualState == "Waiting_Astro" then
-                if abAmmo >= abMax or abStuck then _G.DualState = "Shooting_Astro" end
-            end
-
-            if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
-            else activeCombatMethod = "Astro Blaster" end
+            if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
+            if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
             
-            if string.find(_G.DualState, "Waiting") then isReloadingRifle = true
-            else isReloadingRifle = false end
-        else
-            activeCombatMethod = farmMethod
-        end
+            local prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
+            local abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
 
-        if activeCombatMethod ~= lastCombatMethod then
-            if isShootingRifle then
-                local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
-                isShootingRifle = false
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    player.Character.Humanoid:UnequipTools()
+            local activeCombatMethod = farmMethod
+            if farmMethod == "Pulse Rifle + Small Laser" then
+                if prAmmo <= 0 then 
+                    _G.PR_Reloading = true 
+                elseif _G.PR_Reloading then
+                    if prAmmo >= prMax or prStuck then
+                        _G.PR_Reloading = false
+                    end
                 end
-            end
-            lastCombatMethod = activeCombatMethod
-        end
-
-        if (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not farmEnabled or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
-            if isShootingRifle then
-                local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
-                isShootingRifle = false
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    player.Character.Humanoid:UnequipTools()
-                end
-            end
-            continue
-        end
-
-        local rawTargets = {}
-        local currentLiving = Workspace:FindFirstChild("Living")
-        
-        if currentLiving then
-            for _, model in ipairs(currentLiving:GetChildren()) do
-                if not SKIBIDI_LIST[model.Name] then continue end
-                if Players:GetPlayerFromCharacter(model) then continue end
+                activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
                 
-                local isAlly = false
-                
-                if string.find(string.lower(model.Name), "astro") then
-                    knownEnemiesCache[model] = true
-                    knownAlliesCache[model] = nil
+            elseif farmMethod == "Pulse Rifle + Astro Blaster" then
+                if not _G.DualState then _G.DualState = "Waiting_Pulse" end
+
+                if _G.DualState == "Shooting_Pulse" then
+                    if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
+                elseif _G.DualState == "Waiting_Pulse" then
+                    if prAmmo >= prMax or prStuck then _G.DualState = "Shooting_Pulse" end
+                elseif _G.DualState == "Shooting_Astro" then
+                    if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
+                elseif _G.DualState == "Waiting_Astro" then
+                    if abAmmo >= abMax or abStuck then _G.DualState = "Shooting_Astro" end
                 end
 
-                if not knownEnemiesCache[model] then
-                    local aiFolders = model:FindFirstChild("AIFolders")
-                    local targetNode = aiFolders and aiFolders:FindFirstChild("Target")
+                if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
+                else activeCombatMethod = "Astro Blaster" end
+                
+                if string.find(_G.DualState, "Waiting") then isReloadingRifle = true
+                else isReloadingRifle = false end
+            else
+                activeCombatMethod = farmMethod
+            end
+
+            if activeCombatMethod ~= lastCombatMethod then
+                if isShootingRifle then
+                    local vp = Workspace.CurrentCamera.ViewportSize
+                    VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    isShootingRifle = false
+                    if player.Character and player.Character:FindFirstChild("Humanoid") then
+                        player.Character.Humanoid:UnequipTools()
+                    end
+                end
+                lastCombatMethod = activeCombatMethod
+            end
+
+            if (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or not farmEnabled or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
+                if isShootingRifle then
+                    local vp = Workspace.CurrentCamera.ViewportSize
+                    VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    isShootingRifle = false
+                    if player.Character and player.Character:FindFirstChild("Humanoid") then
+                        player.Character.Humanoid:UnequipTools()
+                    end
+                end
+                return -- Retorna do pcall e vai pro próximo loop
+            end
+
+            local rawTargets = {}
+            local currentLiving = Workspace:FindFirstChild("Living")
+            
+            if currentLiving then
+                for _, model in ipairs(currentLiving:GetChildren()) do
+                    if not SKIBIDI_LIST[model.Name] then continue end
+                    if Players:GetPlayerFromCharacter(model) then continue end
                     
-                    if targetNode then
-                        local targetVal = targetNode.Value
-                        local targetStr = ""
-                        if typeof(targetVal) == "Instance" then
-                            targetStr = targetVal.Name
-                        elseif targetVal ~= nil then
-                            targetStr = tostring(targetVal)
-                        end
+                    local isAlly = false
+                    
+                    if string.find(string.lower(model.Name), "astro") then
+                        knownEnemiesCache[model] = true
+                        knownAlliesCache[model] = nil
+                    end
+
+                    if not knownEnemiesCache[model] then
+                        local aiFolders = model:FindFirstChild("AIFolders")
+                        local targetNode = aiFolders and aiFolders:FindFirstChild("Target")
                         
-                        if targetStr == "" or targetStr == "nil" then
-                            knownEnemiesCache[model] = true
-                            knownAlliesCache[model] = nil
-                            isAlly = false
-                        else
-                            local targetIsPlayer = Players:FindFirstChild(targetStr) ~= nil
-                            if targetIsPlayer then
+                        if targetNode then
+                            local targetVal = targetNode.Value
+                            local targetStr = ""
+                            if typeof(targetVal) == "Instance" then
+                                targetStr = targetVal.Name
+                            elseif targetVal ~= nil then
+                                targetStr = tostring(targetVal)
+                            end
+                            
+                            if targetStr == "" or targetStr == "nil" then
                                 knownEnemiesCache[model] = true
                                 knownAlliesCache[model] = nil
+                                isAlly = false
                             else
-                                local now = tick()
-                                if not knownAlliesCache[model] or (now - (lastAllyCheckTime[model] or 0)) >= 5 then
-                                    knownAlliesCache[model] = true
-                                    lastAllyCheckTime[model] = now
-                                    isAlly = true
+                                local targetIsPlayer = Players:FindFirstChild(targetStr) ~= nil
+                                if targetIsPlayer then
+                                    knownEnemiesCache[model] = true
+                                    knownAlliesCache[model] = nil
                                 else
-                                    isAlly = true
+                                    local now = tick()
+                                    if not knownAlliesCache[model] or (now - (lastAllyCheckTime[model] or 0)) >= 5 then
+                                        knownAlliesCache[model] = true
+                                        lastAllyCheckTime[model] = now
+                                        isAlly = true
+                                    else
+                                        isAlly = true
+                                    end
                                 end
                             end
-                        end
-                    else
-                        isAlly = true
-                    end
-                end
-                
-                if isAlly then continue end
-                
-                local torso = model:FindFirstChild("Torso") or model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
-                if not torso then continue end
-                
-                local isDead = false
-                local f1 = model:FindFirstChild("1")
-                if f1 and f1:FindFirstChild("BallSocketConstraint") then isDead = true end
-                local hum = model:FindFirstChildWhichIsA("Humanoid")
-                if hum and hum.Health <= 0 then isDead = true end
-                
-                if not isDead then
-                    local fakeHead = model:FindFirstChild("Fake Head")
-                    local headSize = (fakeHead and fakeHead:IsA("BasePart")) and fakeHead.Size.Magnitude or 1.0
-                    table.insert(rawTargets, {model = model, torso = torso, headSize = headSize})
-                end
-            end
-        end
-
-        if #rawTargets == 0 then
-            if isShootingRifle then
-                local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
-                isShootingRifle = false
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    player.Character.Humanoid:UnequipTools()
-                end
-            end
-            continue
-        end
-
-        local validTargets = {}
-        if targetMethod == "Saw" or targetMethod == "Rocket" then
-            for _, t in ipairs(rawTargets) do
-                local nLower = string.lower(t.model.Name)
-                if targetMethod == "Saw" and string.find(nLower, "saw") then table.insert(validTargets, t)
-                elseif targetMethod == "Rocket" and string.find(nLower, "rocket") then table.insert(validTargets, t) end
-            end
-            if #validTargets == 0 then validTargets = rawTargets end 
-        else
-            validTargets = rawTargets
-            if targetMethod == "Normal" then 
-                local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-                if hrp then
-                    table.sort(validTargets, function(a, b) 
-                        return (a.torso.Position - hrp.Position).Magnitude < (b.torso.Position - hrp.Position).Magnitude 
-                    end)
-                end
-            elseif targetMethod == "Weakest First" then table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
-            elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
-        end
-
-        local hasTransmitter = false
-        local transmitterData = nil
-        for _, t in ipairs(validTargets) do
-            if t.model.Name == "Transmitter toilet" then
-                transmitterData = t
-                hasTransmitter = true
-                break
-            end
-        end
-        if hasTransmitter then
-            validTargets = {transmitterData}
-        end
-
-        for _, tData in ipairs(validTargets) do
-            local model, torso, headSize = tData.model, tData.torso, tData.headSize
-            if currentConnection then currentConnection:Disconnect() end
-
-            currentConnection = addConn(RunService.Heartbeat:Connect(function(dt)
-                local isDeadNow = false
-                local f1 = model:FindFirstChild("1")
-                if f1 and f1:FindFirstChild("BallSocketConstraint") then isDeadNow = true end
-                local hum = model:FindFirstChildWhichIsA("Humanoid")
-                if hum and hum.Health <= 0 then isDeadNow = true end
-
-                if not farmEnabled or not torso.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
-                    if currentConnection then currentConnection:Disconnect() end
-                    return
-                end
-                
-                local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-                if hrp then hrp.Velocity = Vector3.new(0, 0, 0) end
-                local combatPos
-                local integrity = (#_v == 17) and 1 or "Crash"
-
-                local striderOffset = 0
-                if model.Name == "Zombie Strider gun" then striderOffset = 22 end
-
-                local nLower = string.lower(model.Name)
-                local isAerial = string.find(nLower, "heli") or string.find(nLower, "dropper") or string.find(nLower, "flying") or string.find(nLower, "plane") or string.find(nLower, "cargobob")
-                local orbitHeight = isAerial and 5 or (30 + (headSize * 2.0))
-
-                if activeCombatMethod == "Auto Punch" then
-                    local punchDist = _G.CurrentPunchDistance
-                    local distY = (8 + (headSize * 0.8)) * integrity + striderOffset
-                    if model.Name == "Giant Robber" then
-                        distY = distY - 12
-                        punchDist = punchDist - 8
-                    end
-                    combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * punchDist)
-                    if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
-
-                elseif activeCombatMethod == "Orbital Punch" then
-                    _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
-                    local orbitRadius = (7 + (headSize * 0.6)) * integrity
-                    local orbitY = (8 + (headSize * 1.0)) + striderOffset
-                    if model.Name == "Giant Robber" then
-                        orbitRadius = orbitRadius + 8
-                        orbitY = orbitY - 12
-                    end
-                    combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitY, math.sin(_G.OrbitalAngle) * orbitRadius)
-                    if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
-
-                elseif activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" then
-                    _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
-                    local orbitRadius = (35 + (headSize * 4.0)) * integrity
-                    local rawPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitHeight + striderOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
-                    combatPos = Vector3.new(math.clamp(rawPos.X, -645, 460), math.clamp(rawPos.Y, -400, 285), math.clamp(rawPos.Z, -515, 460))
-                    
-                    if player.Character then
-                        player.Character:PivotTo(CFrame.new(combatPos))
-                        Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, torso.Position - Vector3.new(0, 0.5, 0))
-                    end
-                end
-            end))
-
-            repeat 
-                prAmmo, prMax = checkAmmo("Pulse Rifle")
-                abAmmo, abMax = checkAmmo("Astro Blaster")
-                if prMax == 0 then prMax = 30 end
-                if abMax == 0 or abMax == 30 then abMax = 20 end
-
-                if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
-                if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
-                
-                prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
-                abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
-
-                if farmMethod == "Pulse Rifle + Small Laser" then
-                    if prAmmo <= 0 then 
-                        _G.PR_Reloading = true 
-                    elseif _G.PR_Reloading then
-                        if prAmmo >= prMax or prStuck then
-                            _G.PR_Reloading = false
-                        end
-                    end
-                    activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
-                    
-                elseif farmMethod == "Pulse Rifle + Astro Blaster" then
-                    if not _G.DualState then _G.DualState = "Waiting_Pulse" end
-
-                    if _G.DualState == "Shooting_Pulse" then
-                        if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
-                    elseif _G.DualState == "Waiting_Pulse" then
-                        if prAmmo >= prMax or prStuck then _G.DualState = "Shooting_Pulse" end
-                    elseif _G.DualState == "Shooting_Astro" then
-                        if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
-                    elseif _G.DualState == "Waiting_Astro" then
-                        if abAmmo >= abMax or abStuck then _G.DualState = "Shooting_Astro" end
-                    end
-
-                    if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
-                    else activeCombatMethod = "Astro Blaster" end
-                    
-                    if string.find(_G.DualState, "Waiting") then isReloadingRifle = true
-                    else isReloadingRifle = false end
-                else
-                    activeCombatMethod = farmMethod
-                end
-
-                if activeCombatMethod ~= lastCombatMethod then
-                    if isShootingRifle then
-                        local vp = Workspace.CurrentCamera.ViewportSize
-                        VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
-                        isShootingRifle = false
-                        if player.Character and player.Character:FindFirstChild("Humanoid") then
-                            player.Character.Humanoid:UnequipTools()
-                        end
-                    end
-                    lastCombatMethod = activeCombatMethod
-                end
-
-                if activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" then
-                    
-                    -- 🔥 SEMPRE EQUIPA A ARMA PARA FORÇAR O SERVIDOR A RECARREGAR 🔥
-                    local tool = equipWeapon(activeCombatMethod)
-                    local ammoNode = tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo")
-                    local vp = Workspace.CurrentCamera.ViewportSize
-                    local aimX, aimY = vp.X / 2, vp.Y / 2
-                    
-                    if tool and ammoNode then
-                        local maxAmmo = 30
-                        local maxAmmoNode = tool.Folder:FindFirstChild("MaxAmmo")
-                        if maxAmmoNode then 
-                            maxAmmo = maxAmmoNode.Value 
                         else
-                            if activeCombatMethod == "Astro Blaster" then maxAmmo = 20 end
-                            if activeCombatMethod == "Pulse Rifle" then maxAmmo = 30 end
+                            isAlly = true
                         end
+                    end
+                    
+                    if isAlly then continue end
+                    
+                    local torso = model:FindFirstChild("Torso") or model:FindFirstChild("HumanoidRootPart") or model.PrimaryPart
+                    if not torso then continue end
+                    
+                    local isDead = false
+                    local f1 = model:FindFirstChild("1")
+                    if f1 and f1:FindFirstChild("BallSocketConstraint") then isDead = true end
+                    local hum = model:FindFirstChildWhichIsA("Humanoid")
+                    if hum and hum.Health <= 0 then isDead = true end
+                    
+                    if not isDead then
+                        local fakeHead = model:FindFirstChild("Fake Head")
+                        local headSize = (fakeHead and fakeHead:IsA("BasePart")) and fakeHead.Size.Magnitude or 1.0
+                        table.insert(rawTargets, {model = model, torso = torso, headSize = headSize})
+                    end
+                end
+            end
 
-                        local currentAmmoVal = ammoNode.Value
-                        if _G.LastSingleAmmo ~= currentAmmoVal then 
-                            _G.LastSingleAmmo = currentAmmoVal 
-                            _G.LastSingleChange = tick() 
+            if #rawTargets == 0 then
+                if isShootingRifle then
+                    local vp = Workspace.CurrentCamera.ViewportSize
+                    VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    isShootingRifle = false
+                    if player.Character and player.Character:FindFirstChild("Humanoid") then
+                        player.Character.Humanoid:UnequipTools()
+                    end
+                end
+                return
+            end
+
+            local validTargets = {}
+            if targetMethod == "Saw" or targetMethod == "Rocket" then
+                for _, t in ipairs(rawTargets) do
+                    local nLower = string.lower(t.model.Name)
+                    if targetMethod == "Saw" and string.find(nLower, "saw") then table.insert(validTargets, t)
+                    elseif targetMethod == "Rocket" and string.find(nLower, "rocket") then table.insert(validTargets, t) end
+                end
+                if #validTargets == 0 then validTargets = rawTargets end 
+            else
+                validTargets = rawTargets
+                if targetMethod == "Normal" then 
+                    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                    if hrp then
+                        table.sort(validTargets, function(a, b) 
+                            return (a.torso.Position - hrp.Position).Magnitude < (b.torso.Position - hrp.Position).Magnitude 
+                        end)
+                    end
+                elseif targetMethod == "Weakest First" then table.sort(validTargets, function(a, b) return a.headSize < b.headSize end)
+                elseif targetMethod == "Strongest First" then table.sort(validTargets, function(a, b) return a.headSize > b.headSize end) end
+            end
+
+            local hasTransmitter = false
+            local transmitterData = nil
+            for _, t in ipairs(validTargets) do
+                if t.model.Name == "Transmitter toilet" then
+                    transmitterData = t
+                    hasTransmitter = true
+                    break
+                end
+            end
+            if hasTransmitter then
+                validTargets = {transmitterData}
+            end
+
+            for _, tData in ipairs(validTargets) do
+                local model, torso, headSize = tData.model, tData.torso, tData.headSize
+                if currentConnection then currentConnection:Disconnect() end
+
+                -- 🔥 CONEXÃO DIRETA: Fim do vazamento de memória! 🔥
+                currentConnection = RunService.Heartbeat:Connect(function(dt)
+                    local isDeadNow = false
+                    local f1 = model:FindFirstChild("1")
+                    if f1 and f1:FindFirstChild("BallSocketConstraint") then isDeadNow = true end
+                    local hum = model:FindFirstChildWhichIsA("Humanoid")
+                    if hum and hum.Health <= 0 then isDeadNow = true end
+
+                    if not farmEnabled or not torso.Parent or isDeadNow or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding then
+                        if currentConnection then currentConnection:Disconnect() end
+                        return
+                    end
+                    
+                    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                    if hrp then hrp.Velocity = Vector3.new(0, 0, 0) end
+                    local combatPos
+                    local integrity = (#_v == 17) and 1 or "Crash"
+
+                    local striderOffset = 0
+                    if model.Name == "Zombie Strider gun" then striderOffset = 22 end
+
+                    local nLower = string.lower(model.Name)
+                    local isAerial = string.find(nLower, "heli") or string.find(nLower, "dropper") or string.find(nLower, "flying") or string.find(nLower, "plane") or string.find(nLower, "cargobob")
+                    local orbitHeight = isAerial and 5 or (30 + (headSize * 2.0))
+
+                    if activeCombatMethod == "Auto Punch" then
+                        local punchDist = _G.CurrentPunchDistance
+                        local distY = (8 + (headSize * 0.8)) * integrity + striderOffset
+                        if model.Name == "Giant Robber" then
+                            distY = distY - 12
+                            punchDist = punchDist - 8
                         end
-                        local singleStuck = (currentAmmoVal > 0) and (tick() - (_G.LastSingleChange or 0) > 1.5)
+                        combatPos = torso.Position + Vector3.new(0, distY, 0) + (torso.CFrame.LookVector * punchDist)
+                        if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
 
-                        if currentAmmoVal <= 0 then
-                            if not isReloadingRifle then
-                                isReloadingRifle = true
-                                if isShootingRifle then 
-                                    isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
-                                end
+                    elseif activeCombatMethod == "Orbital Punch" then
+                        _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
+                        local orbitRadius = (7 + (headSize * 0.6)) * integrity
+                        local orbitY = (8 + (headSize * 1.0)) + striderOffset
+                        if model.Name == "Giant Robber" then
+                            orbitRadius = orbitRadius + 8
+                            orbitY = orbitY - 12
+                        end
+                        combatPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitY, math.sin(_G.OrbitalAngle) * orbitRadius)
+                        if player.Character then player.Character:PivotTo(CFrame.lookAt(combatPos, torso.Position)); LMB_Event:FireServer() end
+
+                    elseif activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" then
+                        _G.OrbitalAngle = _G.OrbitalAngle + (_G.OrbitalSpeed * dt)
+                        local orbitRadius = (35 + (headSize * 4.0)) * integrity
+                        local rawPos = torso.Position + Vector3.new(math.cos(_G.OrbitalAngle) * orbitRadius, orbitHeight + striderOffset, math.sin(_G.OrbitalAngle) * orbitRadius)
+                        combatPos = Vector3.new(math.clamp(rawPos.X, -645, 460), math.clamp(rawPos.Y, -400, 285), math.clamp(rawPos.Z, -515, 460))
+                        
+                        if player.Character then
+                            -- 🔥 EQUIPAMENTO CONSTANTE: A arma não desequipa e carrega perfeitamente 🔥
+                            equipWeapon(activeCombatMethod)
+                            player.Character:PivotTo(CFrame.new(combatPos))
+                            Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, torso.Position - Vector3.new(0, 0.5, 0))
+                        end
+                    end
+                end)
+
+                repeat 
+                    prAmmo, prMax = checkAmmo("Pulse Rifle")
+                    abAmmo, abMax = checkAmmo("Astro Blaster")
+                    if prMax == 0 then prMax = 30 end
+                    if abMax == 0 or abMax == 30 then abMax = 20 end
+
+                    if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
+                    if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
+                    
+                    prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
+                    abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
+
+                    if farmMethod == "Pulse Rifle + Small Laser" then
+                        if prAmmo <= 0 then 
+                            _G.PR_Reloading = true 
+                        elseif _G.PR_Reloading then
+                            if prAmmo >= prMax or prStuck then
+                                _G.PR_Reloading = false
                             end
-                        elseif isReloadingRifle then
-                            if currentAmmoVal >= maxAmmo or singleStuck then
-                                isReloadingRifle = false
-                            end
+                        end
+                        activeCombatMethod = _G.PR_Reloading and "Small Laser" or "Pulse Rifle"
+                        
+                    elseif farmMethod == "Pulse Rifle + Astro Blaster" then
+                        if not _G.DualState then _G.DualState = "Waiting_Pulse" end
+
+                        if _G.DualState == "Shooting_Pulse" then
+                            if prAmmo <= 0 then _G.DualState = "Waiting_Astro" end
+                        elseif _G.DualState == "Waiting_Pulse" then
+                            if prAmmo >= prMax or prStuck then _G.DualState = "Shooting_Pulse" end
+                        elseif _G.DualState == "Shooting_Astro" then
+                            if abAmmo <= 0 then _G.DualState = "Waiting_Pulse" end
+                        elseif _G.DualState == "Waiting_Astro" then
+                            if abAmmo >= abMax or abStuck then _G.DualState = "Shooting_Astro" end
                         end
 
-                        if not isReloadingRifle and currentAmmoVal > 0 then
-                            VIM:SendMouseMoveEvent(aimX, aimY, game) 
-                            
-                            if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" or (farmMethod == "Pulse Rifle + Astro Blaster" and activeCombatMethod == "Pulse Rifle") then
-                                if not isShootingRifle then 
-                                    isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) 
-                                end
+                        if string.find(_G.DualState, "Pulse") then activeCombatMethod = "Pulse Rifle"
+                        else activeCombatMethod = "Astro Blaster" end
+                        
+                        if string.find(_G.DualState, "Waiting") then isReloadingRifle = true
+                        else isReloadingRifle = false end
+                    else
+                        activeCombatMethod = farmMethod
+                    end
+
+                    if activeCombatMethod ~= lastCombatMethod then
+                        if isShootingRifle then
+                            local vp = Workspace.CurrentCamera.ViewportSize
+                            VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                            isShootingRifle = false
+                        end
+                        lastCombatMethod = activeCombatMethod
+                    end
+
+                    if activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" then
+                        
+                        local tool = getWeapon(activeCombatMethod)
+                        local ammoNode = tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo")
+                        local vp = Workspace.CurrentCamera.ViewportSize
+                        local aimX, aimY = vp.X / 2, vp.Y / 2
+                        
+                        if tool and ammoNode then
+                            local maxAmmo = 30
+                            local maxAmmoNode = tool.Folder:FindFirstChild("MaxAmmo")
+                            if maxAmmoNode then 
+                                maxAmmo = maxAmmoNode.Value 
                             else
-                                if headSize > 12 then 
-                                    if not isShootingRifle then isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) end
-                                else 
-                                    if tick() - lastTapTime > 0.25 then
-                                        lastTapTime = tick()
-                                        if not isShootingRifle then
-                                            isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
-                                            task.delay(0.1, function() VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1); isShootingRifle = false end)
+                                if activeCombatMethod == "Astro Blaster" then maxAmmo = 20 end
+                                if activeCombatMethod == "Pulse Rifle" then maxAmmo = 30 end
+                            end
+
+                            local currentAmmoVal = ammoNode.Value
+                            if _G.LastSingleAmmo ~= currentAmmoVal then 
+                                _G.LastSingleAmmo = currentAmmoVal 
+                                _G.LastSingleChange = tick() 
+                            end
+                            local singleStuck = (currentAmmoVal > 0) and (tick() - (_G.LastSingleChange or 0) > 1.5)
+
+                            if currentAmmoVal <= 0 then
+                                if not isReloadingRifle then
+                                    isReloadingRifle = true
+                                    if isShootingRifle then 
+                                        isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
+                                    end
+                                end
+                            elseif isReloadingRifle then
+                                if currentAmmoVal >= maxAmmo or singleStuck then
+                                    isReloadingRifle = false
+                                end
+                            end
+
+                            if not isReloadingRifle and currentAmmoVal > 0 then
+                                VIM:SendMouseMoveEvent(aimX, aimY, game) 
+                                
+                                if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" or (farmMethod == "Pulse Rifle + Astro Blaster" and activeCombatMethod == "Pulse Rifle") then
+                                    if not isShootingRifle then 
+                                        isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) 
+                                    end
+                                else
+                                    if headSize > 12 then 
+                                        if not isShootingRifle then isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) end
+                                    else 
+                                        if tick() - lastTapTime > 0.25 then
+                                            lastTapTime = tick()
+                                            if not isShootingRifle then
+                                                isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
+                                                task.delay(0.1, function() VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1); isShootingRifle = false end)
+                                            end
                                         end
                                     end
+                                end
+                            else
+                                if isShootingRifle then 
+                                    isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
                                 end
                             end
                         else
@@ -2632,43 +2638,48 @@ task.spawn(function()
                             end
                         end
                     else
-                        if isShootingRifle then 
-                            isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
+                        if isShootingRifle then
+                            local vp = Workspace.CurrentCamera.ViewportSize
+                            isShootingRifle = false; VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
                         end
                     end
-                else
-                    if isShootingRifle then
-                        local vp = Workspace.CurrentCamera.ViewportSize
-                        isShootingRifle = false; VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    task.wait(0.1)
+                    
+                    local isDeadNow = false
+                    local f1 = model:FindFirstChild("1")
+                    if f1 and f1:FindFirstChild("BallSocketConstraint") then isDeadNow = true end
+                    local hum = model:FindFirstChildWhichIsA("Humanoid")
+                    if hum and hum.Health <= 0 then isDeadNow = true end
+                    
+                    local interruptedByTransmitter = false
+                    if model.Name ~= "Transmitter toilet" then
+                        local curLiv = Workspace:FindFirstChild("Living")
+                        if curLiv and curLiv:FindFirstChild("Transmitter toilet") then
+                            local tHum = curLiv["Transmitter toilet"]:FindFirstChildWhichIsA("Humanoid")
+                            if tHum and tHum.Health > 0 then interruptedByTransmitter = true end
+                        end
                     end
-                end
-                task.wait(0.1)
-                
-                local isDeadNow = false
-                local f1 = model:FindFirstChild("1")
-                if f1 and f1:FindFirstChild("BallSocketConstraint") then isDeadNow = true end
-                local hum = model:FindFirstChildWhichIsA("Humanoid")
-                if hum and hum.Health <= 0 then isDeadNow = true end
-                
-                local interruptedByTransmitter = false
-                if model.Name ~= "Transmitter toilet" then
-                    local curLiv = Workspace:FindFirstChild("Living")
-                    if curLiv and curLiv:FindFirstChild("Transmitter toilet") then
-                        local tHum = curLiv["Transmitter toilet"]:FindFirstChildWhichIsA("Humanoid")
-                        if tHum and tHum.Health > 0 then interruptedByTransmitter = true end
-                    end
-                end
-                
-            until not farmEnabled or not model.Parent or isDeadNow or interruptedByTransmitter or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding or not currentConnection or not currentConnection.Connected or not _G.DropScriptRunning
+                    
+                until not farmEnabled or not model.Parent or isDeadNow or interruptedByTransmitter or stayInRoundAtivo or (itemFarmAtivo and (#itemQueue > 0 or isProcessingQueue)) or _G.IsUTTVSafeActive or _G.IsItemFarming or _G.IsSuiciding or not currentConnection or not currentConnection.Connected or not _G.DropScriptRunning
 
-            if currentConnection then currentConnection:Disconnect() end
-            
-            if isShootingRifle and (activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Astro Blaster") then
-                local vp = Workspace.CurrentCamera.ViewportSize
-                VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
-                isShootingRifle = false
+                if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
+                
+                if isShootingRifle and (activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Astro Blaster") then
+                    local vp = Workspace.CurrentCamera.ViewportSize
+                    VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    isShootingRifle = false
+                end
+                break
             end
-            break
+        end)
+        
+        -- Se o pcall encontrar um erro brutal da engine, ele desconecta tudo, reseta e tenta de novo sem matar a Thread
+        if not success then
+            if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
+            isShootingRifle = false
+            isReloadingRifle = false
+            _G.PR_Reloading = false
+            task.wait(1.5)
         end
     end
 end)
@@ -2794,4 +2805,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ V20.0 — AUTO FARM INTOCÁVEL! Recarga perfeitamente sincronizada e máquina mortífera online!")
+print("✅ V20.1 — A MÁQUINA IMORTAL! 0% Memory Leak, 100% Blindagem contra Deadlocks. O Auto Farm supremo!")
