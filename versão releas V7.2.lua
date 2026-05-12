@@ -1,4 +1,4 @@
--- 🔥 V20.1 - DROP SCRIPTS | THE ASTRO UPDATE (THE IMMORTAL THREAD FIX!) 🔥
+-- 🔥 V20.8 - DROP SCRIPTS | THE VIP RESENHA UPDATE 🔥
 
 local Players           = game:GetService("Players")
 local Workspace         = game:GetService("Workspace")
@@ -14,19 +14,188 @@ local HttpService       = game:GetService("HttpService")
 local TeleportService   = game:GetService("TeleportService")
 
 local player    = Players.LocalPlayer
+local mouse     = player:GetMouse()
 local LMB_Event = ReplicatedStorage:WaitForChild("LMB")
 
 local ACCENT       = Color3.fromRGB(60, 130, 255)
 local BG_MAIN      = Color3.fromRGB(15, 15, 15)
 local BG_TOP       = Color3.fromRGB(10, 10, 10)
 local BG_SECONDARY = Color3.fromRGB(22, 22, 22)
-local VERSION      = "V20.1"
+local VERSION      = "V20.8"
 local SCRIPT_NAME  = "Drop Scripts | ST: Blockade Battlefront (" .. VERSION .. ")"
 
 local ICON_ID      = "rbxthumb://type=Asset&id=108155758414038&w=150&h=150"
-local SOUND_ID     = "rbxassetid://4590657391" 
-
 local _v = string.char(97, 78, 84, 79, 78, 89, 111, 86, 73, 90, 105, 110, 104, 111, 57, 56, 48)
+
+-- ============================================================
+-- 🌟 SISTEMA VIP DE BOAS VINDAS (BLOQUEIA O SCRIPT ATÉ ACABAR) 🌟
+-- ============================================================
+math.randomseed(tick())
+
+local vipMessages = {
+    ["butus0531"] = {
+        "Finalmente saiu do War Thunder!?",
+        "Veio ajudar quem dessa vez?",
+        "Tão gordo que quebrou ate o script."
+    },
+    ["RenatopvpBR126"] = {
+        "Eai Renan! O script ta assim pelo seu Gemini.",
+        "Finalmente ta usando meu script."
+    },
+    ["aureliotanoue"] = {
+        "Nem com o melhor script do mundo consegue passar o Glossy.",
+        "Farma bastante dessa vez!",
+        "Não esquece o Anti AFK!"
+    },
+    ["XDcarro"] = {
+        "olha só, o comedor de pussy chegou.",
+        "Bem vindo Sad.",
+        "Não usa em servidor público denovo ein!"
+    },
+    ["miojopvpbra1"] = {
+        "Se Farmar bastante talvez ate passe o Butus. (Obs: ele nem joga)",
+        "Ola Renato!",
+        "Me vende tadala por 5 pila?"
+    },
+    ["pedroencorasado123"] = {
+        "Praticamente esquecido",
+        "O unico capaz de derrotar Glossy chegou!🔥"
+    },
+    [_v] = { 
+        "Ola Glossy, seja bem vindo." 
+    }
+}
+
+-- Pega as mensagens do cara, se não for VIP, manda a padrão
+local myMessages = vipMessages[player.Name] or {"Olá " .. player.DisplayName .. ", seja bem vindo ao script!"}
+local chosenMsg = myMessages[math.random(1, #myMessages)]
+local isFatJoke = (chosenMsg == "Tão gordo que quebrou ate o script.")
+
+-- Calcula o tempo de tela baseado no tamanho do texto (mínimo de 2.5s)
+local displayTime = math.max(2.5, #chosenMsg * 0.08)
+
+local welcomeDone = Instance.new("BindableEvent")
+
+task.spawn(function()
+    local welcomeGui = Instance.new("ScreenGui")
+    welcomeGui.Name = "DropWelcomeMsg"
+    welcomeGui.Parent = player:WaitForChild("PlayerGui")
+    
+    local wFrame = Instance.new("Frame")
+    wFrame.Size = UDim2.new(0, 450, 0, 70) -- CAIXA GIGANTE PRA CABER AS PÉROLAS
+    wFrame.Position = UDim2.new(0.5, -225, 0, -100) -- Escondido lá no teto
+    wFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    wFrame.BackgroundTransparency = 0
+    wFrame.ClipsDescendants = false
+    Instance.new("UICorner", wFrame).CornerRadius = UDim.new(0, 8)
+    
+    local wStroke = Instance.new("UIStroke", wFrame)
+    wStroke.Color = ACCENT
+    wStroke.Thickness = 1.5
+    wFrame.Parent = welcomeGui
+    
+    local wText = Instance.new("TextLabel")
+    wText.Size = UDim2.new(1, 0, 1, 0)
+    wText.BackgroundTransparency = 1
+    wText.Text = chosenMsg
+    wText.TextColor3 = Color3.new(1, 1, 1)
+    wText.Font = Enum.Font.GothamBold
+    wText.TextSize = 17
+    wText.TextWrapped = true
+    wText.Parent = wFrame
+    
+    -- 1. Descida Triunfal com Mola
+    local tIn = TweenService:Create(wFrame, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -225, 0, 50)})
+    tIn:Play()
+    tIn.Completed:Wait()
+    
+    if isFatJoke then
+        -- 🔥 A ANIMAÇÃO DO PESO PESADO 🔥
+        task.wait(1.5) -- Pausa pro cara ler a ofensa e rir
+        
+        -- A caixa cai como uma âncora pro fundo da tela
+        local tFall = TweenService:Create(wFrame, TweenInfo.new(0.35, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {Position = UDim2.new(0.5, -225, 0.85, 0)})
+        tFall:Play()
+        tFall.Completed:Wait()
+        
+        -- BATEU NO CHÃO! Criando o Efeito de Partição!
+        wFrame.BackgroundTransparency = 1
+        wStroke.Transparency = 1
+        wText.TextTransparency = 1
+        
+        -- Metade Esquerda
+        local leftHalf = Instance.new("Frame", welcomeGui)
+        leftHalf.Size = UDim2.new(0, 225, 0, 70)
+        leftHalf.Position = UDim2.new(0.5, -225, 0.85, 0)
+        leftHalf.BackgroundTransparency = 1
+        leftHalf.ClipsDescendants = true
+        
+        local leftContent = wFrame:Clone()
+        leftContent.BackgroundTransparency = 0
+        leftContent.UIStroke.Transparency = 0
+        leftContent.TextLabel.TextTransparency = 0
+        leftContent.Size = UDim2.new(0, 450, 0, 70)
+        leftContent.Position = UDim2.new(0, 0, 0, 0)
+        leftContent.Parent = leftHalf
+        
+        -- Metade Direita
+        local rightHalf = Instance.new("Frame", welcomeGui)
+        rightHalf.Size = UDim2.new(0, 225, 0, 70)
+        rightHalf.Position = UDim2.new(0.5, 0, 0.85, 0)
+        rightHalf.BackgroundTransparency = 1
+        rightHalf.ClipsDescendants = true
+        
+        local rightContent = wFrame:Clone()
+        rightContent.BackgroundTransparency = 0
+        rightContent.UIStroke.Transparency = 0
+        rightContent.TextLabel.TextTransparency = 0
+        rightContent.Size = UDim2.new(0, 450, 0, 70)
+        rightContent.Position = UDim2.new(0, -225, 0, 0)
+        rightContent.Parent = rightHalf
+        
+        -- As duas partes quebram, giram e despencam pro void!
+        TweenService:Create(leftHalf, TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+            Position = UDim2.new(0.5, -300, 1.2, 0), Rotation = -35
+        }):Play()
+        
+        TweenService:Create(rightHalf, TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+            Position = UDim2.new(0.5, 100, 1.2, 0), Rotation = 35
+        }):Play()
+        
+        task.wait(1)
+        welcomeGui:Destroy()
+        welcomeDone:Fire() -- Libera o script principal!
+    else
+        -- Animação Normal (Balanço suave e some rápido)
+        for i = 1, 3 do
+            TweenService:Create(wFrame, TweenInfo.new(0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Rotation = 2}):Play()
+            task.wait(0.08)
+            TweenService:Create(wFrame, TweenInfo.new(0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Rotation = -2}):Play()
+            task.wait(0.08)
+        end
+        TweenService:Create(wFrame, TweenInfo.new(0.08, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Rotation = 0}):Play()
+        
+        task.wait(displayTime) 
+        
+        -- Some rapidinho estilo fantasma
+        TweenService:Create(wFrame, TweenInfo.new(0.25, Enum.EasingStyle.Linear), {BackgroundTransparency = 1, Position = UDim2.new(0.5, -225, 0, 30)}):Play()
+        TweenService:Create(wStroke, TweenInfo.new(0.25, Enum.EasingStyle.Linear), {Transparency = 1}):Play()
+        TweenService:Create(wText, TweenInfo.new(0.25, Enum.EasingStyle.Linear), {TextTransparency = 1}):Play()
+        
+        task.wait(0.3)
+        welcomeGui:Destroy()
+        welcomeDone:Fire() -- Libera o script principal!
+    end
+end)
+
+-- 🛑 O SCRIPT SÓ CONTINUA DEPOIS QUE A ANIMAÇÃO ACABAR 🛑
+welcomeDone.Event:Wait()
+welcomeDone:Destroy()
+
+
+-- ============================================================
+-- 🔥 INICIANDO O SCRIPT SUPREMO V20.8 DEPOIS DAS BOAS VINDAS 🔥
+-- ============================================================
 
 _G.OrbitalAngle = _G.OrbitalAngle or 0
 _G.IsAimbotting = false 
@@ -108,7 +277,7 @@ if queue then
 end
 
 local SKIBIDI_LIST = { ["Acid Arm Helicopter"] = true, ["Acid Rocket Toilet"] = true, ["Agent Mutant"] = true, ["Air Dropper"] = true, ["Armed Helicopter"] = true, ["Armed Soiler Rocket Toilet"] = true, ["Armored Helicopter"] = true, ["Armored laser toilet"] = true, ["Armored Snow Toilet"] = true, ["Astro assilant toilet"] = true, ["Astro Destructor"] = true, ["Astro Detainer"] = true, ["Astro Entrapper"] = true, ["Astro High Impactor"] = true, ["Astro Impactor"] = true, ["Astro Interceptor"] = true, ["Astro Interceptor (Head)"] = true, ["Astro Obliterator"] = true, ["Astro Rocketeer"] = true, ["Astro Rocketeer V.2"] = true, ["Astro Specialist (Gun)"] = true, ["Astro Specialist (Sword)"] = true, ["Astro Strider"] = true, ["Astro Trooper"] = true, ["Attack Helicopter"] = true, ["Attack Strider Laser"] = true, ["Axe Soldier Mutant"] = true, ["Big Acid bomber"] = true, ["Big Gs toilet"] = true, ["Big Gun Toilet"] = true, ["Big Magnet Helicopter"] = true, ["Big police toilet"] = true, ["Big Quad Laser Toilet"] = true, ["Big ST toilet"] = true, ["Big Strider Toilet"] = true, ["Black Head"] = true, ["BomberToilet"] = true, ["Buff Mutant"] = true, ["Camo toilet"] = true, ["Cargo Cleaner toilet"] = true, ["Cargobob Toilet"] = true, ["Catapult Snow Toilet"] = true, ["Christmas Wraith"] = true, ["Creep Toilet"] = true, ["DJ toilet"] = true, ["DJ Toilet"] = true, ["Dual blade toilet"] = true, ["Dual buzzsaw toilet"] = true, ["Elite Astro Obliterator"] = true, ["Explosive jumper"] = true, ["Explosive Plane Toilet"] = true, ["Failure Mutant"] = true, ["Fast Failure Mutant"] = true, ["Flamethrower toilet"] = true, ["Flashlight Toilet"] = true, ["Flying Toilet"] = true, ["flying buzzsaw toilet"] = true, ["Frontline Guard Toilet"] = true, ["G toilet"] = true, ["G-Toilet 2.0"] = true, ["G-Toilet 2.0 [Glass and Eye]"] = true, ["G-Toilet 3.0"] = true, ["G-Toilet 4.0"] = true, ["G-Toilet Decoy"] = true, ["General Toilet"] = true, ["Giant GS toilet"] = true, ["Giant Magnet"] = true, ["Giant Robber"] = true, ["Giant ST toilet"] = true, ["Giant Sweeper Toilet"] = true, ["Ginger Toilet"] = true, ["Gman Rocket Clone"] = true, ["Gs Helicopter"] = true, ["Gs Jetpack toilet"] = true, ["Gs ST toilet"] = true, ["Gun Big Strider Toilet"] = true, ["harpoon police toilet"] = true, ["Heavy Soldier Toilet V1"] = true, ["Heavy Soldier Toilet V2"] = true, ["Helicopter"] = true, ["Hexa Rocket"] = true, ["Horde Toilet"] = true, ["Huge Acid bomber"] = true, ["Huge DJ Toilet"] = true, ["Huge GS toilet"] = true, ["Huge ST toilet"] = true, ["Infected Big Camera man"] = true, ["Infected Camera man"] = true, ["Infected Clock Titan"] = true, ["Infected Large Speaker man"] = true, ["Infected Speaker man"] = true, ["Infected Titan Speaker"] = true, ["Infected Upgrade Titan Speaker"] = true, ["Infected Upgraded Titan Cameraman"] = true, ["Jetpack Creep Toilet"] = true, ["JetpackToilet"] = true, ["Jolly Berserker"] = true, ["Jumper Mutant"] = true, ["Kamikaze Crawler Toilet"] = true, ["L Bomber"] = true, ["Large GS toilet"] = true, ["Large jumper"] = true, ["Large Mutant"] = true, ["Large ST toilet"] = true, ["Laser Clone"] = true, ["Laser Soldier Toilet"] = true, ["Leg Toilet"] = true, ["Loud Speaker toilet"] = true, ["Mafia Toilet"] = true, ["Magnet Helicopter"] = true, ["Malware"] = true, ["Micheal Jackson"] = true, ["Military Toilet"] = true, ["Militant Toilet"] = true, ["MiniBomberToilet"] = true, ["Mutant old"] = true, ["Normal Gun Toilet"] = true, ["Octa Rocket"] = true, ["PoliceToilet"] = true, ["Quad Laser Toilet"] = true, ["Quad Rocket Toilet"] = true, ["Quad saw toilet"] = true, ["Real Scientist Toilet"] = true, ["Rocket bathtub toilet"] = true, ["Rocket Car Toilet"] = true, ["Rocket Giant Robber"] = true, ["Rocket Heli"] = true, ["Rocket Heli v2"] = true, ["Rocket Helicopter"] = true, ["Rocket Strider Toilet"] = true, ["RocketToilet"] = true, ["S bomber"] = true, ["Saint ST toilet"] = true, ["Saw car toilet"] = true, ["Saw Gman Clone"] = true, ["Saw Mutant"] = true, ["Saw Soldier Mutant"] = true, ["Scavenger toilet"] = true, ["Scientist Toilet"] = true, ["Shooter Snow Toilet"] = true, ["SkibidiToilet"] = true, ["Skull Toilet"] = true, ["Small Gun Toilet"] = true, ["Snow Burner"] = true, ["Snow Explosive Jumper"] = true, ["Snow Large Jumper"] = true, ["Snow Soilder Rocket Toilet"] = true, ["SnowToilet[BigV1]"] = true, ["SnowToilet[BigV2]"] = true, ["SnowToilet[Giant]"] = true, ["SnowToilet[HugeV1]"] = true, ["SnowToilet[HugeV2]"] = true, ["SnowToilet[NormalV1]"] = true, ["SnowToilet[NormalV2]"] = true, ["SnowToilet[NormalV3]"] = true, ["Soilder Rocket Toilet"] = true, ["Speaker Snow Toilet"] = true, ["Strider Laser"] = true, ["Strider Laser V2"] = true, ["Strider Penta Laser"] = true, ["Strider Rocket Laser"] = true, ["StriderToilet"] = true, ["Subject 0"] = true, ["Subject Three"] = true, ["Swat Mutant"] = true, ["Transmitter toilet"] = true, ["Triplets toilet"] = true, ["Twinkle Little Crawler"] = true, ["Vacuum toilet"] = true, ["warhead toilet"] = true, ["Z Astro Entrapper"] = true, ["Z UTTV"] = true, ["Zombie Big ST toilet"] = true, ["Zombie Big Strider Toilet"] = true, ["Zombie Camera man"] = true, ["Zombie Dual buzzsaw toilet"] = true, ["Zombie Fast Camera man"] = true, ["Zombie harpoon police toilet"] = true, ["Zombie Huge ST toilet"] = true, ["Zombie Jumper Camera man"] = true, ["Zombie Large ST toilet"] = true, ["Zombie Scientist Toilet"] = true, ["Zombie Skibidi Toilet"] = true, ["Zombie Strider gun"] = true, ["Zombie Tentacle Arm"] = true, ["Zombie Upgraded Titan Speaker"] = true, ["Zombie Vacuum Toilet"] = true }
-local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true, ["Weird Prism"] = true, ["100MVisitPickOneOfThem"] = true }
+local ITEM_WHITELIST = { ["Astro Destructor : Core"] = true, ["Astro Destructor : Gun"] = true, ["Astro Destructor : Laser"] = true, ["Astro High Impactor : Cannon"] = true, ["Astro High Impactor : Laser"] = true, ["Astro Impactor : Cannon"] = true, ["Astro Impactor : Laser"] = true, ["Astro Interceptor : Mask"] = true, ["Astro Interceptor : Spinner"] = true, ["Astro Interceptor : Wing"] = true, ["Astro Obliterator : Gun"] = true, ["Astro Obliterator : Spinner"] = true, ["Astro Specialist : Blade"] = true, ["Astro Specialist : Grenade Cannon"] = true, ["Astro Specialist : Gun"] = true, ["Astro Specialist : Spinner"] = true, ["Astro Strider : Leg"] = true, ["Astro Token"] = true, ["Astro Trooper : Gun"] = true, ["Astro Trooper : Spinner"] = true, ["Battle-Pass"] = true, ["BlackGear"] = true, ["BlueGear"] = true, ["Booster X2 Mastery : 1Hour"] = true, ["Booster X2 Mastery : 30Min"] = true, ["Booster X2 Mastery : 6Hour"] = true, ["Clock Spider"] = true, ["Drive #A"] = true, ["Drive #B"] = true, ["Drive #C"] = true, ["Drive #D"] = true, ["Drive #E"] = true, ["Drive #SdFE0"] = true, ["Energy Core Base"] = true, ["Flash Drive #1"] = true, ["Flash Drive #2"] = true, ["Flash Drive #3"] = true, ["Flash Drive #4"] = true, ["Flash Drive #5"] = true, ["Gacha Capsule"] = true, ["Green Core Energy"] = true, ["GreenGear"] = true, ["Honor badge"] = true, ["Instant Level 50 Mastery : Normal"] = true, ["Instant Level 50 Mastery : Normal Titan"] = true, ["Instant Level 50 Mastery : Special Titan"] = true, ["Instant Level 80 Mastery : Normal"] = true, ["Instant Level 80 Mastery : Normal Titan"] = true, ["Instant Level 80 Mastery : Special Titan"] = true, ["Keycard"] = true, ["Legendary Ticket"] = true, ["Lighting Module"] = true, ["Mastery Card : Normal"] = true, ["Mastery Card : Normal II"] = true, ["Mastery Card : Normal III"] = true, ["Mastery Card : Normal Titan"] = true, ["Mastery Card : Normal Titan II"] = true, ["Mastery Card : Normal Titan III"] = true, ["Mastery Card : Special Titan"] = true, ["Mastery Card : Special Titan II"] = true, ["Mastery Card : Special Titan III"] = true, ["Potion"] = true, ["Potion II"] = true, ["Potion III"] = true, ["RedGear"] = true, ["Scorching Ember"] = true, ["Shard"] = true, ["Shard:Brown Camera man"] = true, ["Shard:Espada #1"] = true, ["Shard:Tri Soilder"] = true, ["Toilet Token"] = true, ["WhiteGear"] = true, ["X18 Core"] = true, ["YellowGear"] = true, ["Weird Shard"] = true, ["Weird Transmitter"] = true, ["Weird Prism"] = true, ["100MVisitPickOneOfThem"] = true }
 
 for _, v in ipairs(player.PlayerGui:GetChildren()) do
     if string.find(tostring(v.Name), "ST BATTLEFRONT") or string.find(tostring(v.Name), "Drop Scripts") or string.find(tostring(v.Name), "Why did I make") then v:Destroy() end
@@ -285,6 +454,7 @@ local antiAfkZoneAtivo, detectSizeAtivo, astroReviveAtivo, uttvSafeAtivo, ignore
 local espToiletsAtivo, espPlayersAtivo, espItemsAtivo, espJeffreyAtivo = false, false, false, false
 local autoVoteAtivo, autoChooseWeaponAtivo, autoCureAtivo, autoSkipHeliAtivo = false, false, false, false
 local autoRollSkinAtivo, autoRollShardsAtivo, autoRollPresentsAtivo = false, false, false
+local insaneBulletsAtivo = false
 local suicideWaveTarget = 0
 local autoSkillsAtivo = false
 local autoEquipPlungersAtivo = false
@@ -295,7 +465,7 @@ local selectedUseSkills = {}
 local selectedHoldSkills = {}
 local isUpdatingSkills = false
 
-local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Astro Blaster", "Pulse Rifle + Small Laser", "Pulse Rifle + Astro Blaster"}
+local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Astro Blaster", "Pulse Rifle + Small Laser", "Pulse Rifle + Astro Blaster", "Small Laser + Pulse Rifle + Astro Blaster"}
 local farmMethod = farmMethodsArray[1]
 local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
 local targetMethod = targetMethodsArray[1]
@@ -323,8 +493,8 @@ local voteModeInternal = {
     ["Vague Memory"] = "100MVisit",
     ["Christmas"] = "Christmas",
     ["Zombie"] = "Zombie",
-    ["Invasion Holdout (Astro)"] = "Astro",
-    ["The Invasion (Astro)"] = "AstroV2",
+    ["Invasion Holdout (Astro)"] = "AstroV2",
+    ["The Invasion (Astro)"] = "Astro",
     ["In The Mist"] = "NoLightInTheSky",
     ["Hard"] = "Hard",
     ["Insane"] = "Insane",
@@ -336,7 +506,6 @@ local voteModeInternal = {
 
 local voteMode = "Normal"
 
--- 🔥 FUNÇÃO MESTRA PARA LOCALIZAR ARMAS ESCONDIDAS 🔥
 local function getWeapon(methodName)
     local function isMatch(t)
         local name = string.lower(t.Name)
@@ -362,7 +531,6 @@ local function checkWeaponExists(nameSearch)
     return false
 end
 
--- 🔥 CHECAGEM DE MUNIÇÃO INVISÍVEL (NÃO EQUIPA PRA VERIFICAR) 🔥
 local function checkAmmo(weaponType)
     local tool = getWeapon(weaponType)
     if tool and tool:FindFirstChild("Folder") and tool.Folder:FindFirstChild("Ammo") then
@@ -372,10 +540,11 @@ local function checkAmmo(weaponType)
         else
             if weaponType == "Astro Blaster" then maxAmmo = 20 end
             if weaponType == "Pulse Rifle" then maxAmmo = 30 end
+            if weaponType == "Small Laser" then maxAmmo = 100 end
         end
         return tool.Folder.Ammo.Value, maxAmmo
     end
-    return 0, (weaponType == "Astro Blaster" and 20 or 30)
+    return 0, (weaponType == "Astro Blaster" and 20 or (weaponType == "Small Laser" and 100 or 30))
 end
 
 local function equipWeapon(methodName)
@@ -410,7 +579,6 @@ local function processItemQueue()
     isProcessingQueue = true
     _G.IsItemFarming = true 
     
-    -- 🔥 ESCUDO ANTI-DEADLOCK: O pcall impede que a fila trave para sempre 🔥
     pcall(function()
         while #itemQueue > 0 do 
             if not _G.DropScriptRunning then break end
@@ -577,45 +745,6 @@ addConn(RunService.Heartbeat:Connect(function()
         if mugenPart.Parent then mugenPart.Parent = nil end
     end
 end))
-
-local secretNpcFound = false
-local secretEsp = Instance.new("Highlight")
-secretEsp.FillColor = Color3.fromRGB(0, 0, 0)
-secretEsp.OutlineColor = Color3.fromRGB(255, 255, 255)
-secretEsp.FillTransparency = 0.5
-secretEsp.OutlineTransparency = 0
-secretEsp.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-secretEsp.Enabled = false
-secretEsp.Parent = Workspace.CurrentCamera
-
-task.spawn(function()
-    while task.wait(1) do
-        if not _G.DropScriptRunning then break end
-        local npcsFolder = Workspace:FindFirstChild("NPCs")
-        local mysteriousNPC = npcsFolder and npcsFolder:FindFirstChild("Mysterious Camera man")
-
-        if mysteriousNPC then
-            if not secretNpcFound then
-                secretNpcFound = true
-                pcall(function()
-                    game:GetService("StarterGui"):SetCore("SendNotification", {
-                        Title = "🕵️ NPC SECRETO!",
-                        Text = "O Mysterious Camera man spawnou no mapa!",
-                        Duration = 10,
-                    })
-                end)
-                secretEsp.Adornee = mysteriousNPC
-                secretEsp.Enabled = true
-            end
-        else
-            if secretNpcFound then
-                secretNpcFound = false
-                secretEsp.Adornee = nil
-                secretEsp.Enabled = false
-            end
-        end
-    end
-end)
 
 local stayCorners = {
     Vector3.new(-657, 280, -532), Vector3.new(-657, 280, 473),  
@@ -1119,10 +1248,20 @@ end
 -- POPULANDO AS ABAS
 -- ============================================================
 -- ABA 1: FARM
+local farmMethodsArray = {"Auto Punch", "Orbital Punch", "Pulse Rifle", "Big Laser", "Small Laser", "Astro Blaster", "Pulse Rifle + Small Laser", "Pulse Rifle + Astro Blaster", "Small Laser + Pulse Rifle + Astro Blaster"}
+local farmMethod = farmMethodsArray[1]
+local targetMethodsArray = {"Normal", "Weakest First", "Strongest First", "Saw", "Rocket"}
+local targetMethod = targetMethodsArray[1]
+
 farmDropdownObj = createInlineDropdown(tabs.Farm, "Method: ", farmMethodsArray, farmMethod, function(val) farmMethod = val end)
 createInlineDropdown(tabs.Farm, "Target: ", targetMethodsArray, targetMethod, function(val) targetMethod = val end)
 objOrbitalSpeed = createSlider(tabs.Farm, "Orbital Speed", 1, 18, 15, function(val) _G.OrbitalSpeed = val end)
 objAutoFarm = createToggle(tabs.Farm, "Auto Farm", function(s) farmEnabled = s end)
+
+-- 🔥 O BOTÃO INSANE BULLETS RENOMEADO 🔥
+local insaneBulletsAtivo = false
+createToggle(tabs.Farm, "Insane Bullets", {color="red", text="It disables the cooldown per shot, allowing you to fire dozens of shots in milliseconds"}, function(s) insaneBulletsAtivo = s end)
+
 createToggle(tabs.Farm, "Auto Revive Player", function(s) reviveAtivo = s end)
 local objAutoFlush = createToggle(tabs.Farm, "Auto Flush & Save", function(s) interactAtivo = s; saveAtivo = s end)
 local objAutoSkipHeli = createToggle(tabs.Farm, "Auto Skip Helicopter", function(s) autoSkipHeliAtivo = s end)
@@ -1616,12 +1755,10 @@ task.spawn(function()
         for _, slot in ipairs(frameNode:GetChildren()) do
             if slot:IsA("Frame") or slot:IsA("ImageLabel") then
                 local nameLbl = slot:FindFirstChild("NameItem")
-                local stockLbl = slot:FindFirstChild("Stock")
                 
-                if nameLbl and stockLbl then
+                if nameLbl then
                     local rawName = nameLbl.Text
-                    local stockMatch = string.match(stockLbl.Text, "%d+")
-                    local currentStock = stockMatch and tonumber(stockMatch) or 0
+                    local stockLbl = slot:FindFirstChild("Stock")
                     
                     local lookupName = rawName
                     if rawName == "Titan Speaker toilet" then lookupName = "Titan Speaker Toilet" end
@@ -1629,31 +1766,57 @@ task.spawn(function()
                     
                     local setting = autoShopSettings[lookupName]
                     if setting then
-                        local lastStock = lastStockCache[rawName] or currentStock
+                        local currentStock = 999 
+                        local hasStock = false
                         
-                        if currentStock < lastStock and setting.active then
-                            local comprados = lastStock - currentStock
-                            setting.quantity = setting.quantity - comprados
-                            if setting.quantity < 0 then setting.quantity = 0 end
-                            
-                            if setting.ui then
-                                setting.ui.UpdateQuantity(setting.quantity)
-                                if setting.quantity == 0 then
-                                    setting.ui.SetToggle(false)
-                                    setting.active = false
-                                end
+                        if stockLbl then
+                            local stockMatch = string.match(stockLbl.Text, "%d+")
+                            if stockMatch then 
+                                currentStock = tonumber(stockMatch) 
+                                hasStock = true
                             end
                         end
-                        lastStockCache[rawName] = currentStock
                         
                         if setting.active and setting.quantity > 0 and currentStock > 0 then
-                            local internalName = string.gsub(rawName, " ", "")
-                            internalName = string.gsub(internalName, "MasteryCard", "MasterCard")
+                            local internalName = rawName
+                            
+                            if rawName == "Titan Camera Toilet" or rawName == "Titan Camera toilet" then
+                                internalName = "Titan Camera Toilet"
+                            elseif rawName == "Titan Speaker Toilet" or rawName == "Titan Speaker toilet" then
+                                internalName = "Titan Speaker toilet"
+                            else
+                                internalName = string.gsub(rawName, " ", "")
+                                internalName = string.gsub(internalName, "MasteryCard", "MasterCard")
+                            end
                             
                             if buyRemote then
                                 pcall(function()
                                     buyRemote:FireServer(internalName, 1) 
                                 end)
+                            end
+                            
+                            if hasStock then
+                                local lastStock = lastStockCache[rawName] or currentStock
+                                if currentStock < lastStock then
+                                    local comprados = lastStock - currentStock
+                                    setting.quantity = setting.quantity - comprados
+                                end
+                                lastStockCache[rawName] = currentStock
+                            else
+                                setting.quantity = setting.quantity - 1
+                            end
+                            
+                            if setting.quantity <= 0 then
+                                setting.quantity = 0
+                                setting.active = false
+                                if setting.ui then
+                                    setting.ui.UpdateQuantity(0)
+                                    setting.ui.SetToggle(false)
+                                end
+                            else
+                                if setting.ui then
+                                    setting.ui.UpdateQuantity(setting.quantity)
+                                end
                             end
                         end
                     end
@@ -1692,8 +1855,8 @@ local voteModeInternal = {
     ["Vague Memory"] = "100MVisit",
     ["Christmas"] = "Christmas",
     ["Zombie"] = "Zombie",
-    ["Invasion Holdout (Astro)"] = "Astro",
-    ["The Invasion (Astro)"] = "AstroV2",
+    ["Invasion Holdout (Astro)"] = "AstroV2",  
+    ["The Invasion (Astro)"] = "Astro",        
     ["In The Mist"] = "NoLightInTheSky",
     ["Hard"] = "Hard",
     ["Insane"] = "Insane",
@@ -1855,7 +2018,8 @@ task.spawn(function()
             local hasAB = checkWeaponExists("astro blaster")
             local newMethod = "Auto Punch"
             
-            if hasPR and hasAB then newMethod = "Pulse Rifle + Astro Blaster"
+            if hasSL and hasPR and hasAB then newMethod = "Small Laser + Pulse Rifle + Astro Blaster"
+            elseif hasPR and hasAB then newMethod = "Pulse Rifle + Astro Blaster"
             elseif hasPR and hasSL then newMethod = "Pulse Rifle + Small Laser"
             elseif hasAB then newMethod = "Astro Blaster"
             elseif hasPR then newMethod = "Pulse Rifle"
@@ -2195,7 +2359,101 @@ task.spawn(function()
 end)
 
 -- ============================================================
--- 🔥 CORE AUTO FARM (P-CALL SHIELD & IMMORTAL THREAD) 🔥
+-- 🔥 INSANE BULLETS MODO MANUAL INDEPENDENTE (STANDALONE) 🔥
+-- ============================================================
+local isManualShooting = false
+local manualShootConn = nil
+
+UserInputService.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and insaneBulletsAtivo and not farmEnabled then
+        isManualShooting = true
+        local char = player.Character
+        if not char then return end
+        local tool = char:FindFirstChildOfClass("Tool")
+        if not tool then return end
+        
+        local folder = tool:FindFirstChild("Folder")
+        if folder then
+            local cdReload = folder:FindFirstChild("CDReload")
+            if cdReload then cdReload.Value = false end
+            for _, v in pairs(folder:GetChildren()) do
+                if v:IsA("NumberValue") or v:IsA("IntValue") then
+                    local n = string.lower(v.Name)
+                    if string.find(n, "rate") or string.find(n, "time") or string.find(n, "cooldown") then
+                        v.Value = 0 
+                    end
+                end
+            end
+        end
+        
+        local gunSys = ReplicatedStorage:FindFirstChild("GunSystem")
+        local isSmallLaser = string.find(string.lower(tool.Name), "small") and string.find(string.lower(tool.Name), "laser")
+        
+        if manualShootConn then manualShootConn:Disconnect(); manualShootConn = nil end
+        
+        if isSmallLaser then
+            task.spawn(function()
+                if gunSys then
+                    pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Fire", mouse.Hit.LookVector, true) end)
+                    task.wait(2) 
+                    pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Fire", mouse.Hit.LookVector, false) end)
+                    task.wait(2) 
+                end
+                
+                if not isManualShooting then return end
+                
+                manualShootConn = RunService.RenderStepped:Connect(function()
+                    if not isManualShooting or not insaneBulletsAtivo or farmEnabled or tool.Parent ~= char then
+                        if manualShootConn then manualShootConn:Disconnect(); manualShootConn = nil end
+                        if gunSys then pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Fire", mouse.Hit.LookVector, false) end) end
+                        return
+                    end
+                    
+                    local ammoNode = folder and folder:FindFirstChild("Ammo")
+                    if ammoNode and ammoNode.Value <= 0 then
+                        if gunSys then pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Reload", mouse.Hit.LookVector, false) end) end
+                    else
+                        if gunSys then
+                            for i=1,5 do
+                                pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Fire", mouse.Hit.LookVector, true) end)
+                            end
+                        end
+                    end
+                end)
+            end)
+        else
+            manualShootConn = RunService.RenderStepped:Connect(function()
+                if not isManualShooting or not insaneBulletsAtivo or farmEnabled or tool.Parent ~= char then
+                    if manualShootConn then manualShootConn:Disconnect(); manualShootConn = nil end
+                    if gunSys then pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Fire", mouse.Hit.LookVector, false) end) end
+                    return
+                end
+                
+                local ammoNode = folder and folder:FindFirstChild("Ammo")
+                if ammoNode and ammoNode.Value <= 0 then
+                    if gunSys then pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Reload", mouse.Hit.LookVector, false) end) end
+                else
+                    if gunSys then
+                        for i=1,5 do
+                            pcall(function() gunSys:FireServer(tool, mouse.Hit.Position, "Fire", mouse.Hit.LookVector, true) end)
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isManualShooting = false
+    end
+end)
+
+
+-- ============================================================
+-- 🔥 CORE AUTO FARM (P-CALL SHIELD & INSANE BULLETS) 🔥
 -- ============================================================
 local currentConnection = nil
 local isShootingRifle = false
@@ -2210,10 +2468,15 @@ local lastAllyCheckTime = setmetatable({}, {__mode = "k"})
 
 _G.LastPRAmmo = _G.LastPRAmmo or -1
 _G.LastABAmmo = _G.LastABAmmo or -1
+_G.LastSLAmmo = _G.LastSLAmmo or -1
 _G.LastPRChange = _G.LastPRChange or tick()
 _G.LastABChange = _G.LastABChange or tick()
+_G.LastSLChange = _G.LastSLChange or tick()
+
 _G.LastSingleAmmo = _G.LastSingleAmmo or -1
 _G.LastSingleChange = _G.LastSingleChange or tick()
+_G.SmallLaserGlitched = false
+_G.SmallLaserReady = false
 
 local function getWeapon(methodName)
     local function isMatch(t)
@@ -2243,10 +2506,11 @@ local function checkAmmo(weaponType)
         else
             if weaponType == "Astro Blaster" then maxAmmo = 20 end
             if weaponType == "Pulse Rifle" then maxAmmo = 30 end
+            if weaponType == "Small Laser" then maxAmmo = 100 end
         end
         return tool.Folder.Ammo.Value, maxAmmo
     end
-    return 0, (weaponType == "Astro Blaster" and 20 or 30)
+    return 0, (weaponType == "Astro Blaster" and 20 or (weaponType == "Small Laser" and 100 or 30))
 end
 
 local function equipWeapon(methodName)
@@ -2264,21 +2528,49 @@ task.spawn(function()
         task.wait(0.05)
         if not _G.DropScriptRunning then break end
         
-        -- 🔥 O ESCUDO DE IMORTALIDADE (PCALL) 🔥
         local success, err = pcall(function()
+            local slAmmo, slMax = checkAmmo("Small Laser")
             local prAmmo, prMax = checkAmmo("Pulse Rifle")
             local abAmmo, abMax = checkAmmo("Astro Blaster")
+            if slMax == 0 then slMax = 100 end
             if prMax == 0 then prMax = 30 end
             if abMax == 0 or abMax == 30 then abMax = 20 end
             
+            if slAmmo ~= _G.LastSLAmmo then _G.LastSLAmmo = slAmmo; _G.LastSLChange = tick() end
             if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
             if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
             
+            local slStuck = (slAmmo > 0) and (tick() - (_G.LastSLChange or 0) > 1.5)
             local prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
             local abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
 
             local activeCombatMethod = farmMethod
-            if farmMethod == "Pulse Rifle + Small Laser" then
+            
+            if farmMethod == "Small Laser + Pulse Rifle + Astro Blaster" then
+                if not _G.TriState then _G.TriState = "Shooting_SL" end
+
+                if _G.TriState == "Shooting_SL" then
+                    if slAmmo <= 0 then _G.TriState = "Shooting_PR" end
+                elseif _G.TriState == "Shooting_PR" then
+                    if prAmmo <= 0 then _G.TriState = "Shooting_AB" end
+                elseif _G.TriState == "Shooting_AB" then
+                    if abAmmo <= 0 then _G.TriState = "Waiting_All" end
+                elseif _G.TriState == "Waiting_All" then
+                    if slAmmo >= slMax or slStuck then _G.TriState = "Shooting_SL"
+                    elseif prAmmo >= prMax or prStuck then _G.TriState = "Shooting_PR"
+                    elseif abAmmo >= abMax or abStuck then _G.TriState = "Shooting_AB"
+                    end
+                end
+
+                if string.find(_G.TriState, "SL") then activeCombatMethod = "Small Laser"
+                elseif string.find(_G.TriState, "PR") then activeCombatMethod = "Pulse Rifle"
+                elseif string.find(_G.TriState, "AB") then activeCombatMethod = "Astro Blaster"
+                else activeCombatMethod = "Small Laser" end
+                
+                if string.find(_G.TriState, "Waiting") then isReloadingRifle = true
+                else isReloadingRifle = false end
+
+            elseif farmMethod == "Pulse Rifle + Small Laser" then
                 if prAmmo <= 0 then 
                     _G.PR_Reloading = true 
                 elseif _G.PR_Reloading then
@@ -2314,7 +2606,19 @@ task.spawn(function()
                 if isShootingRifle then
                     local vp = Workspace.CurrentCamera.ViewportSize
                     VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    
+                    if insaneBulletsAtivo then
+                        local tool = getWeapon(lastCombatMethod)
+                        local gunSys = ReplicatedStorage:FindFirstChild("GunSystem")
+                        if tool and gunSys then
+                            pcall(function() gunSys:FireServer(tool, Vector3.new(), "Fire", Vector3.new(), false) end)
+                        end
+                    end
+                    
                     isShootingRifle = false
+                    _G.SmallLaserGlitched = false
+                    _G.SmallLaserReady = false
+                    
                     if player.Character and player.Character:FindFirstChild("Humanoid") then
                         player.Character.Humanoid:UnequipTools()
                     end
@@ -2326,12 +2630,24 @@ task.spawn(function()
                 if isShootingRifle then
                     local vp = Workspace.CurrentCamera.ViewportSize
                     VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    
+                    if insaneBulletsAtivo then
+                        local tool = getWeapon(activeCombatMethod)
+                        local gunSys = ReplicatedStorage:FindFirstChild("GunSystem")
+                        if tool and gunSys then
+                            pcall(function() gunSys:FireServer(tool, Vector3.new(), "Fire", Vector3.new(), false) end)
+                        end
+                    end
+                    
                     isShootingRifle = false
+                    _G.SmallLaserGlitched = false
+                    _G.SmallLaserReady = false
+                    
                     if player.Character and player.Character:FindFirstChild("Humanoid") then
                         player.Character.Humanoid:UnequipTools()
                     end
                 end
-                return -- Retorna do pcall e vai pro próximo loop
+                return 
             end
 
             local rawTargets = {}
@@ -2410,7 +2726,19 @@ task.spawn(function()
                 if isShootingRifle then
                     local vp = Workspace.CurrentCamera.ViewportSize
                     VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    
+                    if insaneBulletsAtivo then
+                        local tool = getWeapon(activeCombatMethod)
+                        local gunSys = ReplicatedStorage:FindFirstChild("GunSystem")
+                        if tool and gunSys then
+                            pcall(function() gunSys:FireServer(tool, Vector3.new(), "Fire", Vector3.new(), false) end)
+                        end
+                    end
+                    
                     isShootingRifle = false
+                    _G.SmallLaserGlitched = false
+                    _G.SmallLaserReady = false
+                    
                     if player.Character and player.Character:FindFirstChild("Humanoid") then
                         player.Character.Humanoid:UnequipTools()
                     end
@@ -2456,7 +2784,6 @@ task.spawn(function()
                 local model, torso, headSize = tData.model, tData.torso, tData.headSize
                 if currentConnection then currentConnection:Disconnect() end
 
-                -- 🔥 CONEXÃO DIRETA: Fim do vazamento de memória! 🔥
                 currentConnection = RunService.Heartbeat:Connect(function(dt)
                     local isDeadNow = false
                     local f1 = model:FindFirstChild("1")
@@ -2509,7 +2836,6 @@ task.spawn(function()
                         combatPos = Vector3.new(math.clamp(rawPos.X, -645, 460), math.clamp(rawPos.Y, -400, 285), math.clamp(rawPos.Z, -515, 460))
                         
                         if player.Character then
-                            -- 🔥 EQUIPAMENTO CONSTANTE: A arma não desequipa e carrega perfeitamente 🔥
                             equipWeapon(activeCombatMethod)
                             player.Character:PivotTo(CFrame.new(combatPos))
                             Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position, torso.Position - Vector3.new(0, 0.5, 0))
@@ -2518,18 +2844,46 @@ task.spawn(function()
                 end)
 
                 repeat 
+                    slAmmo, slMax = checkAmmo("Small Laser")
                     prAmmo, prMax = checkAmmo("Pulse Rifle")
                     abAmmo, abMax = checkAmmo("Astro Blaster")
+                    if slMax == 0 then slMax = 100 end
                     if prMax == 0 then prMax = 30 end
                     if abMax == 0 or abMax == 30 then abMax = 20 end
 
+                    if slAmmo ~= _G.LastSLAmmo then _G.LastSLAmmo = slAmmo; _G.LastSLChange = tick() end
                     if prAmmo ~= _G.LastPRAmmo then _G.LastPRAmmo = prAmmo; _G.LastPRChange = tick() end
                     if abAmmo ~= _G.LastABAmmo then _G.LastABAmmo = abAmmo; _G.LastABChange = tick() end
                     
+                    slStuck = (slAmmo > 0) and (tick() - (_G.LastSLChange or 0) > 1.5)
                     prStuck = (prAmmo > 0) and (tick() - (_G.LastPRChange or 0) > 1.5)
                     abStuck = (abAmmo > 0) and (tick() - (_G.LastABChange or 0) > 1.5)
 
-                    if farmMethod == "Pulse Rifle + Small Laser" then
+                    if farmMethod == "Small Laser + Pulse Rifle + Astro Blaster" then
+                        if not _G.TriState then _G.TriState = "Shooting_SL" end
+
+                        if _G.TriState == "Shooting_SL" then
+                            if slAmmo <= 0 then _G.TriState = "Shooting_PR" end
+                        elseif _G.TriState == "Shooting_PR" then
+                            if prAmmo <= 0 then _G.TriState = "Shooting_AB" end
+                        elseif _G.TriState == "Shooting_AB" then
+                            if abAmmo <= 0 then _G.TriState = "Waiting_All" end
+                        elseif _G.TriState == "Waiting_All" then
+                            if slAmmo >= slMax or slStuck then _G.TriState = "Shooting_SL"
+                            elseif prAmmo >= prMax or prStuck then _G.TriState = "Shooting_PR"
+                            elseif abAmmo >= abMax or abStuck then _G.TriState = "Shooting_AB"
+                            end
+                        end
+
+                        if string.find(_G.TriState, "SL") then activeCombatMethod = "Small Laser"
+                        elseif string.find(_G.TriState, "PR") then activeCombatMethod = "Pulse Rifle"
+                        elseif string.find(_G.TriState, "AB") then activeCombatMethod = "Astro Blaster"
+                        else activeCombatMethod = "Small Laser" end
+                        
+                        if string.find(_G.TriState, "Waiting") then isReloadingRifle = true
+                        else isReloadingRifle = false end
+
+                    elseif farmMethod == "Pulse Rifle + Small Laser" then
                         if prAmmo <= 0 then 
                             _G.PR_Reloading = true 
                         elseif _G.PR_Reloading then
@@ -2565,7 +2919,18 @@ task.spawn(function()
                         if isShootingRifle then
                             local vp = Workspace.CurrentCamera.ViewportSize
                             VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                            
+                            if insaneBulletsAtivo then
+                                local tool = getWeapon(lastCombatMethod)
+                                local gunSys = ReplicatedStorage:FindFirstChild("GunSystem")
+                                if tool and gunSys then
+                                    pcall(function() gunSys:FireServer(tool, torso.Position, "Fire", Vector3.new(0,0,0), false) end)
+                                end
+                            end
+                            
                             isShootingRifle = false
+                            _G.SmallLaserGlitched = false
+                            _G.SmallLaserReady = false
                         end
                         lastCombatMethod = activeCombatMethod
                     end
@@ -2585,6 +2950,7 @@ task.spawn(function()
                             else
                                 if activeCombatMethod == "Astro Blaster" then maxAmmo = 20 end
                                 if activeCombatMethod == "Pulse Rifle" then maxAmmo = 30 end
+                                if activeCombatMethod == "Small Laser" then maxAmmo = 100 end
                             end
 
                             local currentAmmoVal = ammoNode.Value
@@ -2598,7 +2964,16 @@ task.spawn(function()
                                 if not isReloadingRifle then
                                     isReloadingRifle = true
                                     if isShootingRifle then 
-                                        isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
+                                        isShootingRifle = false
+                                        _G.SmallLaserGlitched = false
+                                        _G.SmallLaserReady = false
+                                        
+                                        if insaneBulletsAtivo then
+                                            pcall(function()
+                                                ReplicatedStorage.GunSystem:FireServer(tool, torso.Position, "Fire", Vector3.new(0,0,0), false)
+                                            end)
+                                        end
+                                        VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
                                     end
                                 end
                             elseif isReloadingRifle then
@@ -2610,37 +2985,109 @@ task.spawn(function()
                             if not isReloadingRifle and currentAmmoVal > 0 then
                                 VIM:SendMouseMoveEvent(aimX, aimY, game) 
                                 
-                                if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" or (farmMethod == "Pulse Rifle + Astro Blaster" and activeCombatMethod == "Pulse Rifle") then
-                                    if not isShootingRifle then 
-                                        isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) 
+                                if insaneBulletsAtivo then
+                                    local gunSys = ReplicatedStorage:FindFirstChild("GunSystem")
+                                    local targetPos = torso.Position
+                                    local myPos = player.Character and player.Character:GetPivot().Position or Workspace.CurrentCamera.CFrame.Position
+                                    local lookVec = CFrame.lookAt(myPos, targetPos).LookVector
+                                    
+                                    pcall(function()
+                                        local folder = tool:FindFirstChild("Folder")
+                                        if folder then
+                                            local cdReload = folder:FindFirstChild("CDReload")
+                                            if cdReload then cdReload.Value = false end
+                                            for _, v in pairs(folder:GetChildren()) do
+                                                if v:IsA("NumberValue") or v:IsA("IntValue") then
+                                                    local n = string.lower(v.Name)
+                                                    if string.find(n, "rate") or string.find(n, "time") or string.find(n, "cooldown") then
+                                                        v.Value = 0 
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end)
+                                    
+                                    if not isShootingRifle then
+                                        isShootingRifle = true
                                     end
+                                    
+                                    if activeCombatMethod == "Small Laser" then
+                                        if not _G.SmallLaserGlitched then
+                                            _G.SmallLaserGlitched = true
+                                            _G.SmallLaserReady = false
+                                            
+                                            task.spawn(function()
+                                                if gunSys then
+                                                    pcall(function() gunSys:FireServer(tool, targetPos, "Fire", lookVec, true) end)
+                                                    task.wait(2) 
+                                                    pcall(function() gunSys:FireServer(tool, targetPos, "Fire", lookVec, false) end)
+                                                    task.wait(2) 
+                                                    _G.SmallLaserReady = true
+                                                end
+                                            end)
+                                        end
+                                        
+                                        if _G.SmallLaserReady and gunSys then
+                                            for i = 1, 5 do
+                                                pcall(function() gunSys:FireServer(tool, targetPos, "Fire", lookVec, true) end)
+                                            end
+                                        end
+                                    else
+                                        if gunSys then
+                                            for i = 1, 5 do
+                                                pcall(function() gunSys:FireServer(tool, targetPos, "Fire", lookVec, true) end)
+                                            end
+                                        end
+                                    end
+                                    
                                 else
-                                    if headSize > 12 then 
-                                        if not isShootingRifle then isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) end
-                                    else 
-                                        if tick() - lastTapTime > 0.25 then
-                                            lastTapTime = tick()
-                                            if not isShootingRifle then
-                                                isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
-                                                task.delay(0.1, function() VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1); isShootingRifle = false end)
+                                    if activeCombatMethod == "Big Laser" or activeCombatMethod == "Small Laser" or activeCombatMethod == "Astro Blaster" or (farmMethod == "Pulse Rifle + Astro Blaster" and activeCombatMethod == "Pulse Rifle") or (farmMethod == "Small Laser + Pulse Rifle + Astro Blaster") then
+                                        if not isShootingRifle then 
+                                            isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) 
+                                        end
+                                    else
+                                        if headSize > 12 then 
+                                            if not isShootingRifle then isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1) end
+                                        else 
+                                            if tick() - lastTapTime > 0.25 then
+                                                lastTapTime = tick()
+                                                if not isShootingRifle then
+                                                    isShootingRifle = true; VIM:SendMouseButtonEvent(aimX, aimY, 0, true, game, 1)
+                                                    task.delay(0.1, function() VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1); isShootingRifle = false end)
+                                                end
                                             end
                                         end
                                     end
                                 end
                             else
                                 if isShootingRifle then 
-                                    isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
+                                    isShootingRifle = false
+                                    _G.SmallLaserGlitched = false
+                                    _G.SmallLaserReady = false
+                                    
+                                    if insaneBulletsAtivo then
+                                        pcall(function()
+                                            ReplicatedStorage.GunSystem:FireServer(tool, torso.Position, "Fire", Vector3.new(0,0,0), false)
+                                        end)
+                                    end
+                                    VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1) 
                                 end
                             end
                         else
                             if isShootingRifle then 
-                                isShootingRifle = false; VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
+                                isShootingRifle = false
+                                _G.SmallLaserGlitched = false
+                                _G.SmallLaserReady = false
+                                VIM:SendMouseButtonEvent(aimX, aimY, 0, false, game, 1)
                             end
                         end
                     else
                         if isShootingRifle then
                             local vp = Workspace.CurrentCamera.ViewportSize
-                            isShootingRifle = false; VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                            isShootingRifle = false
+                            _G.SmallLaserGlitched = false
+                            _G.SmallLaserReady = false
+                            VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
                         end
                     end
                     task.wait(0.1)
@@ -2664,21 +3111,33 @@ task.spawn(function()
 
                 if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
                 
-                if isShootingRifle and (activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Astro Blaster") then
+                if isShootingRifle and (activeCombatMethod == "Pulse Rifle" or activeCombatMethod == "Astro Blaster" or activeCombatMethod == "Small Laser") then
                     local vp = Workspace.CurrentCamera.ViewportSize
                     VIM:SendMouseButtonEvent(vp.X/2, vp.Y/2, 0, false, game, 1)
+                    
+                    if insaneBulletsAtivo then
+                        local tool = getWeapon(activeCombatMethod)
+                        local gunSys = ReplicatedStorage:FindFirstChild("GunSystem")
+                        if tool and gunSys and torso and torso.Parent then
+                            pcall(function() gunSys:FireServer(tool, torso.Position, "Fire", Vector3.new(0,0,0), false) end)
+                        end
+                    end
+                    
                     isShootingRifle = false
+                    _G.SmallLaserGlitched = false
+                    _G.SmallLaserReady = false
                 end
                 break
             end
         end)
         
-        -- Se o pcall encontrar um erro brutal da engine, ele desconecta tudo, reseta e tenta de novo sem matar a Thread
         if not success then
             if currentConnection then currentConnection:Disconnect(); currentConnection = nil end
             isShootingRifle = false
             isReloadingRifle = false
             _G.PR_Reloading = false
+            _G.SmallLaserGlitched = false
+            _G.SmallLaserReady = false
             task.wait(1.5)
         end
     end
@@ -2805,4 +3264,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ V20.1 — A MÁQUINA IMORTAL! 0% Memory Leak, 100% Blindagem contra Deadlocks. O Auto Farm supremo!")
+print("✅ V20.8 — SISTEMA VIP ATIVO! Tropa toda personalizada com direito a animação quebrando a tela!")
